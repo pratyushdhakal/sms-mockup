@@ -18,6 +18,9 @@ const typeLabel: Record<LeaveType, string> = {
   sick: "Sick",
   casual: "Casual",
   annual: "Annual",
+  maternity: "Maternity",
+  paternity: "Paternity",
+  unpaid: "Unpaid",
 };
 
 export default function StudentLeave() {
@@ -133,6 +136,9 @@ export default function StudentLeave() {
                   <option value="sick">Sick</option>
                   <option value="casual">Casual</option>
                   <option value="annual">Annual</option>
+                  <option value="maternity">Maternity</option>
+                  <option value="paternity">Paternity</option>
+                  <option value="unpaid">Unpaid</option>
                 </select>
               </div>
               <div>

@@ -129,11 +129,11 @@ function AppShell() {
   const pages = PAGE_MAP[role];
   const PageComponent = pages?.[active] || pages?.dashboard;
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-background">
       <Sidebar role={role} active={active} setActive={setActive} collapsed={collapsed} setCollapsed={setCollapsed} onLogout={logout} />
-      <main className="flex-1 p-6 overflow-y-auto" style={{ maxHeight: "100vh" }}>
-        <div className="max-w-7xl mx-auto">
-          {PageComponent ? <PageComponent /> : <p className="text-slate-400 text-sm">Page not found</p>}
+      <main className="flex-1 overflow-y-auto" style={{ maxHeight: "100vh" }}>
+        <div className="p-6 max-w-7xl mx-auto">
+          {PageComponent ? <PageComponent /> : <p className="text-muted-foreground text-sm">Page not found</p>}
         </div>
       </main>
     </div>

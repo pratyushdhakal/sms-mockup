@@ -58,6 +58,32 @@ export interface Teacher {
   joined: string;
   status: ActiveStatus;
   schoolId: string;
+  // New fields
+  title?: string;
+  gender?: string;
+  dob?: string;
+  bloodGroup?: string;
+  nationality?: string;
+  religion?: string;
+  ethnicGroup?: string;
+  motherTongue?: string;
+  maritalStatus?: string;
+  designation?: string;
+  jobType?: string;
+  subDesignation?: string;
+  department?: string;
+  subDepartment?: string;
+  branch?: string;
+  level?: string;
+  hireDate?: string;
+  salary?: string;
+  paymentMethod?: string;
+  highestQualification?: string;
+  experienceYears?: string;
+  citizenshipNumber?: string;
+  panNumber?: string;
+  permanentAddress?: string;
+  temporaryAddress?: string;
 }
 
 export interface StaffMember {
@@ -71,6 +97,33 @@ export interface StaffMember {
   joined: string;
   status: ActiveStatus;
   schoolId: string;
+  // New fields
+  employeeCode?: string;
+  title?: string;
+  gender?: string;
+  dob?: string;
+  bloodGroup?: string;
+  nationality?: string;
+  religion?: string;
+  ethnicGroup?: string;
+  motherTongue?: string;
+  maritalStatus?: string;
+  designation?: string;
+  jobType?: string;
+  subDesignation?: string;
+  subDepartment?: string;
+  branch?: string;
+  level?: string;
+  hireDate?: string;
+  salary?: string;
+  paymentMethod?: string;
+  highestQualification?: string;
+  experienceYears?: string;
+  specialization?: string;
+  citizenshipNumber?: string;
+  panNumber?: string;
+  permanentAddress?: string;
+  temporaryAddress?: string;
 }
 
 export type StaffRole = "accountant" | "librarian" | "front_desk" | "admin_assistant" | "security" | "cleaner" | "other";
@@ -79,7 +132,7 @@ export type FeeStatus = "Paid" | "Due" | "Partial";
 export type ActiveStatus = "Active" | "Inactive";
 export type AttendanceStatus = "Present" | "Absent" | "Late" | "Leave";
 export type AttendanceSource = "manual" | "device";
-export type LeaveType = "sick" | "casual" | "annual";
+export type LeaveType = "sick" | "casual" | "annual" | "maternity" | "paternity" | "unpaid";
 export type LeaveStatus = "pending" | "approved" | "rejected";
 export type AnnouncementAudience = "all" | "students" | "teachers" | "staff" | "parents";
 export type Priority = "high" | "medium" | "low";

@@ -1,10 +1,25 @@
 import type { UserRole } from "../types";
 import {
-  LayoutDashboard, GraduationCap, Users, BookOpen, CreditCard,
-  ClipboardList, Bell, BarChart3, LogOut, Menu,
-  UserCheck, Calendar, BookMarked, FileText, Fingerprint,
-  School2, type LucideIcon,
+  LayoutDashboard,
+  GraduationCap,
+  Users,
+  BookOpen,
+  CreditCard,
+  ClipboardList,
+  Bell,
+  BarChart3,
+  LogOut,
+  UserCheck,
+  Calendar,
+  BookMarked,
+  FileText,
+  Fingerprint,
+  School2,
+  ChevronLeft,
+  type LucideIcon,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 export type NavItem = { id: string; label: string; icon: LucideIcon };
 
@@ -12,7 +27,6 @@ const ALL_NAV: Record<string, NavItem[]> = {
   admin: [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "students", label: "All Students", icon: GraduationCap },
-    { id: "add-student", label: "Add Student", icon: UserCheck },
     { id: "intakes", label: "Intakes", icon: BookMarked },
     { id: "teachers", label: "Teachers", icon: Users },
     { id: "staff", label: "Staff", icon: Users },
@@ -78,44 +92,91 @@ interface SidebarProps {
   onLogout: () => void;
 }
 
-export default function Sidebar({ role, active, setActive, collapsed, setCollapsed, onLogout }: SidebarProps) {
+function NavButton({
+  active,
+  collapsed,
+  item,
+  onClick,
+}: {
+  active: boolean;
+  collapsed: boolean;
+  item: NavItem;
+  onClick: () => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150",
+        active
+          ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+          : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+      )}
+    >
+      <Icon size={17} className="shrink-0" />
+      {!collapsed && <span className="truncate">{item.label}</span>}
+    </button>
+  );
+}
+
+export default function Sidebar({
+  role,
+  active,
+  setActive,
+  collapsed,
+  setCollapsed,
+  onLogout,
+}: SidebarProps) {
   const navItems = ALL_NAV[role] || [];
 
   return (
-    <aside className={`flex flex-col bg-slate-900 text-slate-300 transition-all duration-200 ${collapsed ? "w-16" : "w-56"} min-h-screen flex-shrink-0`}>
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-slate-800">
-        <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
-          <School2 size={16} className="text-white" />
+    <aside
+      className={cn(
+        "flex flex-col bg-sidebar text-sidebar-foreground transition-all duration-200",
+        collapsed ? "w-16" : "w-56",
+        "min-h-screen shrink-0"
+      )}
+    >
+      <div className="flex items-center gap-3 px-4 h-14 border-b border-sidebar-border shrink-0">
+        <div className="w-7 h-7 bg-sidebar-primary rounded-lg flex items-center justify-center shrink-0">
+          <School2 size={15} className="text-sidebar-primary-foreground" />
         </div>
         {!collapsed && (
-          <span className="font-semibold text-white text-sm leading-tight">
+          <span className="font-semibold text-sm leading-tight text-sidebar-foreground">
             Vidya
-            <br />
-            <span className="text-indigo-400 font-normal text-xs capitalize">{role}</span>
+            <span className="text-sidebar-foreground/50 font-normal text-xs capitalize block">
+              {role}
+            </span>
           </span>
         )}
-        <button onClick={() => setCollapsed(!collapsed)} className="ml-auto text-slate-500 hover:text-slate-300 transition-colors">
-          <Menu size={16} />
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="ml-auto text-sidebar-foreground/40 hover:text-sidebar-foreground transition-colors"
+        >
+          <ChevronLeft size={15} className={cn("transition-transform duration-200", collapsed && "rotate-180")} />
         </button>
       </div>
 
-      <nav className="flex-1 py-4 space-y-0.5 px-2 overflow-y-auto">
-        {navItems.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setActive(id)}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 ${
-              active === id ? "bg-indigo-600 text-white" : "hover:bg-slate-800 text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            <Icon size={17} className="flex-shrink-0" />
-            {!collapsed && <span className="truncate">{label}</span>}
-          </button>
+      <nav className="flex-1 py-3 space-y-0.5 px-2 overflow-y-auto">
+        {navItems.map((item) => (
+          <NavButton
+            key={item.id}
+            item={item}
+            active={active === item.id}
+            collapsed={collapsed}
+            onClick={() => setActive(item.id)}
+          />
         ))}
       </nav>
 
-      <div className="px-2 pb-4 border-t border-slate-800 pt-4">
-        <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-all">
+      <Separator className="bg-sidebar-border" />
+
+      <div className="p-2">
+        <button
+          onClick={onLogout}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-all"
+        >
           <LogOut size={17} />
           {!collapsed && <span>Logout</span>}
         </button>

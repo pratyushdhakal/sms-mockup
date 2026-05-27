@@ -36,6 +36,7 @@ export const TEACHERS: Teacher[] = [
   { id: "T003", userId: "U004", name: "Kamala Adhikari", email: "kamala@school.com", phone: "9800000003", subjectSpecialization: "English", assignedClassIds: ["C003", "C006", "C009"], joined: "2022-04-20", status: "Active", schoolId: "SCH001" },
 ];
 
+
 export const STAFF: StaffMember[] = [
   { id: "S001", userId: "U005", name: "Gopal Shrestha", email: "gopal@school.com", phone: "9800000004", role: "accountant", department: "Finance", joined: "2021-01-10", status: "Active", schoolId: "SCH001" },
   { id: "S002", userId: "U006", name: "Binod Karmacharya", email: "binod@school.com", phone: "9800000005", role: "librarian", department: "Library", joined: "2020-08-05", status: "Inactive", schoolId: "SCH001" },

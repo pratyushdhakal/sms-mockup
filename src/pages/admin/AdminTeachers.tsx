@@ -30,7 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import NepaliDatePicker from "@/components/NepaliDatePicker";
 
 interface TeacherEntry {
@@ -237,7 +236,7 @@ export default function AdminTeachers() {
               <DialogHeader className="px-6 pt-6 pb-0 shrink-0">
                 <DialogTitle>{editingId ? "Edit Teacher" : "Add New Teacher"}</DialogTitle>
               </DialogHeader>
-              <ScrollArea className="flex-1 min-h-0 px-6 py-4">
+              <div className="flex-1 min-h-0 px-6 py-4 overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
                 {/* Personal Details */}
                 <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -426,9 +425,9 @@ export default function AdminTeachers() {
                       </label>
                     ))}
                   </div>
+                  </div>
                 </div>
               </div>
-              </ScrollArea>
               <DialogFooter className="px-6 pb-6 shrink-0">
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancel

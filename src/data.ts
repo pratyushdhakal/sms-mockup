@@ -1,7 +1,7 @@
 import type {
   User, Student, Teacher, StaffMember, AttendanceRecord, ClassGroup,
   Intake, LeaveRequest, RoutineSlot, Announcement, CalendarEvent,
-  Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent, Inquiry,
+  Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent, Inquiry, DeviceLog,
 } from "./types";
 
 export const MOCK_USERS: User[] = [
@@ -37,6 +37,8 @@ export const STAFF: StaffMember[] = [];
 export const STUDENTS: Student[] = [];
 
 export const ATTENDANCE: AttendanceRecord[] = [];
+
+export const DEVICE_LOGS: DeviceLog[] = [];
 
 export const INTAKES: Intake[] = [
   { id: "I001", name: "Nursery Intake 2083", academicYear: "2083", grade: "Nursery", capacity: 40, enrolled: 0, status: "open", schoolId: "SCH001" },

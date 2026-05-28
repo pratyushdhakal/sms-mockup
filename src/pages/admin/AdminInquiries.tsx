@@ -17,7 +17,6 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const INIT_FORM = {
   inquirerName: "", inquirerEmail: "", inquirerMobile: "", inquirerPhone: "", relationship: "",
@@ -128,7 +127,7 @@ export default function AdminInquiries() {
               <DialogHeader className="px-6 pt-6 pb-0 shrink-0">
                 <DialogTitle>{editingId ? "Edit Inquiry" : "Add New Inquiry"}</DialogTitle>
               </DialogHeader>
-              <ScrollArea className="flex-1 min-h-0 px-6 py-4">
+              <div className="flex-1 min-h-0 px-6 py-4 overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                   <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Inquirer Information</h3>
                   <InputField label="Full Name *" value={form.inquirerName} onChange={e => setForm({...form, inquirerName: e.target.value})} />
@@ -148,7 +147,7 @@ export default function AdminInquiries() {
                   <TextAreaField label="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
                   <TextAreaField label="Outcome Details" value={form.outcomeDetails} onChange={e => setForm({...form, outcomeDetails: e.target.value})} />
                 </div>
-              </ScrollArea>
+              </div>
               <DialogFooter className="px-6 pb-6 shrink-0">
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
                 <Button onClick={handleSubmit}>{editingId ? "Update" : "Submit"}</Button>

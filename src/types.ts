@@ -176,6 +176,15 @@ export interface AttendanceRecord {
   schoolId: string;
 }
 
+export interface DeviceLog {
+  id: string;
+  userId: string;
+  date: string;
+  checkIn: string;
+  checkOut?: string;
+  schoolId: string;
+}
+
 export interface ClassGroup {
   id: string;
   name: string;

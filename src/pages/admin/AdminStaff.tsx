@@ -31,7 +31,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import NepaliDatePicker from "@/components/NepaliDatePicker";
 
 interface StaffEntry {
@@ -221,7 +220,7 @@ export default function AdminStaff() {
                     {editingId ? "Edit Staff" : "Add New Staff"}
                   </DialogTitle>
                 </DialogHeader>
-                <ScrollArea className="flex-1 min-h-0 px-6 py-4">
+                <div className="flex-1 min-h-0 px-6 py-4 overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                   {/* Section: Personal Details */}
                   <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -397,8 +396,8 @@ export default function AdminStaff() {
                       className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     />
                   </div>
+                  </div>
                 </div>
-                </ScrollArea>
                 <DialogFooter className="px-6 pb-6 shrink-0">
                   <Button variant="outline" onClick={() => setDialogOpen(false)}>
                     Cancel

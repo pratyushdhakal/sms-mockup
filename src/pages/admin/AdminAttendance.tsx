@@ -1,223 +1,391 @@
-import { useState } from "react";
-import { Check, Save } from "lucide-react";
-import { ATTENDANCE, STUDENTS, CLASS_GROUPS, MOCK_USERS } from "../../data";
-import type { AttendanceStatus } from "../../types";
+import { useState, useMemo } from "react";
+import { Clock, CheckCircle2, XCircle, Users, BarChart3 } from "lucide-react";
+import { useStore } from "../../StoreContext";
+import type { AttendanceRecord } from "../../types";
 import Header from "../../layouts/Header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
-const TABS = ["Class Attendance", "Device Logs", "Staff Attendance", "My Attendance"] as const;
-type Tab = (typeof TABS)[number];
+type AttendanceStatus = "Present" | "Absent" | "Late" | "Unmarked";
 
-const STATUSES: AttendanceStatus[] = ["Present", "Absent", "Late", "Leave"];
+interface StaffMember {
+  id: string;
+  name: string;
+  role: string;
+  status: AttendanceStatus;
+}
 
-const statusBadge = (s: AttendanceStatus) => {
-  const m: Record<AttendanceStatus, string> = { Present: "bg-emerald-50 text-emerald-700", Absent: "bg-red-50 text-red-700", Late: "bg-amber-50 text-amber-700", Leave: "bg-slate-100 text-slate-600" };
-  return m[s];
-};
+const DEFAULT_STAFF: StaffMember[] = [
+  { id: "U002", name: "Ram P. KC", role: "TEACHER", status: "Unmarked" },
+  { id: "U003", name: "Sunita M.", role: "TEACHER", status: "Unmarked" },
+  { id: "U004", name: "Kamala A.", role: "TEACHER", status: "Unmarked" },
+  { id: "U005", name: "Gopal S.", role: "STAFF", status: "Unmarked" },
+  { id: "U006", name: "Binod K.", role: "STAFF", status: "Unmarked" },
+  { id: "U010", name: "Suman G.", role: "TEACHER", status: "Unmarked" },
+];
 
-function getUserName(id: string) {
-  return MOCK_USERS.find((u) => u.id === id)?.name || id;
+function StaffAttendanceTab() {
+  const [staffList, setStaffList] = useState<StaffMember[]>(DEFAULT_STAFF);
+  const [filter, setFilter] = useState<AttendanceStatus | "All">("All");
+  const [search, setSearch] = useState("");
+
+  const statusCounts = useMemo(() => ({
+    Present: staffList.filter(s => s.status === "Present").length,
+    Late: staffList.filter(s => s.status === "Late").length,
+    Absent: staffList.filter(s => s.status === "Absent").length,
+    Unmarked: staffList.filter(s => s.status === "Unmarked").length,
+  }), [staffList]);
+
+  const filtered = useMemo(() => {
+    let list = staffList;
+    if (filter !== "All") list = list.filter(s => s.status === filter);
+    if (search) list = list.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+    return list;
+  }, [staffList, filter, search]);
+
+  function setStatus(id: string, status: AttendanceStatus) {
+    setStaffList(prev => prev.map(s => s.id === id ? { ...s, status } : s));
+  }
+
+  const filterBtn = (label: AttendanceStatus | "All") => (
+    <Button variant={filter === label ? "default" : "outline"} size="sm" onClick={() => setFilter(label)}>
+      {label === "Late" && <Clock className="h-4 w-4 mr-2" />}
+      {label === "Present" && <CheckCircle2 className="h-4 w-4 mr-2" />}
+      {label === "Absent" && <XCircle className="h-4 w-4 mr-2" />}
+      {label === "All" && <BarChart3 className="h-4 w-4 mr-2" />}
+      {label}
+    </Button>
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2 flex-wrap">
+          {filterBtn("All")}
+          {filterBtn("Present")}
+          {filterBtn("Late")}
+          {filterBtn("Absent")}
+        </div>
+        <div className="flex gap-2 items-center">
+          <span className="text-xs text-muted-foreground">
+            {statusCounts.Present} present &middot; {statusCounts.Late} late &middot; {statusCounts.Absent} absent &middot; {statusCounts.Unmarked} unmarked
+          </span>
+          <Input placeholder="Search staff..." className="w-48" value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {filtered.map((staff) => (
+          <Card key={staff.id} className={staff.status === "Present" ? "border-emerald-200 bg-emerald-50/30" : staff.status === "Absent" ? "border-red-200 bg-red-50/30" : staff.status === "Late" ? "border-amber-200 bg-amber-50/30" : "border-slate-200"}>
+            <CardContent className="p-4 text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-slate-100 mx-auto flex items-center justify-center font-bold text-sm text-slate-600">
+                {staff.name.split(' ').map(n=>n[0]).slice(0,2).join('')}
+              </div>
+              <div className="space-y-0.5">
+                <div className="font-medium text-sm">{staff.name}</div>
+                <div className="text-[10px] text-muted-foreground">{staff.role}</div>
+              </div>
+              <Badge variant="outline" className={
+                staff.status === "Present" ? "bg-emerald-50 text-emerald-700" :
+                staff.status === "Absent" ? "bg-red-50 text-red-700" :
+                staff.status === "Late" ? "bg-amber-50 text-amber-700" :
+                "bg-slate-50 text-slate-600"
+              }>{staff.status}</Badge>
+              
+              <div className="flex justify-center gap-3 pt-2">
+                <button
+                  onClick={() => setStatus(staff.id, "Late")}
+                  className={`transition-colors ${staff.status === "Late" ? "text-amber-600" : "text-slate-400 hover:text-amber-600"}`}
+                  title="Mark Late"
+                ><Clock size={16} /></button>
+                <button
+                  onClick={() => setStatus(staff.id, "Present")}
+                  className={`transition-colors ${staff.status === "Present" ? "text-emerald-600" : "text-slate-400 hover:text-emerald-600"}`}
+                  title="Mark Present"
+                ><CheckCircle2 size={16} /></button>
+                <button
+                  onClick={() => setStatus(staff.id, "Absent")}
+                  className={`transition-colors ${staff.status === "Absent" ? "text-red-600" : "text-slate-400 hover:text-red-600"}`}
+                  title="Mark Absent"
+                ><XCircle size={16} /></button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function AdminAttendance() {
-  const [activeTab, setActiveTab] = useState<Tab>("Class Attendance");
-  const [selectedClass, setSelectedClass] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10));
-  const [attendanceMap, setAttendanceMap] = useState<Record<string, AttendanceStatus>>({});
+  const { students, attendanceRecords, setAttendanceRecords, deviceLogs, users } = useStore();
 
-  const classStudents = STUDENTS.filter((s) => s.classId === selectedClass);
+  const ADMIN_USER_ID = "U001";
+  const [markDate, setMarkDate] = useState(new Date().toISOString().split("T")[0]);
+  const [markStatus, setMarkStatus] = useState<"Present" | "Absent" | "Late" | "Leave">("Present");
 
-  function markAllPresent() {
-    const map: Record<string, AttendanceStatus> = {};
-    classStudents.forEach((s) => { if (s.userId) map[s.userId] = "Present"; });
-    setAttendanceMap(map);
+  const myRecords = useMemo(
+    () => attendanceRecords.filter((r) => r.userId === ADMIN_USER_ID),
+    [attendanceRecords],
+  );
+
+  const myStats = useMemo(() => {
+    const counts = myRecords.reduce(
+      (acc, r) => {
+        acc[r.status] = (acc[r.status] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+    const total = myRecords.length;
+    return [
+      { label: "Total Records", val: String(total) },
+      { label: "Present", val: String(counts["Present"] || 0) },
+      { label: "Late", val: String(counts["Late"] || 0) },
+      { label: "Absent", val: String(counts["Absent"] || 0) },
+    ];
+  }, [myRecords]);
+
+  const sortedRecords = useMemo(
+    () => [...myRecords].sort((a, b) => b.date.localeCompare(a.date)),
+    [myRecords],
+  );
+
+  function handleMarkAttendance() {
+    const existing = myRecords.find((r) => r.date === markDate);
+    const newRecord: AttendanceRecord = {
+      id: existing?.id || `ATT-${Date.now()}`,
+      userId: ADMIN_USER_ID,
+      date: markDate,
+      status: markStatus,
+      source: "manual",
+      markedBy: ADMIN_USER_ID,
+      schoolId: "SCH001",
+    };
+    if (existing) {
+      setAttendanceRecords((prev) => prev.map((r) => (r.id === existing.id ? newRecord : r)));
+    } else {
+      setAttendanceRecords((prev) => [...prev, newRecord]);
+    }
   }
 
-  function setStudentStatus(userId: string, status: AttendanceStatus) {
-    setAttendanceMap((prev) => ({ ...prev, [userId]: status }));
-  }
+  // Device Logs State
+  const [dateStart, setDateStart] = useState("");
+  const [dateEnd, setDateEnd] = useState("");
+  const [search, setSearch] = useState("");
+  const [selectedClass, setSelectedClass] = useState("All");
+  const [activeRoleTab, setActiveRoleTab] = useState<"Students" | "Staff" | "Teachers" | "Managers">("Students");
 
-  function saveAttendance() {
-    console.log("Saving attendance...", { classId: selectedClass, date: selectedDate, records: attendanceMap });
-  }
+  const filteredDeviceLogs = useMemo(() => {
+    let logs = deviceLogs;
+    if (dateStart) logs = logs.filter(l => l.date >= dateStart);
+    if (dateEnd) logs = logs.filter(l => l.date <= dateEnd);
+    if (search) logs = logs.filter(l => users.find(u => u.id === l.userId)?.name.toLowerCase().includes(search.toLowerCase()));
+    
+    // Filter by role tab
+    if (activeRoleTab === "Students") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "student");
+    if (activeRoleTab === "Staff") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "staff");
+    if (activeRoleTab === "Teachers") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "teacher");
+    if (activeRoleTab === "Managers") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "admin");
 
-  const deviceLogs = ATTENDANCE.filter((a) => a.source === "device");
+    return logs;
+  }, [deviceLogs, dateStart, dateEnd, search, activeRoleTab, users]);
 
-  const staffUsers = MOCK_USERS.filter((u) => u.type === "staff" || u.type === "teacher" || u.type === "admin");
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const todayStaffAttendance = staffUsers.map((u) => ({
-    user: u,
-    record: ATTENDANCE.find((a) => a.userId === u.id && a.date === todayStr),
-  }));
-
-  const myAttendance = ATTENDANCE.filter((a) => a.userId === "U001");
+  const deviceSummary = useMemo(() => ({
+    total: filteredDeviceLogs.length,
+    checkIns: filteredDeviceLogs.filter(l => l.checkIn).length,
+    checkOuts: filteredDeviceLogs.filter(l => l.checkOut).length,
+  }), [filteredDeviceLogs]);
 
   return (
-    <div>
-      <Header title="Attendance" subtitle="Track and manage attendance" />
+    <div className="p-6 space-y-6">
+      <Header title="Attendance" subtitle="Track and manage attendance records" />
 
-      <div className="bg-white rounded-xl border border-slate-100">
-        <div className="flex border-b border-slate-100">
-          {TABS.map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab ? "text-indigo-600 border-b-2 border-indigo-600" : "text-slate-400 hover:text-slate-600"}`}>
-              {tab}
-            </button>
-          ))}
-        </div>
+      <Tabs defaultValue="class" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="class">Class Attendance</TabsTrigger>
+          <TabsTrigger value="staff">Staff Attendance</TabsTrigger>
+          <TabsTrigger value="device">Device Logs</TabsTrigger>
+          <TabsTrigger value="my">My Attendance</TabsTrigger>
+        </TabsList>
 
-        <div className="p-4">
-          {activeTab === "Class Attendance" && (
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <select value={selectedClass} onChange={(e) => { setSelectedClass(e.target.value); setAttendanceMap({}); }} className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 bg-white">
-                  <option value="">Select Class</option>
-                  {CLASS_GROUPS.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name} ({c.section})</option>
-                  ))}
-                </select>
-                <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" />
-                <button onClick={markAllPresent} disabled={!selectedClass} className="flex items-center gap-1.5 px-3 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 disabled:opacity-40">
-                  <Check size={14} /> Mark All Present
-                </button>
-                <button onClick={saveAttendance} disabled={!selectedClass} className="flex items-center gap-1.5 px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-40 ml-auto">
-                  <Save size={14} /> Save
-                </button>
+          <TabsContent value="class" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0"><CardTitle className="text-sm font-medium">Total Students</CardTitle><Users className="h-4 w-4 text-muted-foreground" /></CardHeader>
+                <CardContent><div className="text-2xl font-bold">{students.length}</div></CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0"><CardTitle className="text-sm font-medium">Present</CardTitle><CheckCircle2 className="h-4 w-4 text-emerald-500" /></CardHeader>
+                <CardContent><div className="text-2xl font-bold text-emerald-600">480</div></CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0"><CardTitle className="text-sm font-medium">Absent</CardTitle><XCircle className="h-4 w-4 text-red-500" /></CardHeader>
+                <CardContent><div className="text-2xl font-bold text-red-600">25</div></CardContent>
+              </Card>
+            </div>
+            
+            <Card>
+              <CardHeader><CardTitle>Class Attendance Details</CardTitle></CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader><TableRow><TableHead>Class Name</TableHead><TableHead>Present</TableHead><TableHead>Absent</TableHead><TableHead>Late</TableHead><TableHead>Attendance %</TableHead><TableHead>Status</TableHead></TableRow></TableHeader>
+                  <TableBody>
+                    {[
+                      { name: "Class 1", present: 45, absent: 2, late: 0, pct: "97%" },
+                      { name: "Class 6", present: 29, absent: 2, late: 0, pct: "94%" },
+                      { name: "Nursery", present: 38, absent: 0, late: 1, pct: "100%" },
+                      { name: "LKG", present: 25, absent: 5, late: 0, pct: "83%" },
+                    ].map((row) => (
+                      <TableRow key={row.name}>
+                        <TableCell className="font-medium">{row.name}</TableCell>
+                        <TableCell className="text-emerald-600">{row.present}</TableCell>
+                        <TableCell className="text-red-600">{row.absent}</TableCell>
+                        <TableCell className="text-amber-600">{row.late}</TableCell>
+                        <TableCell>{row.pct}</TableCell>
+                        <TableCell><Badge variant="outline" className={row.pct === "100%" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"}>Good</Badge></TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+        <TabsContent value="staff" className="space-y-4">
+          <StaffAttendanceTab />
+        </TabsContent>
+        
+        <TabsContent value="device">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Biometric Device Logs</CardTitle>
+                <div className="flex gap-2">
+                    <Input type="date" value={dateStart} onChange={e => setDateStart(e.target.value)} className="w-40" />
+                    <Input type="date" value={dateEnd} onChange={e => setDateEnd(e.target.value)} className="w-40" />
+                    <Input placeholder="Search name" value={search} onChange={e => setSearch(e.target.value)} className="w-40" />
+                    <Button variant="outline" size="sm">Refresh</Button>
+                </div>
+            </CardHeader>
+            <CardContent>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <Card><CardContent className="p-4"><p className="text-sm text-muted-foreground">Total Records</p><p className="text-2xl font-bold">{deviceSummary.total}</p></CardContent></Card>
+                <Card><CardContent className="p-4"><p className="text-sm text-muted-foreground">Check Ins</p><p className="text-2xl font-bold text-emerald-600">{deviceSummary.checkIns}</p></CardContent></Card>
+                <Card><CardContent className="p-4"><p className="text-sm text-muted-foreground">Check Outs</p><p className="text-2xl font-bold text-blue-600">{deviceSummary.checkOuts}</p></CardContent></Card>
+              </div>
+              
+              {/* Tabs for Roles */}
+              <div className="flex gap-2 mb-4 border-b">
+                {(["Students", "Staff", "Teachers", "Managers"] as const).map(role => (
+                  <button key={role} onClick={() => setActiveRoleTab(role)} className={`pb-2 px-2 text-sm ${activeRoleTab === role ? "border-b-2 border-indigo-600 font-medium text-indigo-600" : "text-muted-foreground"}`}>{role}</button>
+                ))}
               </div>
 
-              {selectedClass && classStudents.length > 0 ? (
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-100">
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Roll</th>
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Name</th>
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
-                    {classStudents.map((s) => {
-                      const userId = s.userId || "";
-                      const status = attendanceMap[userId] || "Present";
-                      return (
-                        <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-3 py-2.5 text-xs text-slate-500">{s.rollNumber}</td>
-                          <td className="px-3 py-2.5">
-                            <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700">
-                                {s.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
-                              </div>
-                              <span className="text-sm text-slate-700">{s.name}</span>
-                            </div>
-                          </td>
-                          <td className="px-3 py-2.5">
-                            <select value={status} onChange={(e) => setStudentStatus(userId, e.target.value as AttendanceStatus)} className={`text-xs px-2 py-1 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 ${statusBadge(status)}`}>
-                              {STATUSES.map((st) => (
-                                <option key={st} value={st}>{st}</option>
-                              ))}
-                            </select>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              ) : selectedClass ? (
-                <p className="text-sm text-slate-400 text-center py-8">No students found in this class.</p>
-              ) : (
-                <p className="text-sm text-slate-400 text-center py-8">Select a class and date to mark attendance.</p>
-              )}
-            </div>
-          )}
-
-          {activeTab === "Device Logs" && (
-            <div>
-              <p className="text-xs text-slate-400 mb-3">Attendance records synced from biometric devices.</p>
-              {deviceLogs.length > 0 ? (
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-100">
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">User</th>
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Date</th>
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
-                    {deviceLogs.map((a) => (
-                      <tr key={a.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-3 py-2.5 text-sm text-slate-700">{getUserName(a.userId)}</td>
-                        <td className="px-3 py-2.5 text-sm text-slate-600">{a.date}</td>
-                        <td className="px-3 py-2.5">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadge(a.status)}`}>{a.status}</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p className="text-sm text-slate-400 text-center py-8">No device logs found.</p>
-              )}
-            </div>
-          )}
-
-          {activeTab === "Staff Attendance" && (
-            <div>
-              <p className="text-xs text-slate-400 mb-3">Today's attendance for staff & teachers — {todayStr}</p>
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-100">
-                    <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Name</th>
-                    <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Role</th>
-                    <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50">
-                  {todayStaffAttendance.map(({ user, record }) => (
-                    <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-3 py-2.5 text-sm text-slate-700">{user.name}</td>
-                      <td className="px-3 py-2.5 text-xs text-slate-500 capitalize">{user.type}</td>
-                      <td className="px-3 py-2.5">
-                        {record ? (
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadge(record.status)}`}>{record.status}</span>
-                        ) : (
-                          <span className="text-xs text-slate-400">—</span>
-                        )}
-                      </td>
-                    </tr>
+              <Table>
+                <TableHeader><TableRow><TableHead>User ID</TableHead><TableHead>Date</TableHead><TableHead>User</TableHead><TableHead>Check In</TableHead><TableHead>Check Out</TableHead></TableRow></TableHeader>
+                <TableBody>
+                  {filteredDeviceLogs.map(log => (
+                    <TableRow key={log.id}>
+                      <TableCell>{log.userId}</TableCell>
+                      <TableCell>{log.date}</TableCell>
+                      <TableCell className="font-medium">{users.find(u => u.id === log.userId)?.name || "Unknown"}</TableCell>
+                      <TableCell className="text-emerald-600">{log.checkIn}</TableCell>
+                      <TableCell className="text-blue-600">{log.checkOut || "-"}</TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  {filteredDeviceLogs.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center text-muted-foreground py-6">No data</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          {activeTab === "My Attendance" && (
-            <div>
-              <p className="text-xs text-slate-400 mb-3">Attendance records for Admin (U001)</p>
-              {myAttendance.length > 0 ? (
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-100">
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Date</th>
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Status</th>
-                      <th className="text-left text-xs font-medium text-slate-400 px-3 py-2">Source</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
-                    {myAttendance.map((a) => (
-                      <tr key={a.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-3 py-2.5 text-sm text-slate-700">{a.date}</td>
-                        <td className="px-3 py-2.5">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadge(a.status)}`}>{a.status}</span>
-                        </td>
-                        <td className="px-3 py-2.5 text-xs text-slate-500 capitalize">{a.source}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p className="text-sm text-slate-400 text-center py-8">No attendance records found.</p>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
+        <TabsContent value="my">
+          <Card>
+            <CardHeader><CardTitle>My Attendance</CardTitle></CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-4 gap-4">
+                {myStats.map((stat) => (
+                  <Card key={stat.label}>
+                    <CardContent className="p-4">
+                      <div className="text-xs text-muted-foreground">{stat.label}</div>
+                      <div className="text-2xl font-bold">{stat.val}</div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="flex items-end gap-4 p-4 border rounded-lg">
+                <div>
+                  <label className="text-xs text-muted-foreground block mb-1">Date</label>
+                  <Input type="date" value={markDate} onChange={(e) => setMarkDate(e.target.value)} className="w-40" />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground block mb-1">Status</label>
+                  <Select value={markStatus} onValueChange={(v) => setMarkStatus(v as "Present" | "Absent" | "Late" | "Leave")}>
+                    <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Present">Present</SelectItem>
+                      <SelectItem value="Absent">Absent</SelectItem>
+                      <SelectItem value="Late">Late</SelectItem>
+                      <SelectItem value="Leave">Leave</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={handleMarkAttendance} size="sm">Mark</Button>
+              </div>
+
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Source</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedRecords.map((r) => (
+                    <TableRow key={r.id}>
+                      <TableCell>{r.date}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={
+                            r.status === "Present"
+                              ? "bg-emerald-50 text-emerald-700"
+                              : r.status === "Absent"
+                                ? "bg-red-50 text-red-700"
+                                : r.status === "Late"
+                                  ? "bg-amber-50 text-amber-700"
+                                  : "bg-blue-50 text-blue-700"
+                          }
+                        >
+                          {r.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="capitalize">{r.source}</TableCell>
+                    </TableRow>
+                  ))}
+                  {sortedRecords.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center text-muted-foreground py-6">No attendance records found.</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

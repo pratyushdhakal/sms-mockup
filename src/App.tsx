@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./AuthContext";
+import { StoreProvider } from "./StoreContext";
 import Sidebar from "./layouts/Sidebar";
 import Login from "./pages/Login";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminStudents from "./pages/admin/AdminStudents";
 import AdminTeachers from "./pages/admin/AdminTeachers";
 import AdminStaff from "./pages/admin/AdminStaff";
 import AdminIntakes from "./pages/admin/AdminIntakes";
@@ -18,8 +18,8 @@ import AdminResults from "./pages/admin/AdminResults";
 import AdminAssignments from "./pages/admin/AdminAssignments";
 import AdminIDCards from "./pages/admin/AdminIDCards";
 import AdminFees from "./pages/admin/AdminFees";
-import AdminReports from "./pages/admin/AdminReports";
 import AdminInquiries from "./pages/admin/AdminInquiries";
+import AdminAdmissions from "./pages/admin/AdminAdmissions";
 
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherClasses from "./pages/teacher/TeacherClasses";
@@ -37,6 +37,8 @@ import StaffAttendance from "./pages/staff/StaffAttendance";
 import StaffLeave from "./pages/staff/StaffLeave";
 import StaffAnnouncements from "./pages/staff/StaffAnnouncements";
 import StaffCalendar from "./pages/staff/StaffCalendar";
+import StaffInquiries from "./pages/staff/StaffInquiries";
+import StaffIntakes from "./pages/staff/StaffIntakes";
 
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentAttendance from "./pages/student/StudentAttendance";
@@ -61,8 +63,6 @@ import type { UserRole } from "./types";
 const PAGE_MAP: Record<string, Record<string, React.FC>> = {
   admin: {
     dashboard: AdminDashboard,
-    students: AdminStudents,
-    "add-student": AdminStudents,
     intakes: AdminIntakes,
     teachers: AdminTeachers,
     staff: AdminStaff,
@@ -76,8 +76,8 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
     calendar: AdminCalendar,
     "id-cards": AdminIDCards,
     fees: AdminFees,
-    reports: AdminReports,
     inquiry: AdminInquiries,
+    admissions: AdminAdmissions,
   },
   teacher: {
     dashboard: TeacherDashboard,
@@ -93,6 +93,8 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
   },
   staff: {
     dashboard: StaffDashboard,
+    inquiry: StaffInquiries,
+    intakes: StaffIntakes,
     "my-attendance": StaffAttendance,
     "my-leave": StaffLeave,
     notices: StaffAnnouncements,
@@ -145,7 +147,9 @@ function AppShell() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppShell />
+      <StoreProvider>
+        <AppShell />
+      </StoreProvider>
     </AuthProvider>
   );
 }

@@ -1,7 +1,6 @@
 import type { UserRole } from "../types";
 import {
   LayoutDashboard,
-  GraduationCap,
   Users,
   BookOpen,
   CreditCard,
@@ -17,6 +16,8 @@ import {
   School2,
   ChevronLeft,
   FileQuestion,
+  DoorOpen,
+  GraduationCap,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -27,8 +28,9 @@ export type NavItem = { id: string; label: string; icon: LucideIcon };
 const ALL_NAV: Record<string, NavItem[]> = {
   admin: [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "students", label: "All Students", icon: GraduationCap },
-    { id: "intakes", label: "Intakes", icon: BookMarked },
+    { id: "inquiry", label: "Inquiries", icon: FileQuestion },
+    { id: "admissions", label: "Admissions", icon: DoorOpen },
+    { id: "intakes", label: "Batch Management", icon: BookMarked },
     { id: "teachers", label: "Teachers", icon: Users },
     { id: "staff", label: "Staff", icon: Users },
     { id: "attendance", label: "Attendance", icon: Fingerprint },
@@ -36,13 +38,11 @@ const ALL_NAV: Record<string, NavItem[]> = {
     { id: "routine", label: "Routine Builder", icon: Calendar },
     { id: "exams", label: "Exams", icon: ClipboardList },
     { id: "results", label: "Exam Results", icon: BarChart3 },
-    { id: "inquiry", label: "Inquiries", icon: FileQuestion },
     { id: "assignments", label: "Assignments", icon: BookOpen },
     { id: "notices", label: "Announcements", icon: Bell },
     { id: "calendar", label: "Calendar", icon: Calendar },
     { id: "id-cards", label: "ID Cards", icon: CreditCard },
     { id: "fees", label: "Fee Management", icon: CreditCard },
-    { id: "reports", label: "Reports", icon: BarChart3 },
   ],
   teacher: [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -58,6 +58,8 @@ const ALL_NAV: Record<string, NavItem[]> = {
   ],
   staff: [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "inquiry", label: "Inquiries", icon: FileQuestion },
+    { id: "intakes", label: "Intakes", icon: BookMarked },
     { id: "my-attendance", label: "My Attendance", icon: UserCheck },
     { id: "my-leave", label: "Leave Requests", icon: FileText },
     { id: "notices", label: "Announcements", icon: Bell },
@@ -110,13 +112,16 @@ function NavButton({
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150",
+        "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 relative",
         active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-          : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
+          ? "bg-sidebar-accent/80 text-sidebar-accent-foreground font-semibold shadow-sm"
+          : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/30"
       )}
     >
-      <Icon size={17} className="shrink-0" />
+      {active && !collapsed && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-white/60 rounded-full" />
+      )}
+      <Icon size={17} className={cn("shrink-0", active && "text-white")} />
       {!collapsed && <span className="truncate">{item.label}</span>}
     </button>
   );

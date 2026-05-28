@@ -130,6 +130,35 @@ export type StaffRole = "accountant" | "librarian" | "front_desk" | "admin_assis
 
 export type FeeStatus = "Paid" | "Due" | "Partial";
 export type ActiveStatus = "Active" | "Inactive";
+export type InquiryStatus = "new" | "contacted" | "converted" | "lost";
+
+export interface Inquiry {
+  id: string;
+  inquirerName: string;
+  inquirerEmail: string;
+  inquirerMobile: string;
+  inquirerPhone: string;
+  relationship: string;
+  candidateTitle: string;
+  candidateName: string;
+  candidateGender: string;
+  candidateDob: string;
+  candidateMobile: string;
+  candidatePhone: string;
+  candidateEmail: string;
+  contactMethod: string;
+  permanentAddress: string;
+  temporaryAddress: string;
+  inquiryType: string;
+  description: string;
+  outcome: string;
+  assignedTo: string;
+  outcomeDetails: string;
+  status: InquiryStatus;
+  createdAt: string;
+  createdBy: string;
+  schoolId: string;
+}
 export type AttendanceStatus = "Present" | "Absent" | "Late" | "Leave";
 export type AttendanceSource = "manual" | "device";
 export type LeaveType = "sick" | "casual" | "annual" | "maternity" | "paternity" | "unpaid";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Phone, MessageSquare, UserX } from "lucide-react";
+import { Plus, Search, MessageSquare, Phone, UserX } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import type { Inquiry, InquiryStatus } from "../../types";
 import Header from "../../layouts/Header";
@@ -52,12 +52,8 @@ function TextAreaField({ label, value, onChange, placeholder }: { label: string;
   );
 }
 
-export default function AdminInquiries() {
+export default function StaffInquiries() {
   const { inquiries, setInquiries } = useStore();
-
-  function markStatus(id: string, status: InquiryStatus) {
-    setInquiries((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
-  }
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -74,7 +70,9 @@ export default function AdminInquiries() {
     if (editingId) {
       setInquiries((prev) =>
         prev.map((i) =>
-          i.id === editingId ? { ...i, candidateName: form.candidateName, inquirerName: form.inquirerName, description: form.description } : i
+          i.id === editingId
+            ? { ...i, candidateName: form.candidateName, inquirerName: form.inquirerName, description: form.description }
+            : i
         )
       );
     } else {
@@ -84,7 +82,7 @@ export default function AdminInquiries() {
         candidateMobile: form.candidateMobile || "98XXXXXXXX",
         status: "new",
         createdAt: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
-        createdBy: "U001",
+        createdBy: "U005",
         schoolId: "SCH001",
       } as Inquiry;
       setInquiries((prev) => [newInquiry, ...prev]);
@@ -92,19 +90,23 @@ export default function AdminInquiries() {
     setDialogOpen(false);
   }
 
+  function markStatus(id: string, status: InquiryStatus) {
+    setInquiries((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
+  }
+
   return (
     <div>
-      <Header title="Inquiries" />
+      <Header title="Inquiries" subtitle="Manage admissions inquiries" />
 
       <div className="rounded-lg border bg-card">
         <div className="flex items-center gap-2 p-3 border-b">
           <div className="relative">
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." className="h-8 pl-8 w-64 text-sm" />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or ID..." className="h-8 pl-8 w-64 text-sm" />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-36 h-8 text-sm">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Status</SelectItem>
@@ -117,16 +119,16 @@ export default function AdminInquiries() {
         </div>
 
         <div className="flex items-center justify-between p-3 border-b">
-          <span className="text-sm text-muted-foreground">Showing {filtered.length} inquiries</span>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <span className="text-sm text-muted-foreground">{filtered.length} inquiries</span>
+          <Dialog open={dialogOpen} onOpenChange={(o) => { if (!o) setEditingId(null); setDialogOpen(o); }}>
             <DialogTrigger asChild>
               <Button size="sm" onClick={() => { setEditingId(null); setForm(INIT_FORM); }}>
-                <Plus size={14} className="mr-2" /> Add Inquiry
+                <Plus size={14} className="mr-2" /> New Inquiry
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-4xl max-h-[90vh] p-0 flex flex-col overflow-hidden">
               <DialogHeader className="px-6 pt-6 pb-0 shrink-0">
-                <DialogTitle>{editingId ? "Edit Inquiry" : "Add New Inquiry"}</DialogTitle>
+                <DialogTitle>{editingId ? "Edit Inquiry" : "New Inquiry"}</DialogTitle>
               </DialogHeader>
               <ScrollArea className="flex-1 min-h-0 px-6 py-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -137,16 +139,13 @@ export default function AdminInquiries() {
                   <InputField label="Phone" value={form.inquirerPhone} onChange={e => setForm({...form, inquirerPhone: e.target.value})} />
                   <InputField label="Relationship" value={form.relationship} onChange={e => setForm({...form, relationship: e.target.value})} />
                   <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">Candidate Information</h3>
-                  <InputField label="Title" value={form.candidateTitle} onChange={e => setForm({...form, candidateTitle: e.target.value})} />
                   <InputField label="Full Name" value={form.candidateName} onChange={e => setForm({...form, candidateName: e.target.value})} />
                   <InputField label="Gender" value={form.candidateGender} onChange={e => setForm({...form, candidateGender: e.target.value})} />
                   <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">Address</h3>
                   <TextAreaField label="Permanent Address" value={form.permanentAddress} onChange={e => setForm({...form, permanentAddress: e.target.value})} />
-                  <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">Inquiry Details & Outcome</h3>
+                  <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">Inquiry Details</h3>
                   <InputField label="Inquiry Type" value={form.inquiryType} onChange={e => setForm({...form, inquiryType: e.target.value})} />
-                  <InputField label="Assigned To" value={form.assignedTo} onChange={e => setForm({...form, assignedTo: e.target.value})} />
                   <TextAreaField label="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
-                  <TextAreaField label="Outcome Details" value={form.outcomeDetails} onChange={e => setForm({...form, outcomeDetails: e.target.value})} />
                 </div>
               </ScrollArea>
               <DialogFooter className="px-6 pb-6 shrink-0">
@@ -175,7 +174,9 @@ export default function AdminInquiries() {
               return (
                 <TableRow key={inq.id}>
                   <TableCell className="text-sm font-medium text-primary">{inq.id}</TableCell>
-                  <TableCell className="text-sm font-medium">{inq.candidateName}</TableCell>
+                  <TableCell>
+                    <span className="text-sm font-medium">{inq.candidateName}</span>
+                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -189,17 +190,13 @@ export default function AdminInquiries() {
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
                       {inq.status === "new" && (
-                        <Button variant="ghost" size="sm" className="text-xs gap-1"
-                          onClick={() => markStatus(inq.id, "contacted")}
-                        >
-                          <MessageSquare size={12} /> Contacted
+                        <Button variant="ghost" size="icon" onClick={() => markStatus(inq.id, "contacted")} title="Mark Contacted">
+                          <MessageSquare size={14} />
                         </Button>
                       )}
                       {inq.status === "contacted" && (
-                        <Button variant="ghost" size="sm" className="text-destructive text-xs gap-1"
-                          onClick={() => markStatus(inq.id, "lost")}
-                        >
-                          <UserX size={12} /> Lost
+                        <Button variant="ghost" size="icon" onClick={() => markStatus(inq.id, "lost")} title="Mark Lost" className="text-destructive">
+                          <UserX size={14} />
                         </Button>
                       )}
                     </div>

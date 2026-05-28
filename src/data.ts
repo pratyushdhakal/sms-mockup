@@ -1,7 +1,7 @@
 import type {
   User, Student, Teacher, StaffMember, AttendanceRecord, ClassGroup,
   Intake, LeaveRequest, RoutineSlot, Announcement, CalendarEvent,
-  Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent,
+  Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent, Inquiry,
 } from "./types";
 
 export const MOCK_USERS: User[] = [
@@ -66,6 +66,17 @@ export const INTAKES: Intake[] = [
   { id: "I001", name: "Grade 10 Intake 2082", academicYear: "2082", grade: "Grade 10", capacity: 80, enrolled: 72, status: "closed", schoolId: "SCH001" },
   { id: "I002", name: "Grade 1 Intake 2083", academicYear: "2083", grade: "Class 1", capacity: 60, enrolled: 45, status: "open", schoolId: "SCH001" },
   { id: "I003", name: "Nursery Intake 2083", academicYear: "2083", grade: "Nursery", capacity: 40, enrolled: 28, status: "open", schoolId: "SCH001" },
+  { id: "I004", name: "Grade 4 Intake 2083", academicYear: "2083", grade: "Class 4", capacity: 50, enrolled: 0, status: "open", schoolId: "SCH001" },
+];
+
+export const INQUIRIES: Inquiry[] = [
+  {
+    id: "INQ-001", inquirerName: "Hari Poudel", inquirerEmail: "hari@email.com", inquirerMobile: "9800980260", inquirerPhone: "", relationship: "Father",
+    candidateTitle: "Mr.", candidateName: "Aayush Poudel", candidateGender: "Male", candidateDob: "Jestha 15, 2075", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "Phone",
+    permanentAddress: "Sundarharaicha, Morang", temporaryAddress: "",
+    inquiryType: "New Admission", description: "Looking to enroll son in Grade 4", outcome: "", assignedTo: "U005", outcomeDetails: "",
+    status: "new", createdAt: "Baisakh 28, 2083", createdBy: "U005", schoolId: "SCH001",
+  },
 ];
 
 export const LEAVE_REQUESTS: LeaveRequest[] = [

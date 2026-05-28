@@ -99,9 +99,31 @@ export const CALENDAR_EVENTS: CalendarEvent[] = [
   { id: "E003", title: "First Day of Classes", description: "Regular classes begin", date: "2026-07-01", type: "academic", schoolId: "SCH001" },
 ];
 
-export const EXAMS: Exam[] = [];
+export const EXAMS: Exam[] = [
+  { 
+    id: "EXM001", 
+    name: "First Terminal Exam 2083", 
+    applicableClassIds: ["C007", "C008", "C009"], 
+    startDate: "2083-04-01", 
+    endDate: "2083-04-10", 
+    subjects: [
+      { name: "Mathematics", fullMarks: 100, passMarks: 40 },
+      { name: "Science", fullMarks: 100, passMarks: 40 },
+      { name: "English", fullMarks: 100, passMarks: 40 }
+    ], 
+    schoolId: "SCH001" 
+  },
+];
 
-export const EXAM_MARKS: ExamMarks[] = [];
+export const EXAM_MARKS: ExamMarks[] = [
+  { 
+    id: "MK001", 
+    examId: "EXM001", 
+    studentId: "STU001", 
+    subjectMarks: { "Mathematics": 85, "Science": 90, "English": 78 }, 
+    schoolId: "SCH001" 
+  },
+];
 
 export const ASSIGNMENTS: Assignment[] = [];
 

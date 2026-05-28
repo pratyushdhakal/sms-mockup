@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import type { Inquiry, Intake, Student, User, ParentStudent, AttendanceRecord, DeviceLog } from "./types";
+import type { Inquiry, Intake, Student, User, ParentStudent, AttendanceRecord, DeviceLog, Exam, ExamMarks } from "./types";
 import {
   INQUIRIES as DATA_INQUIRIES,
   INTAKES as DATA_INTAKES,
@@ -9,6 +9,8 @@ import {
   CLASS_GROUPS,
   ATTENDANCE as DATA_ATTENDANCE,
   DEVICE_LOGS as DATA_DEVICE_LOGS,
+  EXAMS as DATA_EXAMS,
+  EXAM_MARKS as DATA_EXAM_MARKS,
 } from "./data";
 
 let nextStuNum = 700;
@@ -39,6 +41,10 @@ interface StoreState {
   setAttendanceRecords: React.Dispatch<React.SetStateAction<AttendanceRecord[]>>;
   deviceLogs: DeviceLog[];
   setDeviceLogs: React.Dispatch<React.SetStateAction<DeviceLog[]>>;
+  exams: Exam[];
+  setExams: React.Dispatch<React.SetStateAction<Exam[]>>;
+  examMarks: ExamMarks[];
+  setExamMarks: React.Dispatch<React.SetStateAction<ExamMarks[]>>;
 
   enrollInquiry: (inquiryId: string, intakeId: string, rollNumber: string, classGroupId: string) => EnrollResult | null;
 }
@@ -53,6 +59,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [parentStudent, setParentStudent] = useState<ParentStudent[]>(DATA_PARENT_STUDENT);
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(DATA_ATTENDANCE);
   const [deviceLogs, setDeviceLogs] = useState<DeviceLog[]>(DATA_DEVICE_LOGS);
+  const [exams, setExams] = useState<Exam[]>(DATA_EXAMS);
+  const [examMarks, setExamMarks] = useState<ExamMarks[]>(DATA_EXAM_MARKS);
 
   const enrollInquiry = useCallback((
     inquiryId: string,
@@ -157,6 +165,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         parentStudent, setParentStudent,
         attendanceRecords, setAttendanceRecords,
         deviceLogs, setDeviceLogs,
+        exams, setExams,
+        examMarks, setExamMarks,
         enrollInquiry,
       }}
     >

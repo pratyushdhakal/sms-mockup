@@ -32,8 +32,35 @@ interface Exam {
 const MOCK_EXAMS: Exam[] = [];
 
 export default function AdminExams() {
-  const [exams] = useState<Exam[]>(MOCK_EXAMS);
+  const [exams, setExams] = useState<Exam[]>(MOCK_EXAMS);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [newExam, setNewExam] = useState<Omit<Exam, 'id'>>({
+    name: "",
+    type: "Theory",
+    year: "2026",
+    status: "Draft",
+    startDate: "",
+    endDate: "",
+    description: ""
+  });
+
+  const handleAddExam = () => {
+    const exam: Exam = {
+      ...newExam,
+      id: `EXAM-${Math.floor(Math.random() * 1000)}`
+    };
+    setExams([...exams, exam]);
+    setDialogOpen(false);
+    setNewExam({
+      name: "",
+      type: "Theory",
+      year: "2026",
+      status: "Draft",
+      startDate: "",
+      endDate: "",
+      description: ""
+    });
+  };
 
   return (
     <div>
@@ -60,11 +87,18 @@ export default function AdminExams() {
               <div className="grid grid-cols-2 gap-4 py-4">
                 <div className="space-y-2">
                   <Label>Name *</Label>
-                  <Input placeholder="e.g. First Terminal Exam" />
+                  <Input 
+                    placeholder="e.g. First Terminal Exam" 
+                    value={newExam.name}
+                    onChange={(e) => setNewExam({...newExam, name: e.target.value})}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Type *</Label>
-                  <Select>
+                  <Select 
+                    value={newExam.type} 
+                    onValueChange={(value: ExamType) => setNewExam({...newExam, type: value})}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
@@ -75,11 +109,17 @@ export default function AdminExams() {
                 </div>
                 <div className="space-y-2">
                   <Label>Year</Label>
-                  <Input defaultValue="2026" />
+                  <Input 
+                    value={newExam.year}
+                    onChange={(e) => setNewExam({...newExam, year: e.target.value})}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Status</Label>
-                  <Select>
+                  <Select 
+                    value={newExam.status}
+                    onValueChange={(value: ExamStatus) => setNewExam({...newExam, status: value})}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Draft" />
                     </SelectTrigger>
@@ -91,27 +131,32 @@ export default function AdminExams() {
                 <div className="space-y-2">
                   <Label>Start Date</Label>
                   <NepaliDatePicker
-                    value={""}
-                    onChange={() => {}}
+                    value={newExam.startDate}
+                    onChange={(date) => setNewExam({...newExam, startDate: date})}
                     placeholder="Select start date"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label>End Date</Label>
                   <NepaliDatePicker
-                    value={""}
-                    onChange={() => {}}
+                    value={newExam.endDate}
+                    onChange={(date) => setNewExam({...newExam, endDate: date})}
                     placeholder="Select end date"
                   />
                 </div>
                 <div className="col-span-2 space-y-2">
                   <Label>Description</Label>
-                  <Textarea placeholder="Add description..." rows={3} />
+                  <Textarea 
+                    placeholder="Add description..." 
+                    rows={3} 
+                    value={newExam.description}
+                    onChange={(e) => setNewExam({...newExam, description: e.target.value})}
+                  />
                 </div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button>Add Exam</Button>
+                <Button onClick={handleAddExam}>Add Exam</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

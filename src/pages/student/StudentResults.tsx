@@ -1,5 +1,5 @@
 import { Award, CheckCircle, XCircle } from "lucide-react";
-import { EXAMS, EXAM_MARKS } from "../../data";
+import { EXAMS, EXAM_MARKS, PUBLISHED_RESULTS } from "../../data";
 
 const STUDENT_CLASS_ID = "C003";
 const STUDENT_ID = "STU-601";
@@ -15,7 +15,9 @@ function getGrade(pct: number): string {
 }
 
 export default function StudentResults() {
-  const relevantExams = EXAMS.filter((e) => e.applicableClassIds.includes(STUDENT_CLASS_ID));
+  const relevantExams = EXAMS.filter(
+    (e) => e.applicableClassIds.includes(STUDENT_CLASS_ID) && PUBLISHED_RESULTS[`${e.id}-${STUDENT_CLASS_ID}`]
+  );
 
   return (
     <div>

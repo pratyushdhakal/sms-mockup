@@ -215,13 +215,13 @@ export default function AdminStaff() {
                   <Plus size={14} /> Add New
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 flex flex-col">
+              <DialogContent className="sm:max-w-2xl max-h-[90vh] h-full p-0 flex flex-col overflow-hidden">
                 <DialogHeader className="px-6 pt-6 pb-0 shrink-0">
                   <DialogTitle>
                     {editingId ? "Edit Staff" : "Add New Staff"}
                   </DialogTitle>
                 </DialogHeader>
-                <ScrollArea className="flex-1 px-6 py-4">
+                <ScrollArea className="flex-1 min-h-0 px-6 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   {/* Section: Personal Details */}
                   <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">

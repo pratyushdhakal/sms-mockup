@@ -140,6 +140,12 @@ export const PARENT_STUDENT: ParentStudent[] = [
 
 export const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 export const PERIODS = [1, 2, 3, 4, 5, 6];
+export const PUBLISHED_RESULTS: Record<string, boolean> = {};
+
+export function setPublishedResult(key: string, value: boolean) {
+  PUBLISHED_RESULTS[key] = value;
+}
+
 export const CLASSES_LIST = ["Nursery", "LKG", "UKG", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9", "Grade 10"];
 export const SECTIONS = ["Section A", "Section B", "Section C", "Section D"];
 export const BATCHES = ["2080", "2081", "2082", "2083", "2084", "2085"];

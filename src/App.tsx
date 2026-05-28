@@ -19,6 +19,7 @@ import AdminAssignments from "./pages/admin/AdminAssignments";
 import AdminIDCards from "./pages/admin/AdminIDCards";
 import AdminFees from "./pages/admin/AdminFees";
 import AdminReports from "./pages/admin/AdminReports";
+import AdminInquiries from "./pages/admin/AdminInquiries";
 
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherClasses from "./pages/teacher/TeacherClasses";
@@ -76,6 +77,7 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
     "id-cards": AdminIDCards,
     fees: AdminFees,
     reports: AdminReports,
+    inquiry: AdminInquiries,
   },
   teacher: {
     dashboard: TeacherDashboard,

@@ -16,6 +16,7 @@ import {
   Fingerprint,
   School2,
   ChevronLeft,
+  FileQuestion,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ const ALL_NAV: Record<string, NavItem[]> = {
     { id: "routine", label: "Routine Builder", icon: Calendar },
     { id: "exams", label: "Exams", icon: ClipboardList },
     { id: "results", label: "Exam Results", icon: BarChart3 },
+    { id: "inquiry", label: "Inquiries", icon: FileQuestion },
     { id: "assignments", label: "Assignments", icon: BookOpen },
     { id: "notices", label: "Announcements", icon: Bell },
     { id: "calendar", label: "Calendar", icon: Calendar },

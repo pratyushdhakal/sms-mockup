@@ -383,7 +383,7 @@ export default function AdminStudents() {
                   {editingId ? "Edit Student" : "Add New Student"}
                 </DialogTitle>
               </DialogHeader>
-              <ScrollArea className="flex-1 px-6 py-4">
+              <ScrollArea className="flex-1 min-h-0 px-6 py-4">
               <div className="grid grid-cols-2 gap-4">
                 {/* Academic Information */}
                 <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">

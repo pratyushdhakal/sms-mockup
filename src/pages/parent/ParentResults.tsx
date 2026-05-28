@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Award, CheckCircle, XCircle } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, EXAMS, EXAM_MARKS, PARENT_STUDENT } from "../../data";
+import { STUDENTS, CLASS_GROUPS, EXAMS, EXAM_MARKS, PARENT_STUDENT, PUBLISHED_RESULTS } from "../../data";
 
 const PARENT_ID = "U009";
 
@@ -23,7 +23,9 @@ export default function ParentResults() {
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const relevantExams = EXAMS.filter((e) => e.applicableClassIds.includes(currentStudent?.classId ?? ""));
+  const relevantExams = EXAMS.filter(
+    (e) => e.applicableClassIds.includes(currentStudent?.classId ?? "") && PUBLISHED_RESULTS[`${e.id}-${currentStudent?.classId}`]
+  );
 
   return (
     <div>

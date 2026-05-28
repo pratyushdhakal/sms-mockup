@@ -139,8 +139,8 @@ export interface Inquiry {
   inquirerMobile: string;
   inquirerPhone: string;
   relationship: string;
-  candidateTitle: string;
-  candidateName: string;
+  candidateTitle?: string;
+  candidateName?: string;
   candidateGender: string;
   candidateDob: string;
   candidateMobile: string;

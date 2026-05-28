@@ -31,6 +31,7 @@ const ALL_NAV: Record<string, NavItem[]> = {
     { id: "inquiry", label: "Inquiries", icon: FileQuestion },
     { id: "admissions", label: "Admissions", icon: DoorOpen },
     { id: "intakes", label: "Batch Management", icon: BookMarked },
+    { id: "students", label: "All Students", icon: GraduationCap },
     { id: "teachers", label: "Teachers", icon: Users },
     { id: "staff", label: "Staff", icon: Users },
     { id: "attendance", label: "Attendance", icon: Fingerprint },

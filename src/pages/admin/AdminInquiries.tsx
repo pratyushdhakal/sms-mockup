@@ -65,7 +65,7 @@ export default function AdminInquiries() {
   const [form, setForm] = useState(INIT_FORM);
 
   const filtered = inquiries.filter((i) => {
-    const matchSearch = i.candidateName.toLowerCase().includes(search.toLowerCase()) || i.id.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (i.candidateName || "").toLowerCase().includes(search.toLowerCase()) || i.id.toLowerCase().includes(search.toLowerCase());
     const matchStatus = !statusFilter || i.status === statusFilter;
     return matchSearch && matchStatus;
   });
@@ -175,7 +175,7 @@ export default function AdminInquiries() {
               return (
                 <TableRow key={inq.id}>
                   <TableCell className="text-sm font-medium text-primary">{inq.id}</TableCell>
-                  <TableCell className="text-sm font-medium">{inq.candidateName}</TableCell>
+                  <TableCell className="text-sm font-medium">{inq.candidateName || "N/A"}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">

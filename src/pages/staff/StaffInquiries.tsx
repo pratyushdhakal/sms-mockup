@@ -61,7 +61,7 @@ export default function StaffInquiries() {
   const [form, setForm] = useState(INIT_FORM);
 
   const filtered = inquiries.filter((i) => {
-    const matchSearch = i.candidateName.toLowerCase().includes(search.toLowerCase()) || i.id.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (i.candidateName || "").toLowerCase().includes(search.toLowerCase()) || i.id.toLowerCase().includes(search.toLowerCase());
     const matchStatus = !statusFilter || i.status === statusFilter;
     return matchSearch && matchStatus;
   });
@@ -175,7 +175,7 @@ export default function StaffInquiries() {
                 <TableRow key={inq.id}>
                   <TableCell className="text-sm font-medium text-primary">{inq.id}</TableCell>
                   <TableCell>
-                    <span className="text-sm font-medium">{inq.candidateName}</span>
+                    <span className="text-sm font-medium">{inq.candidateName || "N/A"}</span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
                   <TableCell>

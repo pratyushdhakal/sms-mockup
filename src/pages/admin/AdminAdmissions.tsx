@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Search, UserPlus, Phone } from "lucide-react";
+import { Search, UserPlus, Phone, Users } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import { CLASS_GROUPS } from "../../data";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -28,8 +27,9 @@ export default function AdminAdmissions() {
   const [enrollClassGroup, setEnrollClassGroup] = useState("");
   const [enrollRoll, setEnrollRoll] = useState("");
 
-  const contacted = inquiries.filter((i) => i.status === "contacted" && i.candidateName.toLowerCase().includes(search.toLowerCase()));
-  const converted = inquiries.filter((i) => i.status === "converted" && i.candidateName.toLowerCase().includes(search.toLowerCase()));
+  const contacted = inquiries.filter((i) => i.status === "contacted" && i.candidateName && i.candidateName.toLowerCase().includes(search.toLowerCase()));
+  const converted = inquiries.filter((i) => i.status === "converted" && i.candidateName && i.candidateName.toLowerCase().includes(search.toLowerCase()));
+  const openIntakes = intakes.filter((i) => i.status === "open" && i.enrolled < i.capacity);
 
   function handleEnroll() {
     if (!dialogInquiry || !enrollIntake || !enrollClassGroup || !enrollRoll) return;
@@ -65,6 +65,11 @@ export default function AdminAdmissions() {
         <div className="flex items-center gap-2 p-3 border-b">
           <Search size={14} className="text-muted-foreground" />
           <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." className="h-8 w-64 text-sm" />
+          {tab === "pending" && (
+            <span className="text-xs text-muted-foreground ml-auto">
+              {openIntakes.length} batch{openIntakes.length !== 1 ? "es" : ""} with seats available
+            </span>
+          )}
         </div>
 
         <Table>
@@ -97,22 +102,7 @@ export default function AdminAdmissions() {
                 </TableCell>
               </TableRow>
             ))}
-            {tab === "enrolled" && converted.map((inq: Inquiry) => (
-              <TableRow key={inq.id}>
-                <TableCell className="font-medium">{inq.candidateName}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Phone size={11} /> {inq.inquirerMobile}
-                  </div>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{inq.createdAt}</TableCell>
-                <TableCell className="text-right">
-                  <Badge variant="outline" className="text-emerald-600 border-emerald-600">Enrolled</Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-            {(tab === "pending" && contacted.length === 0) && (
+            {tab === "pending" && contacted.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground py-8 text-sm">
                   No pending admissions
@@ -130,43 +120,53 @@ export default function AdminAdmissions() {
         </Table>
       </div>
 
-      <Dialog open={!!dialogInquiry} onOpenChange={(o) => { if (!o) setDialogInquiry(null); }}>
+      <Dialog open={!!dialogInquiry} onOpenChange={(o) => { if (!o) { setDialogInquiry(null); setEnrollIntake(""); setEnrollClassGroup(""); setEnrollRoll(""); } }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>Enroll Student</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label>Select Intake</Label>
-              <Select value={enrollIntake} onValueChange={setEnrollIntake}>
-                <SelectTrigger><SelectValue placeholder="Select intake" /></SelectTrigger>
-                <SelectContent>
-                  {intakes.filter((i) => i.status === "open" && i.enrolled < i.capacity).map((i) => (
-                    <SelectItem key={i.id} value={i.id}>{i.name} ({i.enrolled}/{i.capacity})</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {openIntakes.length === 0 ? (
+            <div className="py-6 text-center space-y-2">
+              <Users size={28} className="text-muted-foreground mx-auto" />
+              <p className="text-sm text-muted-foreground">No open batches with available seats.</p>
+              <Button variant="outline" size="sm" className="mt-2" onClick={() => setDialogInquiry(null)}>Close</Button>
             </div>
-            <div className="space-y-2">
-              <Label>Select Class Group</Label>
-              <Select value={enrollClassGroup} onValueChange={setEnrollClassGroup}>
-                <SelectTrigger><SelectValue placeholder="Select class" /></SelectTrigger>
-                <SelectContent>
-                  {CLASS_GROUPS.map((cg) => (
-                    <SelectItem key={cg.id} value={cg.id}>{cg.name} ({cg.section})</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          ) : (
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label>Select Intake</Label>
+                <Select value={enrollIntake} onValueChange={setEnrollIntake}>
+                  <SelectTrigger><SelectValue placeholder="Select intake" /></SelectTrigger>
+                  <SelectContent>
+                    {openIntakes.map((i) => (
+                      <SelectItem key={i.id} value={i.id}>{i.name} ({i.enrolled}/{i.capacity})</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Select Class Group</Label>
+                <Select value={enrollClassGroup} onValueChange={setEnrollClassGroup}>
+                  <SelectTrigger><SelectValue placeholder="Select class" /></SelectTrigger>
+                  <SelectContent>
+                    {CLASS_GROUPS.map((cg) => (
+                      <SelectItem key={cg.id} value={cg.id}>{cg.name} ({cg.section})</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Roll Number</Label>
+                <Input value={enrollRoll} onChange={(e) => setEnrollRoll(e.target.value)} placeholder="e.g. 06" />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>Roll Number</Label>
-              <Input value={enrollRoll} onChange={(e) => setEnrollRoll(e.target.value)} placeholder="e.g. 06" />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogInquiry(null)}>Cancel</Button>
-            <Button onClick={handleEnroll} disabled={!enrollIntake || !enrollClassGroup || !enrollRoll}>
-              Enroll Now
-            </Button>
-          </DialogFooter>
+          )}
+          {openIntakes.length > 0 && (
+            <DialogFooter>
+              <Button variant="outline" onClick={() => { setDialogInquiry(null); setEnrollIntake(""); setEnrollClassGroup(""); setEnrollRoll(""); }}>Cancel</Button>
+              <Button onClick={handleEnroll} disabled={!enrollIntake || !enrollClassGroup || !enrollRoll}>
+                Enroll Now
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -20,6 +20,7 @@ import AdminIDCards from "./pages/admin/AdminIDCards";
 import AdminFees from "./pages/admin/AdminFees";
 import AdminInquiries from "./pages/admin/AdminInquiries";
 import AdminAdmissions from "./pages/admin/AdminAdmissions";
+import AdminStudents from "./pages/admin/AdminStudents";
 
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherClasses from "./pages/teacher/TeacherClasses";
@@ -63,6 +64,8 @@ import type { UserRole } from "./types";
 const PAGE_MAP: Record<string, Record<string, React.FC>> = {
   admin: {
     dashboard: AdminDashboard,
+    students: AdminStudents,
+    "add-student": AdminStudents,
     intakes: AdminIntakes,
     teachers: AdminTeachers,
     staff: AdminStaff,

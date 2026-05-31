@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Search, Clock, BookMarked, Users, DoorOpen } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
+import type { Intake } from "../../types";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,11 +12,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
-const STATUS_BADGE: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; label: string }> = {
-  pending: { variant: "secondary", label: "Pending Approval" },
+const STATUS_BADGE: Record<Intake["status"], { variant: "default" | "secondary" | "destructive" | "outline"; label: string }> = {
   open: { variant: "default", label: "Open" },
   closed: { variant: "outline", label: "Closed" },
-  rejected: { variant: "destructive", label: "Rejected" },
 };
 
 export default function StaffIntakes() {
@@ -26,7 +25,7 @@ export default function StaffIntakes() {
 
   const stats = useMemo(() => {
     const total = intakes.length;
-    const pending = intakes.filter((i) => i.status === "pending").length;
+    const pending = 0;
     const open = intakes.filter((i) => i.status === "open").length;
     const totalCapacity = intakes.reduce((s, i) => s + i.capacity, 0);
     const totalEnrolled = intakes.reduce((s, i) => s + i.enrolled, 0);

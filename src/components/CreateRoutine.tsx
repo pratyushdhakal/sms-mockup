@@ -29,8 +29,7 @@ type FormErrors = {
 };
 
 export function CreateRoutine({ onSaved }: { onSaved?: (classId: string) => void }) {
-  const { routineSlots, setRoutineSlots } = useStore();
-
+  const { setRoutineSlots } = useStore();
   const [classId, setClassId] = useState("");
   const [day, setDay] = useState("");
   const [firstStartTime, setFirstStartTime] = useState("");

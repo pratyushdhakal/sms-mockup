@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus, Edit2, Trash2 } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, Eye } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import {
   CLASS_GROUPS,
@@ -7,6 +7,7 @@ import {
   SECTIONS,
   BATCHES,
 } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -210,6 +211,7 @@ function InputField({
 }
 
 export default function AdminStudents() {
+  const { navigate, setViewEntity } = useNavigate();
   const { students: storeStudents, setStudents: setStoreStudents } = useStore();
   const [displayStudents, setDisplayStudents] = useState<StudentEntry[]>(
     storeStudents.map((s) => ({
@@ -691,8 +693,10 @@ export default function AdminStudents() {
                     <span className="text-sm font-medium">{s.name}</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {s.class}
+                <TableCell>
+                  <button onClick={() => navigate("class-groups")} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    {s.class}
+                  </button>
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
                   {s.section}
@@ -722,6 +726,9 @@ export default function AdminStudents() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
+                    <Button variant="ghost" size="icon" onClick={() => { setViewEntity({ type: "student", id: s.id }); navigate("student-detail"); }}>
+                      <Eye size={14} />
+                    </Button>
                     <Button variant="ghost" size="icon" onClick={() => handleEdit(s)}>
                       <Edit2 size={14} />
                     </Button>

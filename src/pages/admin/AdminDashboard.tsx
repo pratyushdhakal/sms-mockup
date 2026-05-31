@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown, GraduationCap, Users, DollarSign, AlertCircle, CreditCard, Bell, UserCheck, Calendar, ChevronRight } from "lucide-react";
 import { STUDENTS, TEACHERS, FEE_RECORDS, ATTENDANCE } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 
 const RECENT_ACTIVITY = [
@@ -22,6 +23,7 @@ const activityDot = (t: string) =>
   ({ success: "bg-emerald-500", info: "bg-blue-500", warning: "bg-amber-500", error: "bg-red-500" })[t];
 
 export default function AdminDashboard() {
+  const { navigate } = useNavigate();
   const totalStudents = STUDENTS.length;
   const totalTeachers = TEACHERS.length;
   const feesCollected = FEE_RECORDS.reduce((s, r) => s + r.paid, 0);
@@ -53,7 +55,7 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {statCards.map(({ label, value, change, up, icon: Icon, bg, ic }) => (
-          <div key={label} className="bg-white rounded-xl border border-slate-100 p-4 hover:shadow-sm transition-shadow">
+          <button key={label} onClick={() => navigate(label === "Total Students" ? "students" : label === "Teachers" ? "teachers" : "fees")} className="bg-white rounded-xl border border-slate-100 p-4 hover:shadow-sm transition-shadow text-left w-full">
             <div className="flex items-start justify-between mb-3">
               <div className={`w-9 h-9 rounded-lg ${bg} flex items-center justify-center`}>
                 <Icon size={17} className={ic} />
@@ -65,7 +67,7 @@ export default function AdminDashboard() {
             </div>
             <p className="text-2xl font-semibold text-slate-800">{value}</p>
             <p className="text-xs text-slate-400 mt-0.5">{label}</p>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -92,7 +94,16 @@ export default function AdminDashboard() {
           <h2 className="text-sm font-semibold text-slate-700 mb-4">Quick Actions</h2>
           <div className="space-y-2">
             {QUICK_ACTIONS.map(({ label, icon: Icon, colors }) => (
-              <button key={label} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 text-left transition-colors group">
+              <button key={label} onClick={() => {
+                const map: Record<string, string> = {
+                  "Enroll New Student": "admissions",
+                  "Collect Fee": "fees",
+                  "Post Notice": "notices",
+                  "Add Staff": "staff",
+                  "Schedule Exam": "exams",
+                };
+                navigate(map[label] || "dashboard");
+              }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 text-left transition-colors group">
                 <div className={`w-8 h-8 rounded-lg ${colors} flex items-center justify-center flex-shrink-0`}>
                   <Icon size={15} />
                 </div>

@@ -3,6 +3,7 @@ import { Plus, Trash2, X } from "lucide-react";
 import { CLASS_GROUPS, TEACHERS, MOCK_USERS } from "../../data";
 import type { RoutineSlot } from "../../types";
 import { useStore } from "../../StoreContext";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreateRoutine } from "../../components/CreateRoutine";
@@ -17,6 +18,7 @@ function getTeacherName(teacherId: string) {
 }
 
 export default function AdminRoutine() {
+  const { navigate } = useNavigate();
   const { routineSlots: slots, setRoutineSlots: setSlots } = useStore();
   const [tab, setTab] = useState("list");
   const [selectedClass, setSelectedClass] = useState("");
@@ -157,7 +159,9 @@ export default function AdminRoutine() {
                                     ) : (
                                       <>
                                         <p className="text-xs font-semibold text-indigo-700">{slot.subject}</p>
-                                        <p className="text-xs text-slate-500 mt-0.5">{getTeacherName(slot.teacherId)}</p>
+                                        <button onClick={() => navigate("teachers")} className="text-xs text-slate-500 mt-0.5 hover:text-primary transition-colors block">
+                                          {getTeacherName(slot.teacherId)}
+                                        </button>
                                         <p className="text-xs text-slate-400">Room {slot.room}</p>
                                       </>
                                     )}

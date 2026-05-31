@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { StoreProvider } from "./StoreContext";
+import { NavContext } from "./NavContext";
 import Sidebar from "./layouts/Sidebar";
 import Login from "./pages/Login";
 
@@ -21,6 +22,7 @@ import AdminFees from "./pages/admin/AdminFees";
 import AdminInquiries from "./pages/admin/AdminInquiries";
 import AdminAdmissions from "./pages/admin/AdminAdmissions";
 import AdminStudents from "./pages/admin/AdminStudents";
+import AdminStudentDetail from "./pages/admin/AdminStudentDetail";
 import AdminClassGroups from "./pages/admin/AdminClassGroups";
 import AdminSections from "./pages/admin/AdminSections";
 import AdminSubjects from "./pages/admin/AdminSubjects";
@@ -92,6 +94,7 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
     fees: AdminFees,
     inquiry: AdminInquiries,
     admissions: AdminAdmissions,
+    "student-detail": AdminStudentDetail,
     "class-groups": AdminClassGroups,
     sections: AdminSections,
     subjects: AdminSubjects,
@@ -150,21 +153,25 @@ function AppShell() {
   const { user, logout } = useAuth();
   const [active, setActive] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
+  const [viewEntity, setViewEntity] = useState<{ type: string; id: string } | null>(null);
 
   if (!user) return <Login />;
 
   const role = user.type as UserRole;
   const pages = PAGE_MAP[role];
   const PageComponent = pages?.[active] || pages?.dashboard;
+  const navContext = { navigate: setActive, viewEntity, setViewEntity };
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar role={role} active={active} setActive={setActive} collapsed={collapsed} setCollapsed={setCollapsed} onLogout={logout} />
-      <main className="flex-1 overflow-y-auto" style={{ maxHeight: "100vh" }}>
-        <div className="p-6 max-w-7xl mx-auto">
-          {PageComponent ? <PageComponent /> : <p className="text-muted-foreground text-sm">Page not found</p>}
-        </div>
-      </main>
-    </div>
+    <NavContext.Provider value={navContext}>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar role={role} active={active} setActive={setActive} collapsed={collapsed} setCollapsed={setCollapsed} onLogout={logout} />
+        <main className="flex-1 overflow-y-auto" style={{ maxHeight: "100vh" }}>
+          <div className="p-6 max-w-7xl mx-auto">
+            {PageComponent ? <PageComponent /> : <p className="text-muted-foreground text-sm">Page not found</p>}
+          </div>
+        </main>
+      </div>
+    </NavContext.Provider>
   );
 }
 

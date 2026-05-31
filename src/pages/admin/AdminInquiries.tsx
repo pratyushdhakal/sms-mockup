@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, Search, Phone, MessageSquare, UserX } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import type { Inquiry, InquiryStatus } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,6 +53,7 @@ function TextAreaField({ label, value, onChange, placeholder }: { label: string;
 }
 
 export default function AdminInquiries() {
+  const { navigate } = useNavigate();
   const { inquiries, setInquiries } = useStore();
 
   function markStatus(id: string, status: InquiryStatus) {
@@ -175,7 +177,11 @@ export default function AdminInquiries() {
                 <TableRow key={inq.id}>
                   <TableCell className="text-sm font-medium text-primary">{inq.id}</TableCell>
                   <TableCell className="text-sm font-medium">{inq.candidateName || "N/A"}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("users")} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {inq.inquirerName}
+                    </button>
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Phone size={11} /> {inq.inquirerMobile}

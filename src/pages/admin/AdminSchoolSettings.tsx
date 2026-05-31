@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Save } from "lucide-react";
+import { Save, Calendar } from "lucide-react";
 import { SCHOOL_CONFIG as DATA_SCHOOL_CONFIG, BATCHES } from "../../data";
 import type { SchoolConfig } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import {
 import { Label } from "@/components/ui/label";
 
 export default function AdminSchoolSettings() {
+  const { navigate } = useNavigate();
   const [config, setConfig] = useState<SchoolConfig>(DATA_SCHOOL_CONFIG);
   const [saved, setSaved] = useState(false);
 
@@ -72,6 +74,9 @@ export default function AdminSchoolSettings() {
           <div className="flex items-center gap-3 pt-2">
             <Button onClick={handleSave}>
               <Save size={14} /> Save Settings
+            </Button>
+            <Button variant="outline" onClick={() => navigate("academic-years")}>
+              <Calendar size={14} /> Manage Years
             </Button>
             {saved && (
               <span className="text-xs text-emerald-600 font-medium">Settings saved successfully!</span>

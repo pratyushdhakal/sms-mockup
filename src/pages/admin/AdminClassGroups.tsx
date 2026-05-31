@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Search, Plus, Pencil, Trash2 } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Eye } from "lucide-react";
 import { CLASS_GROUPS as DATA_CLASS_GROUPS, TEACHERS, SECTIONS, CLASSES_LIST } from "../../data";
 import type { ClassGroup } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 
 export default function AdminClassGroups() {
+  const { navigate } = useNavigate();
   const [groups, setGroups] = useState<ClassGroup[]>(DATA_CLASS_GROUPS);
   const [search, setSearch] = useState("");
 
@@ -106,10 +108,17 @@ export default function AdminClassGroups() {
                 <TableRow key={g.id}>
                   <TableCell className="font-medium">{g.name}</TableCell>
                   <TableCell>{g.section}</TableCell>
-                  <TableCell>{getTeacherName(g.teacherId)}</TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("teachers")} className="hover:text-primary transition-colors">
+                      {getTeacherName(g.teacherId)}
+                    </button>
+                  </TableCell>
                   <TableCell>{g.room}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate("routine")} title="View routine">
+                        <Eye size={13} />
+                      </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(g)}>
                         <Pencil size={13} />
                       </Button>

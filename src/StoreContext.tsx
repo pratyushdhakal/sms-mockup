@@ -92,12 +92,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const parentUserId = genId("U", userIdNum + 1);
     nextUserNum += 2;
 
+    const candName = inquiry.candidateName || "Student";
     const studentUser: User = {
       id: studentUserId,
       type: "student",
-      email: inquiry.candidateName.toLowerCase().replace(/\s+/g, ".") + "." + studentId.toLowerCase() + "@school.com",
+      email: candName.toLowerCase().replace(/\s+/g, ".") + "." + studentId.toLowerCase() + "@school.com",
       password: "student",
-      name: inquiry.candidateName,
+      name: candName,
       phone: inquiry.candidateMobile || "98XXXXXXXX",
       schoolId: "SCH001",
       active: true,
@@ -117,7 +118,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     const student: Student = {
       id: studentId,
-      name: inquiry.candidateName,
+      name: candName,
       classId: classGroupId,
       section: classGroup.section,
       rollNumber,

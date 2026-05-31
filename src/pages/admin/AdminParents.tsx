@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Link2, Unlink } from "lucide-react";
 import { MOCK_USERS as DATA_USERS, PARENT_STUDENT as DATA_PARENT_STUDENT, STUDENTS as DATA_STUDENTS } from "../../data";
 import type { User, ParentStudent, Student } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
 import { Label } from "@/components/ui/label";
 
 export default function AdminParents() {
+  const { navigate, setViewEntity } = useNavigate();
   const [parents] = useState<User[]>(DATA_USERS.filter((u) => u.type === "parent"));
   const [parentStudent, setParentStudent] = useState<ParentStudent[]>(DATA_PARENT_STUDENT);
   const [students] = useState<Student[]>(DATA_STUDENTS);
@@ -103,9 +105,11 @@ export default function AdminParents() {
                           <span className="text-xs text-muted-foreground">None</span>
                         ) : (
                           linked.map((l) => (
-                            <Badge key={l.studentId} variant="secondary" className="text-xs">
-                              {getStudentName(l.studentId)}
-                            </Badge>
+                            <button key={l.studentId} onClick={() => { setViewEntity({ type: "student", id: l.studentId }); navigate("student-detail"); }}>
+                              <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-primary/20 transition-colors">
+                                {getStudentName(l.studentId)}
+                              </Badge>
+                            </button>
                           ))
                         )}
                       </div>

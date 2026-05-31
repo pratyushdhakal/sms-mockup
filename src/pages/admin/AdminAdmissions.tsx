@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, UserPlus, Phone, Users } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import { CLASS_GROUPS } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import type { Inquiry } from "../../types";
 
 export default function AdminAdmissions() {
+  const { navigate } = useNavigate();
   const { inquiries, intakes, enrollInquiry } = useStore();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"pending" | "enrolled">("pending");
@@ -86,7 +88,11 @@ export default function AdminAdmissions() {
             {tab === "pending" && contacted.map((inq: Inquiry) => (
               <TableRow key={inq.id}>
                 <TableCell className="font-medium">{inq.candidateName}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
+                <TableCell>
+                  <button onClick={() => navigate("inquiry")} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    {inq.inquirerName}
+                  </button>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Phone size={11} /> {inq.inquirerMobile}

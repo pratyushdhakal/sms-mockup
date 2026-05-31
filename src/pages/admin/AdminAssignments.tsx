@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Eye, X, Star } from "lucide-react";
 import { ASSIGNMENTS as DATA_ASSIGNMENTS, SUBMISSIONS, STUDENTS, CLASS_GROUPS, TEACHERS, CLASSES_LIST, SECTIONS, BATCHES, SUBJECTS } from "../../data";
 import type { Assignment, AssignmentSubmission } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddAssignment } from "@/components/AddAssignment";
@@ -26,6 +27,7 @@ function getClassForStudent(id: string) {
 }
 
 export default function AdminAssignments() {
+  const { navigate, setViewEntity } = useNavigate();
   const [assignments] = useState<Assignment[]>(DATA_ASSIGNMENTS);
   const [filterClass, setFilterClass] = useState("all");
   const [filterBatch, setFilterBatch] = useState("all");
@@ -183,9 +185,21 @@ export default function AdminAssignments() {
                     <>
                       <tr key={a.id} className="hover:bg-slate-50/50 transition-colors">
                         <td className="px-4 py-3 text-sm font-medium text-slate-700">{a.title}</td>
-                        <td className="px-4 py-3 text-sm text-slate-600">{getClassName(a.classId)}</td>
-                        <td className="px-4 py-3 text-sm text-slate-600">{a.subject}</td>
-                        <td className="px-4 py-3 text-sm text-slate-600">{getTeacherName(a.teacherId)}</td>
+                        <td className="px-4 py-3">
+                          <button onClick={() => navigate("class-groups")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                            {getClassName(a.classId)}
+                          </button>
+                        </td>
+                        <td className="px-4 py-3">
+                          <button onClick={() => navigate("subjects")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                            {a.subject}
+                          </button>
+                        </td>
+                        <td className="px-4 py-3">
+                          <button onClick={() => navigate("teachers")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                            {getTeacherName(a.teacherId)}
+                          </button>
+                        </td>
                         <td className="px-4 py-3 text-sm text-slate-600">{a.dueDate}</td>
                         <td className="px-4 py-3 text-sm text-slate-600">{subs.length}</td>
                         <td className="px-4 py-3">
@@ -218,7 +232,11 @@ export default function AdminAssignments() {
                                 <tbody className="divide-y divide-slate-100">
                                   {subs.map((sub) => (
                                     <tr key={sub.id}>
-                                      <td className="px-3 py-2 text-xs text-slate-700">{getStudentName(sub.studentId)}</td>
+                                      <td className="px-3 py-2">
+                                        <button onClick={() => { setViewEntity({ type: "student", id: sub.studentId }); navigate("student-detail"); }} className="text-xs text-slate-700 hover:text-primary transition-colors">
+                                          {getStudentName(sub.studentId)}
+                                        </button>
+                                      </td>
                                       <td className="px-3 py-2 text-xs text-slate-500">{getClassForStudent(sub.studentId)}</td>
                                       <td className="px-3 py-2 text-xs text-slate-500">{sub.submittedAt}</td>
                                       <td className="px-3 py-2 text-xs text-slate-500">{sub.response}</td>
@@ -272,9 +290,17 @@ export default function AdminAssignments() {
               <tbody className="divide-y divide-slate-50">
                 {allSubmissions.map((s) => (
                   <tr key={s.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3 text-sm font-medium text-slate-700">{getStudentName(s.studentId)}</td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => { setViewEntity({ type: "student", id: s.studentId }); navigate("student-detail"); }} className="text-sm font-medium text-slate-700 hover:text-primary transition-colors">
+                        {getStudentName(s.studentId)}
+                      </button>
+                    </td>
                     <td className="px-4 py-3 text-sm text-slate-600">{s.assignment?.title || "-"}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{s.assignment ? getClassName(s.assignment.classId) : "-"}</td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("class-groups")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {s.assignment ? getClassName(s.assignment.classId) : "-"}
+                      </button>
+                    </td>
                     <td className="px-4 py-3 text-sm text-slate-600">{s.submittedAt}</td>
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{s.reviewed ? s.score : "-"}</td>
                     <td className="px-4 py-3">
@@ -308,9 +334,21 @@ export default function AdminAssignments() {
                 {recentAssignments.map((a) => (
                   <tr key={a.id} className="hover:bg-slate-50/50">
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{a.title}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{getClassName(a.classId)}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{a.subject}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{getTeacherName(a.teacherId)}</td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("class-groups")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {getClassName(a.classId)}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("subjects")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {a.subject}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("teachers")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {getTeacherName(a.teacherId)}
+                      </button>
+                    </td>
                     <td className="px-4 py-3 text-sm text-slate-600">{a.createdAt}</td>
                     <td className="px-4 py-3 text-sm text-slate-600">{a.dueDate}</td>
                   </tr>
@@ -336,9 +374,21 @@ export default function AdminAssignments() {
                 {ledgerData.map((a) => (
                   <tr key={a.id} className="hover:bg-slate-50/50">
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{a.title}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{getClassName(a.classId)}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{a.subject}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{getTeacherName(a.teacherId)}</td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("class-groups")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {getClassName(a.classId)}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("subjects")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {a.subject}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => navigate("teachers")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                        {getTeacherName(a.teacherId)}
+                      </button>
+                    </td>
                     <td className="px-4 py-3 text-sm text-slate-600">{a.dueDate}</td>
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{a.totalSubs}</td>
                     <td className="px-4 py-3 text-sm text-emerald-600 font-medium">{a.reviewed}</td>
@@ -426,8 +476,16 @@ export default function AdminAssignments() {
                     const avgScore = reviewed.length > 0 ? Math.round(reviewed.reduce((sum, r) => sum + (r.score || 0), 0) / reviewed.length) : 0;
                     return (
                       <tr key={student.id} className="hover:bg-slate-50/50">
-                        <td className="px-4 py-3 text-sm font-medium text-slate-700">{student.name}</td>
-                        <td className="px-4 py-3 text-sm text-slate-600">{getClassName(student.classId)}</td>
+                        <td className="px-4 py-3">
+                          <button onClick={() => { setViewEntity({ type: "student", id: student.id }); navigate("student-detail"); }} className="text-sm font-medium text-slate-700 hover:text-primary transition-colors">
+                            {student.name}
+                          </button>
+                        </td>
+                        <td className="px-4 py-3">
+                          <button onClick={() => navigate("class-groups")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                            {getClassName(student.classId)}
+                          </button>
+                        </td>
                         <td className="px-4 py-3 text-sm text-amber-600 font-medium">{pending}</td>
                         <td className="px-4 py-3 text-sm text-slate-700">{submitted}</td>
                         <td className="px-4 py-3 text-sm text-emerald-600 font-medium">{reviewed.length}</td>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { BATCHES as DATA_BATCHES, SCHOOL_CONFIG as DATA_SCHOOL_CONFIG } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import type { SchoolConfig } from "../../types";
 type YearEntry = { id: string; year: string };
 
 export default function AdminAcademicYears() {
+  const { navigate } = useNavigate();
   const [years, setYears] = useState<YearEntry[]>(
     DATA_BATCHES.map((y, i) => ({ id: `YR${String(i + 1).padStart(3, "0")}`, year: y }))
   );
@@ -66,7 +68,7 @@ export default function AdminAcademicYears() {
         </div>
         <div className="rounded-lg border bg-card p-4">
           <span className="text-xs text-muted-foreground font-medium">School</span>
-          <p className="text-lg font-semibold">{config.schoolName}</p>
+          <p className="text-lg font-semibold cursor-pointer hover:text-primary transition-colors" onClick={() => navigate("school-settings")}>{config.schoolName}</p>
         </div>
       </div>
 

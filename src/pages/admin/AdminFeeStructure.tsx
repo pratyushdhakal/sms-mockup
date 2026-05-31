@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Plus, Pencil, Trash2 } from "lucide-react";
 import { FEE_TYPES as DATA_FEE_TYPES, CLASS_GROUPS } from "../../data";
 import type { FeeType } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 
 export default function AdminFeeStructure() {
+  const { navigate } = useNavigate();
   const [feeTypes, setFeeTypes] = useState<FeeType[]>(DATA_FEE_TYPES);
   const [search, setSearch] = useState("");
 
@@ -104,7 +106,11 @@ export default function AdminFeeStructure() {
               {filtered.map((f) => (
                 <TableRow key={f.id}>
                   <TableCell className="font-medium">{f.name}</TableCell>
-                  <TableCell>{getClassName(f.classId)}</TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("class-groups")} className="hover:text-primary transition-colors">
+                      {getClassName(f.classId)}
+                    </button>
+                  </TableCell>
                   <TableCell>Rs. {f.amount.toLocaleString()}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">

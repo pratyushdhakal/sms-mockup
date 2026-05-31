@@ -7,6 +7,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 
 function getGrade(pct: number): string {
@@ -35,6 +36,7 @@ interface ComboStat {
 }
 
 export default function AdminResults() {
+  const { navigate, setViewEntity } = useNavigate();
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"list" | "detail">("list");
   const [selected, setSelected] = useState<{ examId: string; classId: string } | null>(null);
@@ -156,7 +158,11 @@ export default function AdminResults() {
                   return (
                     <TableRow key={s.id}>
                       <TableCell className="text-muted-foreground">{i + 1}</TableCell>
-                      <TableCell className="font-medium">{s.name}</TableCell>
+                      <TableCell>
+                        <button onClick={() => { setViewEntity({ type: "student", id: s.id }); navigate("student-detail"); }} className="font-medium hover:text-primary transition-colors">
+                          {s.name}
+                        </button>
+                      </TableCell>
                       <TableCell className="text-muted-foreground">{s.rollNumber}</TableCell>
                       {exam?.subjects.map((sub) => {
                         const obtained = marks?.subjectMarks[sub.name];
@@ -232,8 +238,8 @@ export default function AdminResults() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Exam</TableHead>
-              <TableHead>Class</TableHead>
+                  <TableHead>Exam</TableHead>
+                  <TableHead>Class</TableHead>
               <TableHead>Section</TableHead>
               <TableHead>Students</TableHead>
               <TableHead>Entered</TableHead>
@@ -254,8 +260,16 @@ export default function AdminResults() {
             ) : (
               filtered.map((combo) => (
                 <TableRow key={combo.key}>
-                  <TableCell className="font-medium">{combo.examName}</TableCell>
-                  <TableCell>{combo.className}</TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("exams")} className="font-medium hover:text-primary transition-colors">
+                      {combo.examName}
+                    </button>
+                  </TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("class-groups")} className="hover:text-primary transition-colors">
+                      {combo.className}
+                    </button>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{combo.section}</TableCell>
                   <TableCell>{combo.totalStudents}</TableCell>
                   <TableCell>

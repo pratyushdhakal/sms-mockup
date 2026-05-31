@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Edit2, Trash2 } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, Eye } from "lucide-react";
 import NepaliDatePicker from "../../components/NepaliDatePicker";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "../../components/ui/textarea";
 import { Label } from "../../components/ui/label";
 import { Badge } from "../../components/ui/badge";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 
 type ExamType = "Theory" | "Practical" | "Internal" | "Viva" | "Project" | "Written" | "Oral" | "Mcq" | "Assignment" | "Quiz" | "Terminal" | "Final" | "Midterm" | "Semester";
@@ -38,6 +39,7 @@ const SEED_EXAMS: Exam[] = [
 ];
 
 export default function AdminExams() {
+  const { navigate } = useNavigate();
   const [exams, setExams] = useState<Exam[]>(SEED_EXAMS);
   const [search, setSearch] = useState("");
 
@@ -175,6 +177,7 @@ export default function AdminExams() {
                   <TableCell>{exam.year}</TableCell>
                   <TableCell>{statusBadge(exam.status)}</TableCell>
                   <TableCell className="text-right">
+                    <Button variant="ghost" size="icon" onClick={() => navigate("results")} title="View results"><Eye size={14} /></Button>
                     <Button variant="ghost" size="icon" onClick={() => openEdit(exam)}><Edit2 size={14} /></Button>
                     <Button variant="ghost" size="icon" className="text-destructive" onClick={() => setDeleteTarget(exam)}><Trash2 size={14} /></Button>
                   </TableCell>

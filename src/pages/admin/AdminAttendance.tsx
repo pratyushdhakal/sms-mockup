@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Clock, CheckCircle2, XCircle, Users, BarChart3 } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import type { AttendanceRecord } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -122,6 +123,7 @@ function StaffAttendanceTab() {
 }
 
 export default function AdminAttendance() {
+  const { navigate, setViewEntity } = useNavigate();
   const { students, attendanceRecords, setAttendanceRecords, deviceLogs, users } = useStore();
 
   const ADMIN_USER_ID = "U001";
@@ -177,7 +179,6 @@ export default function AdminAttendance() {
   const [dateStart, setDateStart] = useState("");
   const [dateEnd, setDateEnd] = useState("");
   const [search, setSearch] = useState("");
-  const [selectedClass, setSelectedClass] = useState("All");
   const [activeRoleTab, setActiveRoleTab] = useState<"Students" | "Staff" | "Teachers" | "Managers">("Students");
 
   const filteredDeviceLogs = useMemo(() => {
@@ -242,7 +243,7 @@ export default function AdminAttendance() {
                       { name: "LKG", present: 25, absent: 5, late: 0, pct: "83%" },
                     ].map((row) => (
                       <TableRow key={row.name}>
-                        <TableCell className="font-medium">{row.name}</TableCell>
+                        <TableCell className="font-medium cursor-pointer hover:text-primary transition-colors" onClick={() => navigate("class-groups")}>{row.name}</TableCell>
                         <TableCell className="text-emerald-600">{row.present}</TableCell>
                         <TableCell className="text-red-600">{row.absent}</TableCell>
                         <TableCell className="text-amber-600">{row.late}</TableCell>
@@ -293,7 +294,17 @@ export default function AdminAttendance() {
                     <TableRow key={log.id}>
                       <TableCell>{log.userId}</TableCell>
                       <TableCell>{log.date}</TableCell>
-                      <TableCell className="font-medium">{users.find(u => u.id === log.userId)?.name || "Unknown"}</TableCell>
+                      <TableCell
+                        className="font-medium cursor-pointer hover:text-primary transition-colors"
+                        onClick={() => {
+                          const user = users.find(u => u.id === log.userId);
+                          if (user?.type === "student") {
+                            setViewEntity({ type: "student", id: user.id });
+                            navigate("student-detail");
+                          } else if (user?.type === "teacher" || user?.type === "staff") navigate("staff");
+                          else if (user?.type === "admin") navigate("users");
+                        }}
+                      >{users.find(u => u.id === log.userId)?.name || "Unknown"}</TableCell>
                       <TableCell className="text-emerald-600">{log.checkIn}</TableCell>
                       <TableCell className="text-blue-600">{log.checkOut || "-"}</TableCell>
                     </TableRow>

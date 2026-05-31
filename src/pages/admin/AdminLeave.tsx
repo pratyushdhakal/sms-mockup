@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, Search, Eye, Pencil, Trash } from "lucide-react";
 import { LEAVE_REQUESTS as DATA_LEAVE, MOCK_USERS } from "../../data";
 import type { LeaveRequest, LeaveStatus, LeaveType } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -67,6 +68,7 @@ function getInitials(name: string) {
 }
 
 export default function AdminLeave() {
+  const { navigate } = useNavigate();
   const [requests, setRequests] = useState<LeaveRequest[]>(DATA_LEAVE);
   const [filter, setFilter] = useState("pending");
   const [search, setSearch] = useState("");
@@ -293,9 +295,9 @@ export default function AdminLeave() {
                         {getInitials(getUserName(r.userId))}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium">
+                    <button onClick={() => navigate("users")} className="text-sm font-medium hover:text-primary transition-colors">
                       {getUserName(r.userId)}
-                    </span>
+                    </button>
                   </div>
                 </TableCell>
                 <TableCell>

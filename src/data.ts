@@ -92,9 +92,76 @@ export const STUDENTS: Student[] = [
   { id: "STU-604", name: "Priya Thapa", classId: "C007", section: "Section A", rollNumber: "5", batch: "2083", phone: "9800000010", email: "priya@email.com", fee: "Partial", status: "Active", dob: "2065-12-25", gender: "Female", bloodGroup: "AB+", nationality: "Nepali", religion: "Hindu", motherTongue: "Nepali", ethnicGroup: "Thapa", permanentAddress: "Urlabari, Morang", temporaryAddress: "", fatherName: "Krishna Thapa", fatherOccupation: "Farmer", motherName: "Maya Thapa", motherOccupation: "Housewife", guardianName: "Krishna Thapa", guardianContact: "9800000015", guardianRelation: "Father", parentEmail: "", previousSchool: "Everest Academy", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U011" },
 ];
 
-export const ATTENDANCE: AttendanceRecord[] = [];
+export const ATTENDANCE: AttendanceRecord[] = [
+  { id: "AT001", userId: "U007", date: "2083-02-01", status: "Present", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT002", userId: "U008", date: "2083-02-01", status: "Present", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT003", userId: "U010", date: "2083-02-01", status: "Present", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT004", userId: "U011", date: "2083-02-01", status: "Late", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT005", userId: "U002", date: "2083-02-01", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT006", userId: "U003", date: "2083-02-01", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT007", userId: "U004", date: "2083-02-01", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT008", userId: "U005", date: "2083-02-01", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT009", userId: "U007", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT010", userId: "U008", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT011", userId: "U010", date: "2083-02-02", status: "Absent", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT012", userId: "U011", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT013", userId: "U002", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT014", userId: "U003", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT015", userId: "U004", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT016", userId: "U005", date: "2083-02-02", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT017", userId: "U007", date: "2083-02-03", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT018", userId: "U008", date: "2083-02-03", status: "Late", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT019", userId: "U010", date: "2083-02-03", status: "Present", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT020", userId: "U011", date: "2083-02-03", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT021", userId: "U002", date: "2083-02-03", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT022", userId: "U003", date: "2083-02-03", status: "Leave", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT023", userId: "U004", date: "2083-02-03", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT024", userId: "U005", date: "2083-02-03", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT025", userId: "U007", date: "2083-02-04", status: "Absent", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT026", userId: "U008", date: "2083-02-04", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT027", userId: "U010", date: "2083-02-04", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT028", userId: "U011", date: "2083-02-04", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT029", userId: "U002", date: "2083-02-04", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT030", userId: "U003", date: "2083-02-04", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT031", userId: "U004", date: "2083-02-04", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT032", userId: "U005", date: "2083-02-04", status: "Absent", source: "manual", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT033", userId: "U007", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT034", userId: "U008", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT035", userId: "U010", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT036", userId: "U011", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT037", userId: "U002", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT038", userId: "U003", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT039", userId: "U004", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+  { id: "AT040", userId: "U005", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", schoolId: "SCH001" },
+];
 
-export const DEVICE_LOGS: DeviceLog[] = [];
+export const DEVICE_LOGS: DeviceLog[] = [
+  { id: "DL001", userId: "U002", date: "2083-02-01", checkIn: "07:45", checkOut: "15:30", schoolId: "SCH001" },
+  { id: "DL002", userId: "U003", date: "2083-02-01", checkIn: "07:50", checkOut: "15:45", schoolId: "SCH001" },
+  { id: "DL003", userId: "U004", date: "2083-02-01", checkIn: "07:40", checkOut: "15:20", schoolId: "SCH001" },
+  { id: "DL004", userId: "U005", date: "2083-02-01", checkIn: "08:00", checkOut: "16:30", schoolId: "SCH001" },
+  { id: "DL005", userId: "U006", date: "2083-02-01", checkIn: "08:15", checkOut: "16:00", schoolId: "SCH001" },
+  { id: "DL006", userId: "U007", date: "2083-02-01", checkIn: "07:55", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL007", userId: "U008", date: "2083-02-01", checkIn: "07:58", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL008", userId: "U010", date: "2083-02-01", checkIn: "07:50", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL009", userId: "U011", date: "2083-02-01", checkIn: "08:05", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL010", userId: "U002", date: "2083-02-02", checkIn: "07:42", checkOut: "15:25", schoolId: "SCH001" },
+  { id: "DL011", userId: "U003", date: "2083-02-02", checkIn: "07:46", checkOut: "15:40", schoolId: "SCH001" },
+  { id: "DL012", userId: "U004", date: "2083-02-02", checkIn: "07:38", checkOut: "15:15", schoolId: "SCH001" },
+  { id: "DL013", userId: "U005", date: "2083-02-02", checkIn: "07:55", checkOut: "16:20", schoolId: "SCH001" },
+  { id: "DL014", userId: "U006", date: "2083-02-02", checkIn: "08:10", checkOut: "16:00", schoolId: "SCH001" },
+  { id: "DL015", userId: "U007", date: "2083-02-02", checkIn: "07:50", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL016", userId: "U008", date: "2083-02-02", checkIn: "07:55", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL017", userId: "U011", date: "2083-02-02", checkIn: "07:48", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL018", userId: "U002", date: "2083-02-03", checkIn: "07:48", checkOut: "15:35", schoolId: "SCH001" },
+  { id: "DL019", userId: "U004", date: "2083-02-03", checkIn: "07:42", checkOut: "15:20", schoolId: "SCH001" },
+  { id: "DL020", userId: "U005", date: "2083-02-03", checkIn: "07:58", checkOut: "16:25", schoolId: "SCH001" },
+  { id: "DL021", userId: "U006", date: "2083-02-03", checkIn: "08:12", checkOut: "16:00", schoolId: "SCH001" },
+  { id: "DL022", userId: "U007", date: "2083-02-03", checkIn: "07:52", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL023", userId: "U008", date: "2083-02-03", checkIn: "08:02", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL024", userId: "U010", date: "2083-02-03", checkIn: "07:55", checkOut: "14:30", schoolId: "SCH001" },
+  { id: "DL025", userId: "U011", date: "2083-02-03", checkIn: "07:50", checkOut: "14:30", schoolId: "SCH001" },
+];
 
 export const INTAKES: Intake[] = [
   { id: "I001", name: "Nursery Intake 2083", academicYear: "2083", grade: "Nursery", capacity: 40, enrolled: 0, status: "open", schoolId: "SCH001" },
@@ -141,7 +208,16 @@ export const INQUIRIES: Inquiry[] = [
   },
 ];
 
-export const LEAVE_REQUESTS: LeaveRequest[] = [];
+export const LEAVE_REQUESTS: LeaveRequest[] = [
+  { id: "LR001", userId: "U002", startDate: "2083-02-10", endDate: "2083-02-11", type: "sick", reason: "Fever and cold", status: "approved", adminNote: "Take rest. Covered by substitute.", schoolId: "SCH001" },
+  { id: "LR002", userId: "U003", startDate: "2083-02-15", endDate: "2083-02-15", type: "casual", reason: "Personal family matter", status: "pending", schoolId: "SCH001" },
+  { id: "LR003", userId: "U004", startDate: "2083-02-20", endDate: "2083-02-22", type: "annual", reason: "Going to hometown for festival", status: "approved", adminNote: "Enjoy the festival!", schoolId: "SCH001" },
+  { id: "LR004", userId: "U005", startDate: "2083-01-25", endDate: "2083-01-25", type: "sick", reason: "Dental appointment", status: "approved", adminNote: "Approved.", schoolId: "SCH001" },
+  { id: "LR005", userId: "U007", startDate: "2083-02-04", endDate: "2083-02-04", type: "sick", reason: "Not feeling well", status: "approved", adminNote: "Rest at home.", schoolId: "SCH001" },
+  { id: "LR006", userId: "U010", startDate: "2083-02-02", endDate: "2083-02-02", type: "casual", reason: "Family function", status: "approved", adminNote: "Approved.", schoolId: "SCH001" },
+  { id: "LR007", userId: "U006", startDate: "2083-02-18", endDate: "2083-02-19", type: "casual", reason: "Personal errand", status: "pending", schoolId: "SCH001" },
+  { id: "LR008", userId: "U011", startDate: "2083-02-12", endDate: "2083-02-12", type: "sick", reason: "Eye checkup", status: "approved", adminNote: "Bring medical report.", schoolId: "SCH001" },
+];
 
 export const ROUTINE_SLOTS: RoutineSlot[] = [
   // Grade 10 A (C007) — Ram Prasad KC (U002) is the class teacher
@@ -250,7 +326,22 @@ export const SUBMISSIONS: AssignmentSubmission[] = [
   { id: "SUB1712345678905", assignmentId: "AS006", studentId: "STU-602", response: "The moral of the story is honesty always wins. The woodcutter got all three axes because he told the truth.", submittedAt: "2026-05-21T10:00:00Z", score: 10, reviewed: true, comment: "Good understanding of the moral. Try to write in complete sentences.", schoolId: "SCH001" },
 ];
 
-export const FEE_RECORDS: FeeRecord[] = [];
+export const FEE_RECORDS: FeeRecord[] = [
+  { id: "FR001", studentId: "STU-601", amount: 5000, paid: 5000, status: "Paid", date: "2083-02-05", schoolId: "SCH001" },
+  { id: "FR002", studentId: "STU-601", amount: 1500, paid: 1500, status: "Paid", date: "2083-02-05", schoolId: "SCH001" },
+  { id: "FR003", studentId: "STU-602", amount: 5000, paid: 5000, status: "Paid", date: "2083-02-06", schoolId: "SCH001" },
+  { id: "FR004", studentId: "STU-602", amount: 500, paid: 500, status: "Paid", date: "2083-02-06", schoolId: "SCH001" },
+  { id: "FR005", studentId: "STU-603", amount: 5500, paid: 5500, status: "Paid", date: "2083-02-03", schoolId: "SCH001" },
+  { id: "FR006", studentId: "STU-603", amount: 1500, paid: 1500, status: "Paid", date: "2083-02-03", schoolId: "SCH001" },
+  { id: "FR007", studentId: "STU-603", amount: 800, paid: 800, status: "Paid", date: "2083-02-03", schoolId: "SCH001" },
+  { id: "FR008", studentId: "STU-604", amount: 7000, paid: 3500, status: "Partial", date: "2083-02-04", schoolId: "SCH001" },
+  { id: "FR009", studentId: "STU-604", amount: 1000, paid: 0, status: "Due", date: "2083-02-04", schoolId: "SCH001" },
+  { id: "FR010", studentId: "STU-604", amount: 1000, paid: 1000, status: "Paid", date: "2083-02-04", schoolId: "SCH001" },
+  { id: "FR011", studentId: "STU-601", amount: 5000, paid: 0, status: "Due", date: "2083-03-01", schoolId: "SCH001" },
+  { id: "FR012", studentId: "STU-602", amount: 1500, paid: 0, status: "Due", date: "2083-03-01", schoolId: "SCH001" },
+  { id: "FR013", studentId: "STU-603", amount: 5500, paid: 0, status: "Due", date: "2083-03-01", schoolId: "SCH001" },
+  { id: "FR014", studentId: "STU-604", amount: 7000, paid: 0, status: "Due", date: "2083-03-01", schoolId: "SCH001" },
+];
 
 export const PARENT_STUDENT: ParentStudent[] = [
   { parentId: "U009", studentId: "STU-601" },

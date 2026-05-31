@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Search, Plus, Edit2, Trash2 } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, Eye } from "lucide-react";
 import { TEACHERS as DATA_TEACHERS, CLASS_GROUPS } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -111,6 +112,7 @@ const INIT_FORM = {
 type FormState = typeof INIT_FORM;
 
 export default function AdminTeachers() {
+  const { navigate } = useNavigate();
   const [teachers, setTeachers] = useState<TeacherEntry[]>([...DATA_TEACHERS]);
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -506,8 +508,10 @@ export default function AdminTeachers() {
                 <TableCell className="text-sm text-muted-foreground">
                   {t.email}
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {t.subjectSpecialization}
+                <TableCell>
+                  <button onClick={() => navigate("subjects")} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    {t.subjectSpecialization}
+                  </button>
                 </TableCell>
                 <TableCell>
                   <Badge variant={t.status === "Active" ? "default" : "secondary"}>
@@ -516,6 +520,9 @@ export default function AdminTeachers() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
+                    <Button variant="ghost" size="icon" onClick={() => navigate("class-groups")} title="View classes">
+                      <Eye size={14} />
+                    </Button>
                     <Button variant="ghost" size="icon" onClick={() => handleEdit(t)}>
                       <Edit2 size={14} />
                     </Button>

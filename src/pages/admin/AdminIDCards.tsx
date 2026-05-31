@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, X, Search, Trash2, Printer, Check } from "lucide-react";
 import { STUDENTS, CLASS_GROUPS, BATCHES } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import type { Student } from "../../types";
 
@@ -31,6 +32,7 @@ const initials = (name: string) =>
     .toUpperCase();
 
 export default function AdminIDCards() {
+  const { navigate, setViewEntity } = useNavigate();
   const [viewState, setViewState] = useState<"idle" | "design">("idle");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Student[]>([]);
@@ -214,7 +216,7 @@ export default function AdminIDCards() {
                         {initials(s.name)}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-slate-800">{s.name}</p>
+                        <p className="text-sm font-medium text-slate-800 cursor-pointer hover:text-indigo-600 transition-colors" onClick={() => { setViewEntity({ type: "student", id: s.id }); navigate("student-detail"); }}>{s.name}</p>
                         <p className="text-xs text-slate-400">
                           {s.rollNumber} &middot; {getClassSection(s.classId)}
                         </p>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Plus, Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
 import { MOCK_USERS as DATA_USERS } from "../../data";
 import type { User, UserRole } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ const roleBadge = (role: UserRole) => {
 };
 
 export default function AdminUsers() {
+  const { navigate } = useNavigate();
   const [users, setUsers] = useState<User[]>(DATA_USERS);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
@@ -133,7 +135,13 @@ export default function AdminUsers() {
                   <TableCell className="font-medium">{u.name}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{u.email}</TableCell>
                   <TableCell>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${roleBadge(u.type)}`}>{u.type}</span>
+                    <button onClick={() => {
+                      const roleMap: Record<string, string> = { teacher: "teachers", staff: "staff", student: "students", parent: "parents" };
+                      const target = roleMap[u.type];
+                      if (target) navigate(target);
+                    }} className={`text-xs px-2 py-0.5 rounded-full font-medium hover:opacity-80 transition-opacity ${roleBadge(u.type)}`}>
+                      {u.type}
+                    </button>
                   </TableCell>
                   <TableCell>
                     <Badge variant={u.active ? "default" : "secondary"}>{u.active ? "Active" : "Inactive"}</Badge>

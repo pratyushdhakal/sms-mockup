@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, X, DollarSign } from "lucide-react";
 import { FEE_RECORDS as DATA_FEE_RECORDS, STUDENTS, CLASS_GROUPS } from "../../data";
 import type { FeeRecord, FeeStatus } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 
 function getStudentName(id: string) {
@@ -18,6 +19,7 @@ const statusColor = (s: string) =>
   ({ Paid: "bg-emerald-50 text-emerald-700", Due: "bg-red-50 text-red-700", Partial: "bg-amber-50 text-amber-700" })[s] || "bg-gray-100 text-gray-600";
 
 export default function AdminFees() {
+  const { navigate, setViewEntity } = useNavigate();
   const [records, setRecords] = useState<FeeRecord[]>(DATA_FEE_RECORDS);
   const [showForm, setShowForm] = useState(false);
   const [formStudent, setFormStudent] = useState("");
@@ -122,10 +124,16 @@ export default function AdminFees() {
                     <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700">
                       {getStudentName(r.studentId).split(" ").map((n) => n[0]).slice(0, 2).join("")}
                     </div>
-                    <span className="text-sm font-medium text-slate-700">{getStudentName(r.studentId)}</span>
+                    <button onClick={() => { setViewEntity({ type: "student", id: r.studentId }); navigate("student-detail"); }} className="text-sm font-medium text-slate-700 hover:text-primary transition-colors">
+                      {getStudentName(r.studentId)}
+                    </button>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-slate-600">{getStudentClass(r.studentId)}</td>
+                <td className="px-4 py-3">
+                  <button onClick={() => navigate("class-groups")} className="text-sm text-slate-600 hover:text-primary transition-colors">
+                    {getStudentClass(r.studentId)}
+                  </button>
+                </td>
                 <td className="px-4 py-3 text-sm text-slate-700">Rs. {r.amount.toLocaleString()}</td>
                 <td className="px-4 py-3 text-sm text-slate-700">Rs. {r.paid.toLocaleString()}</td>
                 <td className="px-4 py-3">

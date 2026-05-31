@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, X, Megaphone } from "lucide-react";
 import { ANNOUNCEMENTS as DATA_ANNOUNCEMENTS } from "../../data";
 import type { Announcement, AnnouncementAudience, Priority } from "../../types";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 
 const priorityColor = (p: string) =>
@@ -11,6 +12,7 @@ const audienceColor = (a: string) =>
   ({ all: "bg-indigo-50 text-indigo-700", students: "bg-emerald-50 text-emerald-700", teachers: "bg-purple-50 text-purple-700", staff: "bg-cyan-50 text-cyan-700", parents: "bg-rose-50 text-rose-700" })[a] || "bg-gray-100 text-gray-600";
 
 export default function AdminAnnouncements() {
+  const { navigate } = useNavigate();
   const [announcements, setAnnouncements] = useState<Announcement[]>(DATA_ANNOUNCEMENTS);
   const [showForm, setShowForm] = useState(false);
   const [formTitle, setFormTitle] = useState("");
@@ -70,7 +72,14 @@ export default function AdminAnnouncements() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${audienceColor(a.audience)}`}>{a.audience}</span>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium cursor-pointer hover:ring-2 hover:ring-offset-1 ${audienceColor(a.audience)}`}
+                    onClick={() => {
+                      const targets: Record<string, string> = { students: "students", teachers: "teachers", staff: "staff", parents: "parents" };
+                      const target = targets[a.audience];
+                      if (target) navigate(target);
+                    }}
+                  >{a.audience}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${priorityColor(a.priority)}`}>{a.priority}</span>
                 </div>
               </div>

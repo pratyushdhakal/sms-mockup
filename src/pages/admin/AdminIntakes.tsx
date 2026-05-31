@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Plus, Pencil, Trash2 } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import { CLASSES_LIST, BATCHES } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import type { Intake } from "../../types";
 
 export default function AdminIntakes() {
+  const { navigate } = useNavigate();
   const { intakes, setIntakes } = useStore();
   const [search, setSearch] = useState("");
   const [gradeFilter, setGradeFilter] = useState("");
@@ -139,10 +141,18 @@ export default function AdminIntakes() {
               {filtered.map((intake) => (
                 <TableRow key={intake.id}>
                   <TableCell className="font-medium">{intake.name}</TableCell>
-                  <TableCell>{intake.grade}</TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("class-groups")} className="hover:text-primary transition-colors">
+                      {intake.grade}
+                    </button>
+                  </TableCell>
                   <TableCell>{intake.academicYear}</TableCell>
                   <TableCell>{intake.capacity}</TableCell>
-                  <TableCell>{intake.enrolled}</TableCell>
+                  <TableCell>
+                    <button onClick={() => navigate("students")} className="hover:text-primary transition-colors font-medium">
+                      {intake.enrolled}
+                    </button>
+                  </TableCell>
                   <TableCell>
                     <button onClick={() => toggleStatus(intake)}>
                       <Badge variant={intake.status === "open" ? "default" : "secondary"} className="cursor-pointer">

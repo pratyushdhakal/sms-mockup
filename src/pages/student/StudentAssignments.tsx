@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FileText, Plus, X, CheckCircle } from "lucide-react";
-import type { Assignment } from "../../types";
+import { FileText, Plus, X, CheckCircle, Star } from "lucide-react";
+import type { Assignment, AssignmentSubmission } from "../../types";
 import { useAuth } from "../../AuthContext";
 import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
@@ -22,8 +22,12 @@ export default function StudentAssignments() {
     return teacher?.name ?? "—";
   }
 
+  function getSubmission(assignmentId: string): AssignmentSubmission | undefined {
+    return submissions.find((s) => s.assignmentId === assignmentId && s.studentId === studentId);
+  }
+
   function isSubmitted(assignmentId: string): boolean {
-    return submissions.some((s) => s.assignmentId === assignmentId && s.studentId === studentId);
+    return !!getSubmission(assignmentId);
   }
 
   function handleSubmit() {
@@ -51,6 +55,7 @@ export default function StudentAssignments() {
       <div className="grid grid-cols-1 gap-4">
         {assignments.map((a) => {
           const submitted = isSubmitted(a.id);
+          const sub = getSubmission(a.id);
           return (
             <div
               key={a.id}
@@ -67,12 +72,19 @@ export default function StudentAssignments() {
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                         submitted
-                          ? "bg-emerald-50 text-emerald-700"
+                          ? sub?.reviewed
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-sky-50 text-sky-700"
                           : "bg-amber-50 text-amber-700"
                       }`}
                     >
-                      {submitted ? "Submitted" : "Pending"}
+                      {submitted ? (sub?.reviewed ? "Graded" : "Submitted") : "Pending"}
                     </span>
+                    {sub?.reviewed && sub.score != null && (
+                      <span className="text-xs flex items-center gap-0.5 text-amber-600 font-medium">
+                        <Star size={11} /> {sub.score}
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-slate-400">
                     {a.subject} · {getTeacherName(a.teacherId)} · Due: {a.dueDate}
@@ -124,12 +136,35 @@ export default function StudentAssignments() {
                 <span className="text-xs font-medium text-slate-500">Description</span>
                 <p className="text-sm text-slate-600 mt-1">{selected.description}</p>
               </div>
-              {isSubmitted(selected.id) && (
-                <div className="flex items-center gap-2 text-sm text-emerald-600">
-                  <CheckCircle size={14} />
-                  You have submitted this assignment
-                </div>
-              )}
+              {isSubmitted(selected.id) && (() => {
+                const sub = getSubmission(selected.id);
+                return (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-emerald-600">
+                      <CheckCircle size={14} />
+                      Submitted on {sub?.submittedAt}
+                    </div>
+                    {sub?.reviewed && (
+                      <>
+                        {sub.score != null && (
+                          <div>
+                            <span className="text-xs font-medium text-slate-500">Score</span>
+                            <p className="text-lg font-bold text-amber-600 flex items-center gap-1">
+                              <Star size={15} /> {sub.score}
+                            </p>
+                          </div>
+                        )}
+                        {sub.comment && (
+                          <div>
+                            <span className="text-xs font-medium text-slate-500">Teacher Comment</span>
+                            <p className="text-sm text-slate-700 mt-0.5 bg-slate-50 rounded-lg p-3">{sub.comment}</p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
             <div className="flex justify-end px-5 pb-5">
               <button onClick={() => setSelected(null)} className="px-4 py-2 text-sm text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">

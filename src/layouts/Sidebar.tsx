@@ -234,9 +234,20 @@ const ALL_NAV: Record<string, NavEntry[]> = {
     {
       type: "group",
       group: {
-        label: "Personal",
-        icon: FileText,
+        label: "Finance",
+        icon: CreditCard,
         items: [
+          { id: "my-fees", label: "Fee Details", icon: CreditCard },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Personal",
+        icon: UserCog,
+        items: [
+          { id: "my-profile", label: "My Profile", icon: UserCog },
           { id: "my-leave", label: "Leave Requests", icon: FileText },
         ],
       },

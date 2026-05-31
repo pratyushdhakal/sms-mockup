@@ -60,6 +60,8 @@ import StudentRoutine from "./pages/student/StudentRoutine";
 import StudentAssignments from "./pages/student/StudentAssignments";
 import StudentResults from "./pages/student/StudentResults";
 import StudentLeave from "./pages/student/StudentLeave";
+import StudentProfile from "./pages/student/StudentProfile";
+import StudentFees from "./pages/student/StudentFees";
 import StudentAnnouncements from "./pages/student/StudentAnnouncements";
 import StudentCalendar from "./pages/student/StudentCalendar";
 
@@ -136,6 +138,8 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
     assignments: StudentAssignments,
     "my-results": StudentResults,
     "my-leave": StudentLeave,
+    "my-profile": StudentProfile,
+    "my-fees": StudentFees,
     notices: StudentAnnouncements,
     calendar: StudentCalendar,
   },

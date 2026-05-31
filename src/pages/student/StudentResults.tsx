@@ -19,9 +19,8 @@ export default function StudentResults() {
   const classId = currentStudent?.classId || "";
   const studentId = currentStudent?.id || "";
 
-  const PUBLISHED_RESULTS: Record<string, boolean> = {};
   const relevantExams = exams.filter(
-    (e) => e.applicableClassIds.includes(classId) && PUBLISHED_RESULTS[`${e.id}-${classId}`]
+    (e) => e.applicableClassIds.includes(classId)
   );
 
   return (

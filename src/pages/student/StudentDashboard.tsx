@@ -2,9 +2,11 @@ import { CheckCircle, CalendarClock, ArrowRight, BookOpen, FileText, GraduationC
 import { useAuth } from "../../AuthContext";
 import { useStore } from "../../StoreContext";
 import { CLASS_GROUPS } from "../../data";
+import { useNavigate } from "../../NavContext";
 import Header from "../../layouts/Header";
 
 export default function StudentDashboard() {
+  const { navigate } = useNavigate();
   const { currentStudent } = useAuth();
   const { attendanceRecords, assignments, exams } = useStore();
   const student = currentStudent;
@@ -22,10 +24,10 @@ export default function StudentDashboard() {
   const upcomingExams = exams.filter((e) => e.applicableClassIds.includes(classId)).length;
 
   const quickLinks = [
-    { label: "My Attendance", icon: CalendarClock },
-    { label: "My Routine", icon: BookOpen },
-    { label: "Assignments", icon: FileText },
-    { label: "My Results", icon: GraduationCap },
+    { label: "My Attendance", icon: CalendarClock, page: "my-attendance" },
+    { label: "My Routine", icon: BookOpen, page: "my-routine" },
+    { label: "Assignments", icon: FileText, page: "assignments" },
+    { label: "My Results", icon: GraduationCap, page: "my-results" },
   ];
 
   return (
@@ -59,18 +61,18 @@ export default function StudentDashboard() {
       <div>
         <h2 className="text-sm font-semibold text-slate-700 mb-3">Quick Links</h2>
         <div className="grid grid-cols-2 gap-3">
-          {quickLinks.map(({ label, icon: Icon }) => (
-            <a
+          {quickLinks.map(({ label, icon: Icon, page }) => (
+            <button
               key={label}
-              href="#"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-slate-100 bg-white hover:bg-slate-50 transition-colors group"
+              onClick={() => navigate(page)}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-slate-100 bg-white hover:bg-slate-50 transition-colors group text-left w-full"
             >
               <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
                 <Icon size={15} className="text-indigo-600" />
               </div>
               <span className="text-sm text-slate-600 group-hover:text-slate-800">{label}</span>
               <ArrowRight size={14} className="ml-auto text-slate-300 group-hover:text-slate-500" />
-            </a>
+            </button>
           ))}
         </div>
       </div>

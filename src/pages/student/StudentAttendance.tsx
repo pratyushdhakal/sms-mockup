@@ -1,4 +1,5 @@
-import { CheckCircle, XCircle, Clock, CalendarClock, Calendar } from "lucide-react";
+import { useState, useMemo } from "react";
+import { CheckCircle, XCircle, Clock, CalendarClock, Calendar, Search } from "lucide-react";
 import { useAuth } from "../../AuthContext";
 import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
@@ -21,7 +22,23 @@ const sourceBadge = (s: string) =>
 export default function StudentAttendance() {
   const { currentStudent } = useAuth();
   const { attendanceRecords } = useStore();
-  const records = attendanceRecords.filter((a) => a.userId === currentStudent?.userId);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [search, setSearch] = useState("");
+
+  const records = useMemo(
+    () => attendanceRecords.filter((a) => a.userId === currentStudent?.userId),
+    [attendanceRecords, currentStudent]
+  );
+
+  const filtered = useMemo(() => {
+    let list = records;
+    if (statusFilter !== "All") list = list.filter((a) => a.status === statusFilter);
+    if (search) {
+      const q = search.toLowerCase();
+      list = list.filter((a) => a.date.includes(q));
+    }
+    return list;
+  }, [records, statusFilter, search]);
 
   const present = records.filter((a) => a.status === "Present").length;
   const absent = records.filter((a) => a.status === "Absent").length;
@@ -52,9 +69,34 @@ export default function StudentAttendance() {
       </div>
 
       <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
-        <div className="flex items-center gap-2 p-4 border-b border-slate-100">
-          <Calendar size={15} className="text-slate-400" />
-          <span className="text-sm text-slate-500">{records.length} records</span>
+        <div className="flex items-center justify-between gap-3 p-4 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <Calendar size={15} className="text-slate-400" />
+            <span className="text-sm text-slate-500">{records.length} records</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-2 py-1.5 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+            >
+              <option value="All">All Status</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+              <option value="Late">Late</option>
+              <option value="Leave">Leave</option>
+            </select>
+            <div className="relative">
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search date..."
+                className="pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 w-36"
+              />
+            </div>
+          </div>
         </div>
         <table className="w-full">
           <thead>
@@ -65,7 +107,7 @@ export default function StudentAttendance() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
-            {records.map((r) => (
+            {filtered.map((r) => (
               <tr key={r.id} className="hover:bg-slate-50/50 transition-colors">
                 <td className="px-4 py-3 text-sm text-slate-600">{r.date}</td>
                 <td className="px-4 py-3">
@@ -82,7 +124,7 @@ export default function StudentAttendance() {
             ))}
           </tbody>
         </table>
-        {records.length === 0 && (
+        {filtered.length === 0 && (
           <p className="text-sm text-slate-400 text-center py-6">No attendance records found.</p>
         )}
       </div>

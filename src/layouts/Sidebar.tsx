@@ -32,6 +32,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export type NavItem = { id: string; label: string; icon: LucideIcon };
 
@@ -203,8 +204,10 @@ function NavButton({
 }) {
   const Icon = item.icon;
   return (
-    <button
+    <motion.button
       onClick={onClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 relative",
         active
@@ -217,7 +220,7 @@ function NavButton({
       )}
       <Icon size={17} className={cn("shrink-0", active && "text-white")} />
       {!collapsed && <span className="truncate">{item.label}</span>}
-    </button>
+    </motion.button>
   );
 }
 
@@ -241,7 +244,10 @@ function NavGroup({
 
   if (collapsed) {
     return (
-      <div
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={onToggle}
         className={cn(
           "w-full flex items-center justify-center px-3 py-2 rounded-md text-sm transition-all duration-150",
           hasActiveChild
@@ -250,14 +256,16 @@ function NavGroup({
         )}
       >
         <GroupIcon size={17} className={cn("shrink-0", hasActiveChild && "text-white")} />
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div>
-      <button
+    <motion.div>
+      <motion.button
         onClick={onToggle}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
         className={cn(
           "w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-all duration-150 relative",
           hasActiveChild
@@ -278,7 +286,7 @@ function NavGroup({
             hasActiveChild ? "text-white/70" : "text-sidebar-foreground/40"
           )}
         />
-      </button>
+      </motion.button>
       {expanded && (
         <div className="ml-4 pl-2 border-l border-sidebar-border/50 mt-0.5 space-y-0.5">
           {group.items.map((item) => (
@@ -292,7 +300,7 @@ function NavGroup({
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -347,13 +355,15 @@ export default function Sidebar({
   );
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col bg-sidebar text-sidebar-foreground transition-all duration-200",
-        collapsed ? "w-16" : "w-56",
-        "min-h-screen shrink-0"
-      )}
-    >
+  <motion.aside
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1, transition: { duration: 0.3 } }}
+    className={cn(
+      "flex flex-col bg-sidebar text-sidebar-foreground transition-all duration-200",
+      collapsed ? "w-16" : "w-56",
+      "h-screen shrink-0"
+    )}
+  >
       <div className="flex items-center gap-3 px-4 h-14 border-b border-sidebar-border shrink-0">
         <div className="w-7 h-7 bg-sidebar-primary rounded-lg flex items-center justify-center shrink-0">
           <School2 size={15} className="text-sidebar-primary-foreground" />
@@ -377,7 +387,8 @@ export default function Sidebar({
         </button>
       </div>
 
-      <nav className="flex-1 py-3 space-y-0.5 px-2 overflow-y-auto">
+      <nav className="sidebar-nav flex-1 py-3 space-y-0.5 px-2 overflow-y-auto"
+        style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(var(--sidebar-accent)) transparent" }}>
         {collapsed
           ? flatItems.map((item) => (
               <NavButton
@@ -425,6 +436,6 @@ export default function Sidebar({
           {!collapsed && <span>Logout</span>}
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 }

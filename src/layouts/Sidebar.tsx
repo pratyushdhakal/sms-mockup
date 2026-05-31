@@ -21,6 +21,7 @@ import {
   DoorOpen,
   GraduationCap,
   Settings,
+  ShieldCheck,
   BookType,
   Layers,
   Library,
@@ -149,6 +150,7 @@ const ALL_NAV: Record<string, NavEntry[]> = {
         items: [
           { id: "my-classes", label: "My Classes", icon: BookOpen },
           { id: "mark-attendance", label: "Mark Attendance", icon: Fingerprint },
+          { id: "approve-attendance", label: "Approve Attendance", icon: ShieldCheck },
           { id: "my-routine", label: "My Routine", icon: Calendar },
           { id: "assignments", label: "Assignments", icon: BookMarked },
           { id: "exam-entry", label: "Exam Entry", icon: ClipboardList },

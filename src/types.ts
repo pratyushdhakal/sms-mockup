@@ -181,6 +181,8 @@ export interface AttendanceRecord {
   status: AttendanceStatus;
   source: AttendanceSource;
   markedBy: string;
+  verified: boolean;
+  verifiedBy?: string;
   schoolId: string;
 }
 

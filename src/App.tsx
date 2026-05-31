@@ -37,6 +37,7 @@ import AdminParents from "./pages/admin/AdminParents";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherClasses from "./pages/teacher/TeacherClasses";
 import TeacherMarkAttendance from "./pages/teacher/TeacherMarkAttendance";
+import TeacherApproveAttendance from "./pages/teacher/TeacherApproveAttendance";
 import TeacherRoutine from "./pages/teacher/TeacherRoutine";
 import TeacherAssignments from "./pages/teacher/TeacherAssignments";
 import TeacherExamEntry from "./pages/teacher/TeacherExamEntry";
@@ -110,6 +111,7 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
     dashboard: TeacherDashboard,
     "my-classes": TeacherClasses,
     "mark-attendance": TeacherMarkAttendance,
+    "approve-attendance": TeacherApproveAttendance,
     "my-routine": TeacherRoutine,
     assignments: TeacherAssignments,
     "exam-entry": TeacherExamEntry,

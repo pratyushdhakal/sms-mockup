@@ -166,6 +166,8 @@ export default function AdminAttendance() {
       status: markStatus,
       source: "manual",
       markedBy: ADMIN_USER_ID,
+      verified: true,
+      verifiedBy: ADMIN_USER_ID,
       schoolId: "SCH001",
     };
     if (existing) {

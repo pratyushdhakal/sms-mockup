@@ -33,6 +33,7 @@ export default function TeacherMarkAttendance() {
       status: statuses[s.id] || "Present",
       source: "manual",
       markedBy: teacher?.userId || "",
+      verified: false,
       schoolId: "SCH001",
     }));
     if (newRecords.length === 0) return;

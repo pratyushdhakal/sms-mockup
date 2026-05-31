@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Eye, X, Star } from "lucide-react";
-import { ASSIGNMENTS as DATA_ASSIGNMENTS, SUBMISSIONS, STUDENTS, CLASS_GROUPS, TEACHERS, CLASSES_LIST, SECTIONS, BATCHES } from "../../data";
+import { ASSIGNMENTS as DATA_ASSIGNMENTS, SUBMISSIONS, STUDENTS, CLASS_GROUPS, TEACHERS, CLASSES_LIST, SECTIONS, BATCHES, SUBJECTS } from "../../data";
 import type { Assignment, AssignmentSubmission } from "../../types";
 import Header from "../../layouts/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -159,7 +159,7 @@ export default function AdminAssignments() {
               <SelectTrigger className="w-[150px]"><SelectValue placeholder="Subject" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Subjects</SelectItem>
-                {["Mathematics", "Science", "English"].map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                {SUBJECTS.map(s => <SelectItem key={s.name} value={s.name}>{s.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -386,8 +386,61 @@ export default function AdminAssignments() {
           </div>
         </TabsContent>
         <TabsContent value="student-assignment">
-          <div className="p-4 bg-white rounded-xl border border-slate-100">
-            <p className="text-sm text-slate-500">Student assignment tracking — coming soon.</p>
+          <div className="bg-white rounded-xl border border-slate-100">
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-slate-700">Student's Assignment</h2>
+              <div className="flex items-center gap-2">
+                <Select value={filterBatch} onValueChange={setFilterBatch}>
+                  <SelectTrigger className="w-[140px] h-8"><SelectValue placeholder="Batch" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Batches</SelectItem>
+                    {BATCHES.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={filterClass} onValueChange={setFilterClass}>
+                  <SelectTrigger className="w-[140px] h-8"><SelectValue placeholder="Class" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Classes</SelectItem>
+                    {CLASSES_LIST.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  {["Student", "Class", "Pending Assignments", "Submitted", "Reviewed", "Avg Score"].map((h) => (
+                    <th key={h} className="text-left text-xs font-medium text-slate-400 px-4 py-3">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {(() => {
+                  const classFiltered = filterClass === "all" ? STUDENTS : STUDENTS.filter(s => CLASS_GROUPS.find(c => c.id === s.classId)?.name === filterClass);
+                  const batchFiltered = filterBatch === "all" ? classFiltered : classFiltered.filter(s => s.batch === filterBatch);
+                  return batchFiltered.map((student) => {
+                    const studentSubs = submissions.filter((s) => s.studentId === student.id);
+                    const pending = studentSubs.filter((s) => !s.reviewed).length;
+                    const submitted = studentSubs.length;
+                    const reviewed = studentSubs.filter((s) => s.reviewed);
+                    const avgScore = reviewed.length > 0 ? Math.round(reviewed.reduce((sum, r) => sum + (r.score || 0), 0) / reviewed.length) : 0;
+                    return (
+                      <tr key={student.id} className="hover:bg-slate-50/50">
+                        <td className="px-4 py-3 text-sm font-medium text-slate-700">{student.name}</td>
+                        <td className="px-4 py-3 text-sm text-slate-600">{getClassName(student.classId)}</td>
+                        <td className="px-4 py-3 text-sm text-amber-600 font-medium">{pending}</td>
+                        <td className="px-4 py-3 text-sm text-slate-700">{submitted}</td>
+                        <td className="px-4 py-3 text-sm text-emerald-600 font-medium">{reviewed.length}</td>
+                        <td className="px-4 py-3 text-sm text-slate-700">{avgScore || "-"}</td>
+                      </tr>
+                    );
+                  });
+                })()}
+                {STUDENTS.length === 0 && (
+                  <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-400">No students found.</td></tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </TabsContent>
       </Tabs>

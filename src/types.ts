@@ -322,3 +322,37 @@ export interface ParentStudent {
   parentId: string;
   studentId: string;
 }
+
+export interface Subject {
+  id: string;
+  name: string;
+  code: string;
+}
+
+export interface FeeType {
+  id: string;
+  name: string;
+  amount: number;
+  classId: string;
+}
+
+export interface GradingScale {
+  id: string;
+  grade: string;
+  minPercentage: number;
+  maxPercentage: number;
+}
+
+export interface ReferenceDatum {
+  id: string;
+  type: string;
+  value: string;
+}
+
+export interface SchoolConfig {
+  schoolName: string;
+  address: string;
+  phone: string;
+  activeAcademicYear: string;
+}
+

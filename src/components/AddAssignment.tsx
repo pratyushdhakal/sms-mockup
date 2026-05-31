@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,84 +11,108 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BATCHES, CLASS_GROUPS, TEACHERS, SUBJECTS } from "../data";
+import type { Assignment } from "../types";
 
-export function AddAssignment() {
+interface AddAssignmentProps {
+  onAdd?: (assignment: Assignment) => void;
+}
+
+export function AddAssignment({ onAdd }: AddAssignmentProps) {
+  const [batch, setBatch] = useState("");
+  const [classId, setClassId] = useState("");
+  const [subject, setSubject] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+
+  function handleSubmit() {
+    if (!batch || !classId || !subject || !title || !dueDate) return;
+    const assignment: Assignment = {
+      id: `AS${Date.now()}`,
+      title,
+      description,
+      classId,
+      subject,
+      teacherId: TEACHERS[0]?.userId || "",
+      dueDate,
+      batch,
+      createdAt: new Date().toISOString(),
+      schoolId: "SCH001",
+    };
+    if (onAdd) onAdd(assignment);
+    setBatch("");
+    setClassId("");
+    setSubject("");
+    setTitle("");
+    setDescription("");
+    setDueDate("");
+  }
+
+  const classOptions = CLASS_GROUPS.map((cg) => ({
+    value: cg.id,
+    label: `${cg.name} (${cg.section})`,
+  }));
+
+  const subjectOptions = SUBJECTS.map((s) => ({
+    value: s.name,
+    label: s.name,
+  }));
+
   return (
     <Card className="w-full">
       <CardContent className="p-6 space-y-6">
         <div className="grid grid-cols-4 gap-4">
           <div className="space-y-2">
             <Label>Batch Year</Label>
-            <Select>
+            <Select value={batch} onValueChange={setBatch}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Batch" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2083">2083</SelectItem>
-                <SelectItem value="2082">2082</SelectItem>
+                {BATCHES.map((b) => <SelectItem key={b} value={b}>{b}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
             <Label>Class</Label>
-            <Select>
+            <Select value={classId} onValueChange={setClassId}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Class" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>Section</Label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select Section" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="darwin">Darwin</SelectItem>
-                <SelectItem value="newton">Newton</SelectItem>
+                {classOptions.map((c) => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
             <Label>Subject</Label>
-            <Select>
+            <Select value={subject} onValueChange={setSubject}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Subject" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="english">English</SelectItem>
-                <SelectItem value="math">Math</SelectItem>
+                {subjectOptions.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Due Date</Label>
+            <Input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
-          <Input id="title" placeholder="Assignment Title" />
+          <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Assignment Title" />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea id="description" placeholder="Assignment Description" />
+          <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Assignment Description" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Deadline Date</Label>
-            <Input type="date" />
-          </div>
-          <div className="space-y-2">
-            <Label>Deadline Time</Label>
-            <Input type="time" />
-          </div>
-        </div>
-
-        <Button>Submit</Button>
+        <Button onClick={handleSubmit} disabled={!batch || !classId || !subject || !title || !dueDate}>Submit</Button>
       </CardContent>
     </Card>
   );

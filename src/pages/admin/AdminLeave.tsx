@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, X, Plus, Search, Eye, Pencil, Trash } from "lucide-react";
+import { Plus, Search, Eye, Pencil, Trash } from "lucide-react";
 import { LEAVE_REQUESTS as DATA_LEAVE, MOCK_USERS } from "../../data";
 import type { LeaveRequest, LeaveStatus, LeaveType } from "../../types";
 import Header from "../../layouts/Header";
@@ -17,7 +17,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -59,13 +58,6 @@ const LEAVE_TYPES: { value: LeaveType; label: string }[] = [
   { value: "unpaid", label: "Unpaid Leave" },
 ];
 
-const TAB_FILTERS = [
-  { value: "All", label: "All" },
-  { value: "pending", label: "Pending" },
-  { value: "approved", label: "Approved" },
-  { value: "rejected", label: "Rejected" },
-];
-
 function getUserName(id: string) {
   return MOCK_USERS.find((u) => u.id === id)?.name || id;
 }
@@ -83,6 +75,12 @@ export default function AdminLeave() {
   const [selectedUser, setSelectedUser] = useState("");
   const [form, setForm] = useState({ type: "" as LeaveType | "", from: "", to: "", reason: "" });
 
+  const [viewTarget, setViewTarget] = useState<LeaveRequest | null>(null);
+  const [editTarget, setEditTarget] = useState<LeaveRequest | null>(null);
+  const [editNote, setEditNote] = useState("");
+  const [editStatus, setEditStatus] = useState<LeaveStatus>("pending");
+  const [deleteTarget, setDeleteTarget] = useState<LeaveRequest | null>(null);
+
   const pendingCount = requests.filter(r => r.status === 'pending').length;
   const processedCount = requests.filter(r => r.status === 'approved' || r.status === 'rejected').length;
 
@@ -96,10 +94,6 @@ export default function AdminLeave() {
     }
     return true;
   });
-
-  function updateStatus(id: string, status: LeaveStatus) {
-    setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
-  }
 
   function handleSubmit() {
     if (!selectedUser || !form.type || !form.from || !form.to || !form.reason) return;
@@ -118,6 +112,21 @@ export default function AdminLeave() {
     setForm({ type: "", from: "", to: "", reason: "" });
     setSelectedUser("");
     setStep(1);
+  }
+
+  function handleEditSave() {
+    if (!editTarget) return;
+    setRequests((prev) => prev.map((r) =>
+      r.id === editTarget.id ? { ...r, adminNote: editNote, status: editStatus } : r
+    ));
+    setEditTarget(null);
+    setEditNote("");
+  }
+
+  function handleDeleteLeave() {
+    if (!deleteTarget) return;
+    setRequests((prev) => prev.filter((r) => r.id !== deleteTarget.id));
+    setDeleteTarget(null);
   }
 
 
@@ -310,9 +319,9 @@ export default function AdminLeave() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="icon" title="View"><Eye size={15} /></Button>
-                    <Button variant="ghost" size="icon" title="Edit"><Pencil size={15} /></Button>
-                    <Button variant="ghost" size="icon" title="Delete"><Trash size={15} /></Button>
+                    <Button variant="ghost" size="icon" title="View" onClick={() => setViewTarget(r)}><Eye size={15} /></Button>
+                    <Button variant="ghost" size="icon" title="Edit" onClick={() => { setEditTarget(r); setEditNote(r.adminNote || ""); setEditStatus(r.status); }}><Pencil size={15} /></Button>
+                    <Button variant="ghost" size="icon" title="Delete" className="text-red-500" onClick={() => setDeleteTarget(r)}><Trash size={15} /></Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -327,6 +336,67 @@ export default function AdminLeave() {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={!!viewTarget} onOpenChange={(o) => { if (!o) setViewTarget(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader><DialogTitle>Leave Request Details</DialogTitle></DialogHeader>
+          {viewTarget && (
+            <div className="space-y-3 py-2">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div><span className="text-muted-foreground">Requester:</span> <span className="font-medium">{getUserName(viewTarget.userId)}</span></div>
+                <div><span className="text-muted-foreground">Type:</span> <span className="font-medium capitalize">{typeLabel[viewTarget.type]}</span></div>
+                <div><span className="text-muted-foreground">From:</span> <span className="font-medium">{viewTarget.startDate}</span></div>
+                <div><span className="text-muted-foreground">To:</span> <span className="font-medium">{viewTarget.endDate}</span></div>
+                <div><span className="text-muted-foreground">Status:</span> <Badge variant={statusConfig[viewTarget.status].variant}>{statusConfig[viewTarget.status].label}</Badge></div>
+                <div><span className="text-muted-foreground">Admin Note:</span> <span className="font-medium">{viewTarget.adminNote || "\u2014"}</span></div>
+              </div>
+              <div className="text-sm"><span className="text-muted-foreground">Reason:</span><p className="mt-1">{viewTarget.reason}</p></div>
+            </div>
+          )}
+          <DialogFooter><Button variant="outline" onClick={() => setViewTarget(null)}>Close</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!editTarget} onOpenChange={(o) => { if (!o) { setEditTarget(null); setEditNote(""); } }}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader><DialogTitle>Edit Leave Request</DialogTitle></DialogHeader>
+          {editTarget && (
+            <div className="space-y-3 py-2">
+              <p className="text-sm font-medium">{getUserName(editTarget.userId)} — {typeLabel[editTarget.type]}</p>
+              <div className="space-y-1.5">
+                <Label>Admin Note</Label>
+                <Textarea value={editNote} onChange={(e) => setEditNote(e.target.value)} rows={3} placeholder="Add admin note..." />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Status</Label>
+                <Select value={editStatus} onValueChange={(v) => setEditStatus(v as LeaveStatus)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setEditTarget(null); setEditNote(""); }}>Cancel</Button>
+            <Button onClick={handleEditSave}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deleteTarget} onOpenChange={(o) => { if (!o) setDeleteTarget(null); }}>
+        <DialogContent className="sm:max-w-xs">
+          <DialogHeader><DialogTitle>Delete Leave Request</DialogTitle></DialogHeader>
+          <p className="text-sm text-muted-foreground">Are you sure you want to delete this leave request?</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDeleteLeave}>Delete</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

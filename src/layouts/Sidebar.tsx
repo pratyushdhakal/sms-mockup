@@ -20,6 +20,13 @@ import {
   FileQuestion,
   DoorOpen,
   GraduationCap,
+  Settings,
+  BookType,
+  Layers,
+  Library,
+  GanttChartSquare,
+  SlidersHorizontal,
+  UserCog,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -102,6 +109,34 @@ const ALL_NAV: Record<string, NavEntry[]> = {
     },
     { type: "single", item: { id: "notices", label: "Announcements", icon: Bell } },
     { type: "single", item: { id: "fees", label: "Fee Management", icon: CreditCard } },
+    {
+      type: "group",
+      group: {
+        label: "Administration",
+        icon: Settings,
+        items: [
+          { id: "class-groups", label: "Class Groups", icon: Layers },
+          { id: "sections", label: "Sections", icon: BookType },
+          { id: "subjects", label: "Subjects", icon: Library },
+          { id: "academic-years", label: "Academic Years", icon: Calendar },
+          { id: "fee-structure", label: "Fee Structure", icon: GanttChartSquare },
+          { id: "grading-scale", label: "Grading Scale", icon: SlidersHorizontal },
+          { id: "reference-data", label: "Reference Data", icon: Tag },
+          { id: "school-settings", label: "School Settings", icon: Settings },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "User Management",
+        icon: UserCog,
+        items: [
+          { id: "users", label: "User Accounts", icon: Users },
+          { id: "parents", label: "Parents", icon: GraduationCap },
+        ],
+      },
+    },
   ],
   teacher: [
     { type: "single", item: { id: "dashboard", label: "Dashboard", icon: LayoutDashboard } },

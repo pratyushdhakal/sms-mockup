@@ -21,6 +21,16 @@ import AdminFees from "./pages/admin/AdminFees";
 import AdminInquiries from "./pages/admin/AdminInquiries";
 import AdminAdmissions from "./pages/admin/AdminAdmissions";
 import AdminStudents from "./pages/admin/AdminStudents";
+import AdminClassGroups from "./pages/admin/AdminClassGroups";
+import AdminSections from "./pages/admin/AdminSections";
+import AdminSubjects from "./pages/admin/AdminSubjects";
+import AdminAcademicYears from "./pages/admin/AdminAcademicYears";
+import AdminFeeStructure from "./pages/admin/AdminFeeStructure";
+import AdminGradingScale from "./pages/admin/AdminGradingScale";
+import AdminReferenceData from "./pages/admin/AdminReferenceData";
+import AdminSchoolSettings from "./pages/admin/AdminSchoolSettings";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminParents from "./pages/admin/AdminParents";
 
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import TeacherClasses from "./pages/teacher/TeacherClasses";
@@ -82,6 +92,16 @@ const PAGE_MAP: Record<string, Record<string, React.FC>> = {
     fees: AdminFees,
     inquiry: AdminInquiries,
     admissions: AdminAdmissions,
+    "class-groups": AdminClassGroups,
+    sections: AdminSections,
+    subjects: AdminSubjects,
+    "academic-years": AdminAcademicYears,
+    "fee-structure": AdminFeeStructure,
+    "grading-scale": AdminGradingScale,
+    "reference-data": AdminReferenceData,
+    "school-settings": AdminSchoolSettings,
+    users: AdminUsers,
+    parents: AdminParents,
   },
   teacher: {
     dashboard: TeacherDashboard,

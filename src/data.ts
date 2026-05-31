@@ -2,6 +2,7 @@ import type {
   User, Student, Teacher, StaffMember, AttendanceRecord, ClassGroup,
   Intake, LeaveRequest, RoutineSlot, Announcement, CalendarEvent,
   Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent, Inquiry, DeviceLog,
+  Subject, FeeType, GradingScale, ReferenceDatum, SchoolConfig,
 } from "./types";
 
 export const MOCK_USERS: User[] = [
@@ -266,4 +267,103 @@ export function setPublishedResult(key: string, value: boolean) {
 export const CLASSES_LIST = ["Nursery", "LKG", "UKG", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9", "Grade 10"];
 export const SECTIONS = ["Section A", "Section B", "Section C", "Section D"];
 export const BATCHES = ["2080", "2081", "2082", "2083", "2084", "2085"];
+
+export const SUBJECTS: Subject[] = [
+  { id: "SUB01", name: "Mathematics", code: "MATH" },
+  { id: "SUB02", name: "Science", code: "SCI" },
+  { id: "SUB03", name: "English", code: "ENG" },
+  { id: "SUB04", name: "Nepali", code: "NEP" },
+  { id: "SUB05", name: "Social Studies", code: "SOC" },
+  { id: "SUB06", name: "Computer Science", code: "COM" },
+  { id: "SUB07", name: "Health & Physical Education", code: "HPE" },
+  { id: "SUB08", name: "General Knowledge", code: "GK" },
+  { id: "SUB09", name: "Science & Environment", code: "SCI-ENV" },
+  { id: "SUB10", name: "Moral Education", code: "MORAL" },
+];
+
+export const FEE_TYPES: FeeType[] = [
+  { id: "FT001", name: "Tuition Fee", amount: 5000, classId: "C001" },
+  { id: "FT002", name: "Transport Fee", amount: 1500, classId: "C001" },
+  { id: "FT003", name: "Library Fee", amount: 500, classId: "C001" },
+  { id: "FT004", name: "Tuition Fee", amount: 5500, classId: "C004" },
+  { id: "FT005", name: "Transport Fee", amount: 1500, classId: "C004" },
+  { id: "FT006", name: "Computer Lab Fee", amount: 800, classId: "C004" },
+  { id: "FT007", name: "Tuition Fee", amount: 7000, classId: "C007" },
+  { id: "FT008", name: "Science Lab Fee", amount: 1000, classId: "C007" },
+  { id: "FT009", name: "Exam Fee", amount: 1000, classId: "C007" },
+  { id: "FT010", name: "Tuition Fee", amount: 4500, classId: "C002" },
+];
+
+export const GRADING_SCALES: GradingScale[] = [
+  { id: "GS01", grade: "A+", minPercentage: 90, maxPercentage: 100 },
+  { id: "GS02", grade: "A", minPercentage: 80, maxPercentage: 89 },
+  { id: "GS03", grade: "B+", minPercentage: 70, maxPercentage: 79 },
+  { id: "GS04", grade: "B", minPercentage: 60, maxPercentage: 69 },
+  { id: "GS05", grade: "C+", minPercentage: 50, maxPercentage: 59 },
+  { id: "GS06", grade: "C", minPercentage: 40, maxPercentage: 49 },
+  { id: "GS07", grade: "D", minPercentage: 0, maxPercentage: 39 },
+];
+
+export const REFERENCE_DATA: ReferenceDatum[] = [
+  { id: "REF001", type: "staff_role", value: "accountant" },
+  { id: "REF002", type: "staff_role", value: "librarian" },
+  { id: "REF003", type: "staff_role", value: "front_desk" },
+  { id: "REF004", type: "staff_role", value: "admin_assistant" },
+  { id: "REF005", type: "staff_role", value: "security" },
+  { id: "REF006", type: "staff_role", value: "cleaner" },
+  { id: "REF007", type: "staff_role", value: "other" },
+  { id: "REF008", type: "leave_type", value: "sick" },
+  { id: "REF009", type: "leave_type", value: "casual" },
+  { id: "REF010", type: "leave_type", value: "annual" },
+  { id: "REF011", type: "leave_type", value: "maternity" },
+  { id: "REF012", type: "leave_type", value: "paternity" },
+  { id: "REF013", type: "leave_type", value: "unpaid" },
+  { id: "REF014", type: "gender", value: "Male" },
+  { id: "REF015", type: "gender", value: "Female" },
+  { id: "REF016", type: "gender", value: "Other" },
+  { id: "REF017", type: "blood_group", value: "A+" },
+  { id: "REF018", type: "blood_group", value: "A-" },
+  { id: "REF019", type: "blood_group", value: "B+" },
+  { id: "REF020", type: "blood_group", value: "B-" },
+  { id: "REF021", type: "blood_group", value: "AB+" },
+  { id: "REF022", type: "blood_group", value: "AB-" },
+  { id: "REF023", type: "blood_group", value: "O+" },
+  { id: "REF024", type: "blood_group", value: "O-" },
+  { id: "REF025", type: "religion", value: "Hindu" },
+  { id: "REF026", type: "religion", value: "Buddhist" },
+  { id: "REF027", type: "religion", value: "Muslim" },
+  { id: "REF028", type: "religion", value: "Christian" },
+  { id: "REF029", type: "religion", value: "Other" },
+  { id: "REF030", type: "ethnic_group", value: "Brahmin" },
+  { id: "REF031", type: "ethnic_group", value: "Chhetri" },
+  { id: "REF032", type: "ethnic_group", value: "Newar" },
+  { id: "REF033", type: "ethnic_group", value: "Magar" },
+  { id: "REF034", type: "ethnic_group", value: "Tharu" },
+  { id: "REF035", type: "ethnic_group", value: "Tamang" },
+  { id: "REF036", type: "ethnic_group", value: "Rai" },
+  { id: "REF037", type: "ethnic_group", value: "Limbu" },
+  { id: "REF038", type: "ethnic_group", value: "Gurung" },
+  { id: "REF039", type: "ethnic_group", value: "Sherpa" },
+  { id: "REF040", type: "ethnic_group", value: "Other" },
+  { id: "REF041", type: "fee_status", value: "Paid" },
+  { id: "REF042", type: "fee_status", value: "Due" },
+  { id: "REF043", type: "fee_status", value: "Partial" },
+  { id: "REF044", type: "audience", value: "all" },
+  { id: "REF045", type: "audience", value: "students" },
+  { id: "REF046", type: "audience", value: "teachers" },
+  { id: "REF047", type: "audience", value: "staff" },
+  { id: "REF048", type: "audience", value: "parents" },
+  { id: "REF049", type: "residency_type", value: "Local" },
+  { id: "REF050", type: "residency_type", value: "Resident" },
+  { id: "REF051", type: "residency_type", value: "Non-Resident" },
+  { id: "REF052", type: "staff_type", value: "Teaching" },
+  { id: "REF053", type: "staff_type", value: "Non-Teaching" },
+];
+
+export const SCHOOL_CONFIG: SchoolConfig = {
+  schoolName: "Vidya School",
+  address: "Biratnagar, Morang, Nepal",
+  phone: "9800980260",
+  activeAcademicYear: "2083",
+};
 

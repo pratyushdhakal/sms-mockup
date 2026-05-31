@@ -38,6 +38,7 @@ export default function TeacherAssignments() {
       subject: createForm.subject,
       teacherId,
       dueDate: createForm.dueDate,
+      batch: "",
       createdAt: new Date().toISOString().split("T")[0],
       schoolId: "SCH001",
     };

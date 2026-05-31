@@ -124,6 +124,14 @@ export interface StaffMember {
   panNumber?: string;
   permanentAddress?: string;
   temporaryAddress?: string;
+  nameNepali?: string;
+  officialEmail?: string;
+  smsNumber?: string;
+  username?: string;
+  avatar?: string;
+  residencyType?: string;
+  staffType?: string;
+  assignedClassIds?: string[];
 }
 
 export type StaffRole = "accountant" | "librarian" | "front_desk" | "admin_assistant" | "security" | "cleaner" | "other";
@@ -226,6 +234,7 @@ export interface RoutineSlot {
   teacherId: string;
   room: string;
   schoolId: string;
+  isHoliday?: boolean;
 }
 
 export interface Announcement {
@@ -280,6 +289,7 @@ export interface Assignment {
   subject: string;
   teacherId: string;
   dueDate: string;
+  batch: string; // Added batch
   fileUrl?: string;
   createdAt: string;
   schoolId: string;

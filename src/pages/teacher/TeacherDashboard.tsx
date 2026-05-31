@@ -1,5 +1,6 @@
 import { GraduationCap, Users, CalendarCheck, Clock, BookOpen, ClipboardCheck, FileText } from "lucide-react";
-import { TEACHERS, STUDENTS, CLASS_GROUPS, ATTENDANCE, LEAVE_REQUESTS, ROUTINE_SLOTS } from "../../data";
+import { TEACHERS, STUDENTS, CLASS_GROUPS, ATTENDANCE, LEAVE_REQUESTS } from "../../data";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -17,8 +18,9 @@ export default function TeacherDashboard() {
 
   const pendingLeaves = LEAVE_REQUESTS.filter((l) => l.userId === "U002" && l.status === "pending").length;
 
+  const { routineSlots } = useStore();
   const todayDay = DAY_NAMES[new Date().getDay()];
-  const todaySlots = ROUTINE_SLOTS.filter((s) => s.teacherId === "U002" && s.day === todayDay);
+  const todaySlots = routineSlots.filter((s) => s.teacherId === "U002" && s.day === todayDay);
   const classMap = Object.fromEntries(CLASS_GROUPS.map((c) => [c.id, c.name]));
 
   const statCards = [

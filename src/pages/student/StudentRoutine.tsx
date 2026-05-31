@@ -1,9 +1,11 @@
-import { ROUTINE_SLOTS, TEACHERS, DAYS, PERIODS } from "../../data";
+import { TEACHERS, DAYS, PERIODS } from "../../data";
+import { useStore } from "../../StoreContext";
 
 const STUDENT_CLASS_ID = "C003";
 
 export default function StudentRoutine() {
-  const slots = ROUTINE_SLOTS.filter((s) => s.classId === STUDENT_CLASS_ID);
+  const { routineSlots } = useStore();
+  const slots = routineSlots.filter((s) => s.classId === STUDENT_CLASS_ID);
 
   function getTeacherName(teacherId: string): string {
     const teacher = TEACHERS.find((t) => t.userId === teacherId);

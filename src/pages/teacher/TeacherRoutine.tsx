@@ -1,11 +1,13 @@
-import { ROUTINE_SLOTS, CLASS_GROUPS } from "../../data";
+import { CLASS_GROUPS } from "../../data";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
 const PERIODS = [1, 2, 3, 4, 5, 6];
 
 export default function TeacherRoutine() {
-  const mySlots = ROUTINE_SLOTS.filter((s) => s.teacherId === "U002");
+  const { routineSlots } = useStore();
+  const mySlots = routineSlots.filter((s) => s.teacherId === "U002");
   const classMap = Object.fromEntries(CLASS_GROUPS.map((c) => [c.id, { name: c.name, section: c.section }]));
 
   function getSlot(day: string, period: number) {

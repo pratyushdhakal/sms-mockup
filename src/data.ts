@@ -30,11 +30,66 @@ export const CLASS_GROUPS: ClassGroup[] = [
   { id: "C009", name: "Grade 9", section: "Section A", teacherId: "U004", room: "203", schoolId: "SCH001" },
 ];
 
-export const TEACHERS: Teacher[] = [];
+export const TEACHERS: Teacher[] = [
+  { id: "T001", userId: "U002", name: "Ram Prasad KC", email: "ram@school.edu", phone: "9800000001", subjectSpecialization: "Mathematics", assignedClassIds: ["C001", "C004", "C007"], joined: "2080-01-01", status: "Active", schoolId: "SCH001" },
+  { id: "T002", userId: "U003", name: "Sunita Maharjan", email: "sunita@school.edu", phone: "9800000002", subjectSpecialization: "Science", assignedClassIds: ["C002", "C005", "C008"], joined: "2080-01-01", status: "Active", schoolId: "SCH001" },
+  { id: "T003", userId: "U004", name: "Kamala Adhikari", email: "kamala@school.edu", phone: "9800000003", subjectSpecialization: "English", assignedClassIds: ["C003", "C006", "C009"], joined: "2080-01-01", status: "Active", schoolId: "SCH001" },
+];
 
-export const STAFF: StaffMember[] = [];
+export const STAFF: StaffMember[] = [
+  {
+    id: "S001", userId: "U005", name: "Gopal Shrestha", email: "gopal@school.edu", phone: "9800000004",
+    role: "accountant", department: "Finance", joined: "2080-01-01", status: "Active", schoolId: "SCH001",
+    employeeCode: "EMP001", title: "Mr.", gender: "Male", dob: "2040-05-15", bloodGroup: "O+",
+    nationality: "Nepali", religion: "Hindu", ethnicGroup: "Shrestha", motherTongue: "Nepali",
+    maritalStatus: "Married", designation: "Senior Accountant", jobType: "Permanent",
+    subDesignation: "", subDepartment: "Accounts", branch: "Main", level: "Senior",
+    hireDate: "2080-01-01", salary: "45000", paymentMethod: "Bank Transfer",
+    highestQualification: "BBA", experienceYears: "5", specialization: "Accounting",
+    citizenshipNumber: "45-01-23456789", panNumber: "123456789",
+    permanentAddress: "Biratnagar, Morang", temporaryAddress: "",
+    nameNepali: "गोपाल श्रेष्ठ", officialEmail: "gopal@school.edu.np", smsNumber: "9800000004",
+    username: "gopal.shrestha", avatar: "", residencyType: "Local", staffType: "Non-Teaching",
+    assignedClassIds: [],
+  },
+  {
+    id: "S002", userId: "U006", name: "Binod Karmacharya", email: "binod@school.edu", phone: "9800000005",
+    role: "librarian", department: "Library", joined: "2080-01-01", status: "Active", schoolId: "SCH001",
+    employeeCode: "EMP002", title: "Mr.", gender: "Male", dob: "2042-08-20", bloodGroup: "A+",
+    nationality: "Nepali", religion: "Hindu", ethnicGroup: "Karmacharya", motherTongue: "Nepali",
+    maritalStatus: "Unmarried", designation: "Librarian", jobType: "Permanent",
+    subDesignation: "", subDepartment: "", branch: "Main", level: "Junior",
+    hireDate: "2080-06-01", salary: "35000", paymentMethod: "Bank Transfer",
+    highestQualification: "B.Lib.Sc", experienceYears: "3", specialization: "Library Science",
+    citizenshipNumber: "45-02-34567890", panNumber: "234567890",
+    permanentAddress: "Dharan, Sunsari", temporaryAddress: "",
+    nameNepali: "बिनोद कर्माचार्य", officialEmail: "binod@school.edu.np", smsNumber: "9800000005",
+    username: "binod.karmacharya", avatar: "", residencyType: "Local", staffType: "Non-Teaching",
+    assignedClassIds: [],
+  },
+  {
+    id: "S003", userId: "", name: "Sita Acharya", email: "sita.acharya@school.edu", phone: "9812345678",
+    role: "front_desk", department: "Administration", joined: "2081-04-01", status: "Active", schoolId: "SCH001",
+    employeeCode: "EMP003", title: "Mrs.", gender: "Female", dob: "2045-12-10", bloodGroup: "B+",
+    nationality: "Nepali", religion: "Hindu", ethnicGroup: "Acharya", motherTongue: "Nepali",
+    maritalStatus: "Married", designation: "Front Desk Officer", jobType: "Contract",
+    subDesignation: "", subDepartment: "Reception", branch: "Main", level: "Junior",
+    hireDate: "2081-04-01", salary: "25000", paymentMethod: "Cash",
+    highestQualification: "BA", experienceYears: "2", specialization: "Administration",
+    citizenshipNumber: "45-03-45678901", panNumber: "345678901",
+    permanentAddress: "Itahari, Sunsari", temporaryAddress: "",
+    nameNepali: "सीता अचार्य", officialEmail: "sita@school.edu.np", smsNumber: "9812345678",
+    username: "sita.acharya", avatar: "", residencyType: "Local", staffType: "Teaching",
+    assignedClassIds: ["C001", "C002", "C003"],
+  },
+];
 
-export const STUDENTS: Student[] = [];
+export const STUDENTS: Student[] = [
+  { id: "STU-601", name: "Yuwansh Magar", classId: "C003", section: "Section A", rollNumber: "1", batch: "2083", phone: "9800000006", email: "yuwansh@email.com", fee: "Paid", status: "Active", dob: "2075-05-15", gender: "Male", bloodGroup: "O+", nationality: "Nepali", religion: "Hindu", motherTongue: "Nepali", ethnicGroup: "Magar", permanentAddress: "Biratnagar, Morang", temporaryAddress: "", fatherName: "Hari Magar", fatherOccupation: "Teacher", motherName: "Sita Magar", motherOccupation: "Housewife", guardianName: "Hari Magar", guardianContact: "9800000012", guardianRelation: "Father", parentEmail: "parent@email.com", previousSchool: "", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U007" },
+  { id: "STU-602", name: "Bijan Shakya", classId: "C003", section: "Section A", rollNumber: "2", batch: "2083", phone: "9800000007", email: "bijan@email.com", fee: "Paid", status: "Active", dob: "2075-08-20", gender: "Male", bloodGroup: "A+", nationality: "Nepali", religion: "Buddhist", motherTongue: "Nepali", ethnicGroup: "Shakya", permanentAddress: "Dharan, Sunsari", temporaryAddress: "", fatherName: "Rajan Shakya", fatherOccupation: "Business", motherName: "Anita Shakya", motherOccupation: "Housewife", guardianName: "Rajan Shakya", guardianContact: "9800000013", guardianRelation: "Father", parentEmail: "", previousSchool: "", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U008" },
+  { id: "STU-603", name: "Aarav Sharma", classId: "C004", section: "Section A", rollNumber: "1", batch: "2083", phone: "9800000009", email: "aarav@email.com", fee: "Paid", status: "Active", dob: "2074-03-10", gender: "Male", bloodGroup: "B+", nationality: "Nepali", religion: "Hindu", motherTongue: "Nepali", ethnicGroup: "Sharma", permanentAddress: "Itahari, Sunsari", temporaryAddress: "", fatherName: "Ramesh Sharma", fatherOccupation: "Engineer", motherName: "Pooja Sharma", motherOccupation: "Nurse", guardianName: "Ramesh Sharma", guardianContact: "9800000014", guardianRelation: "Father", parentEmail: "", previousSchool: "Sunshine School", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U010" },
+  { id: "STU-604", name: "Priya Thapa", classId: "C007", section: "Section A", rollNumber: "5", batch: "2083", phone: "9800000010", email: "priya@email.com", fee: "Partial", status: "Active", dob: "2065-12-25", gender: "Female", bloodGroup: "AB+", nationality: "Nepali", religion: "Hindu", motherTongue: "Nepali", ethnicGroup: "Thapa", permanentAddress: "Urlabari, Morang", temporaryAddress: "", fatherName: "Krishna Thapa", fatherOccupation: "Farmer", motherName: "Maya Thapa", motherOccupation: "Housewife", guardianName: "Krishna Thapa", guardianContact: "9800000015", guardianRelation: "Father", parentEmail: "", previousSchool: "Everest Academy", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U011" },
+];
 
 export const ATTENDANCE: AttendanceRecord[] = [];
 
@@ -87,7 +142,57 @@ export const INQUIRIES: Inquiry[] = [
 
 export const LEAVE_REQUESTS: LeaveRequest[] = [];
 
-export const ROUTINE_SLOTS: RoutineSlot[] = [];
+export const ROUTINE_SLOTS: RoutineSlot[] = [
+  // Grade 10 A (C007) — Ram Prasad KC (U002) is the class teacher
+  { id: "R001", classId: "C007", day: "Sunday", period: 1, subject: "Mathematics", teacherId: "U002", room: "201", schoolId: "SCH001" },
+  { id: "R002", classId: "C007", day: "Sunday", period: 2, subject: "Science", teacherId: "U003", room: "201", schoolId: "SCH001" },
+  { id: "R003", classId: "C007", day: "Sunday", period: 3, subject: "English", teacherId: "U004", room: "201", schoolId: "SCH001" },
+  { id: "R004", classId: "C007", day: "Monday", period: 1, subject: "English", teacherId: "U004", room: "201", schoolId: "SCH001" },
+  { id: "R005", classId: "C007", day: "Monday", period: 2, subject: "Mathematics", teacherId: "U002", room: "201", schoolId: "SCH001" },
+  { id: "R006", classId: "C007", day: "Monday", period: 3, subject: "Science", teacherId: "U003", room: "201", schoolId: "SCH001" },
+  { id: "R007", classId: "C007", day: "Tuesday", period: 1, subject: "Nepali", teacherId: "U004", room: "Lab", schoolId: "SCH001" },
+  { id: "R008", classId: "C007", day: "Tuesday", period: 2, subject: "Mathematics", teacherId: "U002", room: "201", schoolId: "SCH001" },
+  { id: "R009", classId: "C007", day: "Tuesday", period: 3, subject: "Science", teacherId: "U003", room: "Lab", schoolId: "SCH001" },
+  { id: "R010", classId: "C007", day: "Wednesday", period: 1, subject: "Mathematics", teacherId: "U002", room: "201", schoolId: "SCH001" },
+  { id: "R011", classId: "C007", day: "Wednesday", period: 2, subject: "English", teacherId: "U004", room: "201", schoolId: "SCH001" },
+  { id: "R012", classId: "C007", day: "Wednesday", period: 3, subject: "Nepali", teacherId: "U004", room: "201", schoolId: "SCH001" },
+  { id: "R013", classId: "C007", day: "Thursday", period: 1, subject: "Science", teacherId: "U003", room: "Lab", schoolId: "SCH001" },
+  { id: "R014", classId: "C007", day: "Thursday", period: 2, subject: "Mathematics", teacherId: "U002", room: "201", schoolId: "SCH001" },
+  { id: "R015", classId: "C007", day: "Thursday", period: 3, subject: "English", teacherId: "U004", room: "201", schoolId: "SCH001" },
+  // UKG (C003) — Kamala Adhikari (U004) is the class teacher
+  { id: "R016", classId: "C003", day: "Sunday", period: 1, subject: "English", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R017", classId: "C003", day: "Sunday", period: 2, subject: "Mathematics", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R018", classId: "C003", day: "Monday", period: 1, subject: "Nepali", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R019", classId: "C003", day: "Monday", period: 2, subject: "English", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R020", classId: "C003", day: "Tuesday", period: 1, subject: "Mathematics", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R021", classId: "C003", day: "Tuesday", period: 2, subject: "Nepali", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R022", classId: "C003", day: "Wednesday", period: 1, subject: "English", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R023", classId: "C003", day: "Wednesday", period: 2, subject: "Mathematics", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R024", classId: "C003", day: "Thursday", period: 1, subject: "Nepali", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  { id: "R025", classId: "C003", day: "Thursday", period: 2, subject: "English", teacherId: "U004", room: "103", schoolId: "SCH001" },
+  // Nursery (C001) — Ram Prasad KC (U002)
+  { id: "R026", classId: "C001", day: "Sunday", period: 1, subject: "English", teacherId: "U002", room: "101", schoolId: "SCH001" },
+  { id: "R027", classId: "C001", day: "Sunday", period: 2, subject: "Mathematics", teacherId: "U002", room: "101", schoolId: "SCH001" },
+  { id: "R028", classId: "C001", day: "Monday", period: 1, subject: "Nepali", teacherId: "U002", room: "101", schoolId: "SCH001" },
+  { id: "R029", classId: "C001", day: "Monday", period: 2, subject: "English", teacherId: "U002", room: "101", schoolId: "SCH001" },
+  { id: "R030", classId: "C001", day: "Tuesday", period: 1, subject: "Mathematics", teacherId: "U002", room: "101", schoolId: "SCH001" },
+  { id: "R031", classId: "C001", day: "Tuesday", period: 2, subject: "Nepali", teacherId: "U002", room: "101", schoolId: "SCH001" },
+  // Class 1 (C004) — Ram Prasad KC (U002)
+  { id: "R032", classId: "C004", day: "Sunday", period: 1, subject: "Science", teacherId: "U002", room: "104", schoolId: "SCH001" },
+  { id: "R033", classId: "C004", day: "Sunday", period: 2, subject: "Mathematics", teacherId: "U002", room: "104", schoolId: "SCH001" },
+  { id: "R034", classId: "C004", day: "Monday", period: 1, subject: "Mathematics", teacherId: "U002", room: "104", schoolId: "SCH001" },
+  { id: "R035", classId: "C004", day: "Monday", period: 2, subject: "Science", teacherId: "U002", room: "104", schoolId: "SCH001" },
+  // Grade 10 B (C008) — Sunita Maharjan (U003)
+  { id: "R036", classId: "C008", day: "Sunday", period: 1, subject: "Science", teacherId: "U003", room: "202", schoolId: "SCH001" },
+  { id: "R037", classId: "C008", day: "Sunday", period: 2, subject: "Mathematics", teacherId: "U003", room: "202", schoolId: "SCH001" },
+  { id: "R038", classId: "C008", day: "Monday", period: 1, subject: "English", teacherId: "U003", room: "202", schoolId: "SCH001" },
+  { id: "R039", classId: "C008", day: "Monday", period: 2, subject: "Science", teacherId: "U003", room: "Lab", schoolId: "SCH001" },
+  // Class 3 (C006) — Kamala Adhikari (U004)
+  { id: "R040", classId: "C006", day: "Sunday", period: 1, subject: "English", teacherId: "U004", room: "106", schoolId: "SCH001" },
+  { id: "R041", classId: "C006", day: "Sunday", period: 2, subject: "Mathematics", teacherId: "U004", room: "106", schoolId: "SCH001" },
+  { id: "R042", classId: "C006", day: "Monday", period: 1, subject: "Nepali", teacherId: "U004", room: "106", schoolId: "SCH001" },
+  { id: "R043", classId: "C006", day: "Monday", period: 2, subject: "English", teacherId: "U004", room: "106", schoolId: "SCH001" },
+];
 
 export const ANNOUNCEMENTS: Announcement[] = [
   { id: "N001", title: "Admissions Open for 2083", content: "Admissions are now open for Nursery through Grade 4 for the academic year 2083. Visit the school office for details.", audience: "all", priority: "high", publishDate: "2026-05-01", createdAt: "2026-04-28", schoolId: "SCH001" },
@@ -125,13 +230,30 @@ export const EXAM_MARKS: ExamMarks[] = [
   },
 ];
 
-export const ASSIGNMENTS: Assignment[] = [];
+export const ASSIGNMENTS: Assignment[] = [
+  { id: "AS001", title: "Algebra Basics", description: "Solve 10 basic algebra problems from Chapter 2. Show all steps clearly.", classId: "C001", subject: "Mathematics", teacherId: "U002", dueDate: "2083-05-15", batch: "2083", createdAt: "2026-05-01T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS002", title: "Science Lab Report", description: "Write a lab report on the plant growth experiment. Include hypothesis, method, observations, and conclusion.", classId: "C004", subject: "Science", teacherId: "U002", dueDate: "2083-05-20", batch: "2083", createdAt: "2026-05-03T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS003", title: "Quadratic Equations", description: "Solve 15 quadratic equations using the quadratic formula. Submit all work on A4 paper.", classId: "C007", subject: "Mathematics", teacherId: "U002", dueDate: "2083-05-25", batch: "2083", createdAt: "2026-05-05T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS004", title: "Grammar Exercise", description: "Complete exercises 1-5 from the Grammar section of Unit 3. Identify nouns, verbs, and adjectives.", classId: "C002", subject: "English", teacherId: "U003", dueDate: "2083-05-18", batch: "2083", createdAt: "2026-05-02T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS005", title: "Chemical Reactions", description: "Write balanced equations for 10 chemical reactions. Identify the type of each reaction.", classId: "C008", subject: "Science", teacherId: "U003", dueDate: "2083-06-01", batch: "2083", createdAt: "2026-05-06T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS006", title: "Reading Comprehension", description: "Read the story 'The Honest Woodcutter' and answer the 5 questions at the end.", classId: "C003", subject: "English", teacherId: "U004", dueDate: "2083-05-22", batch: "2083", createdAt: "2026-05-04T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS007", title: "Addition Practice", description: "Complete 20 addition problems from the worksheet. Practice carrying over numbers.", classId: "C003", subject: "Mathematics", teacherId: "U004", dueDate: "2083-05-28", batch: "2083", createdAt: "2026-05-07T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS008", title: "Nepali Essay", description: "Write a 300-word essay on 'Mero Desh' (My Country) in Nepali.", classId: "C009", subject: "Nepali", teacherId: "U004", dueDate: "2083-06-05", batch: "2083", createdAt: "2026-05-08T10:00:00Z", schoolId: "SCH001" },
+];
 
-export const SUBMISSIONS: AssignmentSubmission[] = [];
+export const SUBMISSIONS: AssignmentSubmission[] = [
+  { id: "SUB1712345678901", assignmentId: "AS006", studentId: "STU-601", response: "The woodcutter was honest because he returned the golden axe to the goddess. He did not lie about losing it.", submittedAt: "2026-05-20T14:30:00Z", reviewed: false, schoolId: "SCH001" },
+  { id: "SUB1712345678902", assignmentId: "AS007", studentId: "STU-601", response: "Completed all 20 addition problems. Answers: 45, 78, 123, 56, 89, 234, 67, 90, 345, 78, 456, 567, 89, 678, 90, 789, 123, 890, 234, 901.", submittedAt: "2026-05-26T09:15:00Z", score: 18, reviewed: true, comment: "Well done! Most answers correct. Check problems 7 and 14.", schoolId: "SCH001" },
+  { id: "SUB1712345678903", assignmentId: "AS003", studentId: "STU-604", response: "Completed all 15 quadratic equations. Used quadratic formula throughout.", submittedAt: "2026-05-23T11:00:00Z", score: 85, reviewed: true, comment: "Good work. Some mistakes in equation 9 and 12.", schoolId: "SCH001" },
+  { id: "SUB1712345678904", assignmentId: "AS003", studentId: "STU-603", response: "Solved 12 out of 15 equations. Could not solve equations 7, 10, and 14.", submittedAt: "2026-05-24T16:45:00Z", reviewed: false, schoolId: "SCH001" },
+  { id: "SUB1712345678905", assignmentId: "AS006", studentId: "STU-602", response: "The moral of the story is honesty always wins. The woodcutter got all three axes because he told the truth.", submittedAt: "2026-05-21T10:00:00Z", score: 10, reviewed: true, comment: "Good understanding of the moral. Try to write in complete sentences.", schoolId: "SCH001" },
+];
 
 export const FEE_RECORDS: FeeRecord[] = [];
 
-export const PARENT_STUDENT: ParentStudent[] = [];
+export const PARENT_STUDENT: ParentStudent[] = [
+  { parentId: "U009", studentId: "STU-601" },
+];
 
 export const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 export const PERIODS = [1, 2, 3, 4, 5, 6];
@@ -144,3 +266,4 @@ export function setPublishedResult(key: string, value: boolean) {
 export const CLASSES_LIST = ["Nursery", "LKG", "UKG", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9", "Grade 10"];
 export const SECTIONS = ["Section A", "Section B", "Section C", "Section D"];
 export const BATCHES = ["2080", "2081", "2082", "2083", "2084", "2085"];
+

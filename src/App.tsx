@@ -64,6 +64,7 @@ import type { UserRole } from "./types";
 const PAGE_MAP: Record<string, Record<string, React.FC>> = {
   admin: {
     dashboard: AdminDashboard,
+    categories: AdminAssignments,
     students: AdminStudents,
     "add-student": AdminStudents,
     intakes: AdminIntakes,

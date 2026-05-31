@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Search, Plus, Edit2, Trash2 } from "lucide-react";
 import type { StaffRole } from "../../types";
-import { STAFF as DATA_STAFF } from "../../data";
+import { STAFF as DATA_STAFF, CLASS_GROUPS } from "../../data";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -69,6 +70,14 @@ interface StaffEntry {
   panNumber?: string;
   permanentAddress?: string;
   temporaryAddress?: string;
+  nameNepali?: string;
+  officialEmail?: string;
+  smsNumber?: string;
+  username?: string;
+  avatar?: string;
+  residencyType?: string;
+  staffType?: string;
+  assignedClassIds?: string[];
 }
 
 function getInitials(name: string) {
@@ -109,6 +118,14 @@ const INIT_FORM = {
   panNumber: "",
   permanentAddress: "",
   temporaryAddress: "",
+  nameNepali: "",
+  officialEmail: "",
+  smsNumber: "",
+  username: "",
+  avatar: "",
+  residencyType: "",
+  staffType: "",
+  assignedClassIds: [] as string[],
 };
 
 type FormState = typeof INIT_FORM;
@@ -118,7 +135,7 @@ export default function AdminStaff() {
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>({ ...INIT_FORM });
+  const [form, setForm] = useState<FormState>({ ...INIT_FORM, assignedClassIds: [] });
 
   const filtered = staff.filter(
     (s) =>
@@ -130,6 +147,15 @@ export default function AdminStaff() {
 
   function handleChange(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  function toggleClass(classId: string) {
+    setForm((prev) => ({
+      ...prev,
+      assignedClassIds: prev.assignedClassIds.includes(classId)
+        ? prev.assignedClassIds.filter((id) => id !== classId)
+        : [...prev.assignedClassIds, classId],
+    }));
   }
 
   function handleEdit(member: StaffEntry) {
@@ -167,6 +193,14 @@ export default function AdminStaff() {
       panNumber: member.panNumber || "",
       permanentAddress: member.permanentAddress || "",
       temporaryAddress: member.temporaryAddress || "",
+      nameNepali: member.nameNepali || "",
+      officialEmail: member.officialEmail || "",
+      smsNumber: member.smsNumber || "",
+      username: member.username || "",
+      avatar: member.avatar || "",
+      residencyType: member.residencyType || "",
+      staffType: member.staffType || "",
+      assignedClassIds: member.assignedClassIds ? [...member.assignedClassIds] : [],
     });
     setEditingId(member.id);
     setDialogOpen(true);
@@ -176,6 +210,12 @@ export default function AdminStaff() {
     if (confirm("Are you sure you want to delete this staff member?")) {
       setStaff((prev) => prev.filter((s) => s.id !== id));
     }
+  }
+
+  function openNew() {
+    setEditingId(null);
+    setForm({ ...INIT_FORM, assignedClassIds: [] });
+    setDialogOpen(true);
   }
 
   function handleSubmit() {
@@ -210,7 +250,7 @@ export default function AdminStaff() {
           <div className="flex gap-2">
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm">
+                <Button size="sm" onClick={openNew}>
                   <Plus size={14} /> Add New
                 </Button>
               </DialogTrigger>
@@ -220,184 +260,297 @@ export default function AdminStaff() {
                     {editingId ? "Edit Staff" : "Add New Staff"}
                   </DialogTitle>
                 </DialogHeader>
-                <div className="flex-1 min-h-0 px-6 py-4 overflow-y-auto">
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Section: Personal Details */}
-                  <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Personal Details
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Employee Code</Label>
-                    <Input value={form.employeeCode} onChange={(e) => handleChange("employeeCode", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Title</Label>
-                    <Input value={form.title} onChange={(e) => handleChange("title", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Full Name *</Label>
-                    <Input value={form.name} onChange={(e) => handleChange("name", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Gender</Label>
-                    <Input value={form.gender} onChange={(e) => handleChange("gender", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Date of Birth</Label>
-                    <NepaliDatePicker
-                      value={form.dob}
-                      onChange={(v) => handleChange("dob", v)}
-                      placeholder="Select date of birth"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Blood Group</Label>
-                    <Input value={form.bloodGroup} onChange={(e) => handleChange("bloodGroup", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Nationality</Label>
-                    <Input value={form.nationality} onChange={(e) => handleChange("nationality", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Religion</Label>
-                    <Input value={form.religion} onChange={(e) => handleChange("religion", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Ethnic Group</Label>
-                    <Input value={form.ethnicGroup} onChange={(e) => handleChange("ethnicGroup", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Mother Tongue</Label>
-                    <Input value={form.motherTongue} onChange={(e) => handleChange("motherTongue", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Marital Status</Label>
-                    <Input value={form.maritalStatus} onChange={(e) => handleChange("maritalStatus", e.target.value)} />
-                  </div>
+                <Tabs defaultValue="account" className="flex-1 min-h-0 flex flex-col">
+                  <TabsList className="mx-6 mt-2 shrink-0">
+                    <TabsTrigger value="account">Create Account</TabsTrigger>
+                    <TabsTrigger value="access">Access Class and Section</TabsTrigger>
+                  </TabsList>
+                  <div className="flex-1 min-h-0 px-6 py-4 overflow-y-auto">
+                    <TabsContent value="account" className="mt-0">
+                      <div className="grid grid-cols-2 gap-4">
+                        {/* Section: Personal Details */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                          Personal Details
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Employee Code</Label>
+                          <Input value={form.employeeCode} onChange={(e) => handleChange("employeeCode", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Title</Label>
+                          <Input value={form.title} onChange={(e) => handleChange("title", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Full Name *</Label>
+                          <Input value={form.name} onChange={(e) => handleChange("name", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Name (Nepali)</Label>
+                          <Input value={form.nameNepali} onChange={(e) => handleChange("nameNepali", e.target.value)} placeholder="नेपाली नाम" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Gender</Label>
+                          <Input value={form.gender} onChange={(e) => handleChange("gender", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Date of Birth</Label>
+                          <NepaliDatePicker
+                            value={form.dob}
+                            onChange={(v) => handleChange("dob", v)}
+                            placeholder="Select date of birth"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Blood Group</Label>
+                          <Input value={form.bloodGroup} onChange={(e) => handleChange("bloodGroup", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Nationality</Label>
+                          <Input value={form.nationality} onChange={(e) => handleChange("nationality", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Religion</Label>
+                          <Input value={form.religion} onChange={(e) => handleChange("religion", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Ethnic Group</Label>
+                          <Input value={form.ethnicGroup} onChange={(e) => handleChange("ethnicGroup", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Mother Tongue</Label>
+                          <Input value={form.motherTongue} onChange={(e) => handleChange("motherTongue", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Marital Status</Label>
+                          <Input value={form.maritalStatus} onChange={(e) => handleChange("maritalStatus", e.target.value)} />
+                        </div>
 
-                  {/* Section: Professional Information */}
-                  <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
-                    Professional Information
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Designation</Label>
-                    <Input value={form.designation} onChange={(e) => handleChange("designation", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Job Type</Label>
-                    <Input value={form.jobType} onChange={(e) => handleChange("jobType", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Sub-Designation</Label>
-                    <Input value={form.subDesignation} onChange={(e) => handleChange("subDesignation", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Department</Label>
-                    <Input value={form.department} onChange={(e) => handleChange("department", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Sub-Department</Label>
-                    <Input value={form.subDepartment} onChange={(e) => handleChange("subDepartment", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Branch</Label>
-                    <Input value={form.branch} onChange={(e) => handleChange("branch", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Level</Label>
-                    <Input value={form.level} onChange={(e) => handleChange("level", e.target.value)} />
-                  </div>
+                        {/* Section: Contact & Login */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
+                          Contact & Login
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Email</Label>
+                          <Input value={form.email} onChange={(e) => handleChange("email", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Official Email</Label>
+                          <Input value={form.officialEmail} onChange={(e) => handleChange("officialEmail", e.target.value)} placeholder="official@school.edu.np" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Phone</Label>
+                          <Input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>SMS Number</Label>
+                          <Input value={form.smsNumber} onChange={(e) => handleChange("smsNumber", e.target.value)} placeholder="For SMS notifications" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Username</Label>
+                          <Input value={form.username} onChange={(e) => handleChange("username", e.target.value)} placeholder="Login username" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Avatar URL</Label>
+                          <Input value={form.avatar} onChange={(e) => handleChange("avatar", e.target.value)} placeholder="Image URL" />
+                        </div>
 
-                  {/* Section: Employment Status */}
-                  <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
-                    Employment Status
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Status</Label>
-                    <Select
-                      value={form.status}
-                      onValueChange={(v) => handleChange("status", v)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Hire Date</Label>
-                    <NepaliDatePicker
-                      value={form.hireDate}
-                      onChange={(v) => handleChange("hireDate", v)}
-                      placeholder="Select hire date"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Salary</Label>
-                    <Input value={form.salary} onChange={(e) => handleChange("salary", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Payment Method</Label>
-                    <Input value={form.paymentMethod} onChange={(e) => handleChange("paymentMethod", e.target.value)} />
-                  </div>
+                        {/* Section: Professional Information */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
+                          Professional Information
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Staff Type</Label>
+                          <Select value={form.staffType} onValueChange={(v) => handleChange("staffType", v)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select staff type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Teaching">Teaching</SelectItem>
+                              <SelectItem value="Non-Teaching">Non-Teaching</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Designation</Label>
+                          <Input value={form.designation} onChange={(e) => handleChange("designation", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Job Type</Label>
+                          <Input value={form.jobType} onChange={(e) => handleChange("jobType", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Role *</Label>
+                          <Select value={form.role} onValueChange={(v) => handleChange("role", v)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="accountant">Accountant</SelectItem>
+                              <SelectItem value="librarian">Librarian</SelectItem>
+                              <SelectItem value="front_desk">Front Desk</SelectItem>
+                              <SelectItem value="admin_assistant">Admin Assistant</SelectItem>
+                              <SelectItem value="security">Security</SelectItem>
+                              <SelectItem value="cleaner">Cleaner</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Residency Type</Label>
+                          <Select value={form.residencyType} onValueChange={(v) => handleChange("residencyType", v)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select residency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Local">Local</SelectItem>
+                              <SelectItem value="Resident">Resident</SelectItem>
+                              <SelectItem value="Non-Resident">Non-Resident</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Department *</Label>
+                          <Input value={form.department} onChange={(e) => handleChange("department", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Sub-Department</Label>
+                          <Input value={form.subDepartment} onChange={(e) => handleChange("subDepartment", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Branch</Label>
+                          <Input value={form.branch} onChange={(e) => handleChange("branch", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Level</Label>
+                          <Input value={form.level} onChange={(e) => handleChange("level", e.target.value)} />
+                        </div>
 
-                  {/* Section: Qualifications */}
-                  <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
-                    Qualifications
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Highest Qualification</Label>
-                    <Input value={form.highestQualification} onChange={(e) => handleChange("highestQualification", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Experience (Years)</Label>
-                    <Input value={form.experienceYears} onChange={(e) => handleChange("experienceYears", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Specialization</Label>
-                    <Input value={form.specialization} onChange={(e) => handleChange("specialization", e.target.value)} />
-                  </div>
+                        {/* Section: Employment Status */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
+                          Employment Status
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Status</Label>
+                          <Select
+                            value={form.status}
+                            onValueChange={(v) => handleChange("status", v)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Active">Active</SelectItem>
+                              <SelectItem value="Inactive">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>School Joined Date</Label>
+                          <NepaliDatePicker
+                            value={form.joined}
+                            onChange={(v) => handleChange("joined", v)}
+                            placeholder="Select joined date"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Hire Date</Label>
+                          <NepaliDatePicker
+                            value={form.hireDate}
+                            onChange={(v) => handleChange("hireDate", v)}
+                            placeholder="Select hire date"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Salary</Label>
+                          <Input value={form.salary} onChange={(e) => handleChange("salary", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Payment Method</Label>
+                          <Input value={form.paymentMethod} onChange={(e) => handleChange("paymentMethod", e.target.value)} />
+                        </div>
 
-                  {/* Section: Official ID */}
-                  <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
-                    Official Identification
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Citizenship Number</Label>
-                    <Input value={form.citizenshipNumber} onChange={(e) => handleChange("citizenshipNumber", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>PAN Number</Label>
-                    <Input value={form.panNumber} onChange={(e) => handleChange("panNumber", e.target.value)} />
-                  </div>
+                        {/* Section: Qualifications */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
+                          Qualifications
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Highest Qualification</Label>
+                          <Input value={form.highestQualification} onChange={(e) => handleChange("highestQualification", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Experience (Years)</Label>
+                          <Input value={form.experienceYears} onChange={(e) => handleChange("experienceYears", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Specialization</Label>
+                          <Input value={form.specialization} onChange={(e) => handleChange("specialization", e.target.value)} />
+                        </div>
 
-                  {/* Section: Address */}
-                  <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
-                    Address Information
+                        {/* Section: Official ID */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
+                          Official Identification
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Citizenship Number</Label>
+                          <Input value={form.citizenshipNumber} onChange={(e) => handleChange("citizenshipNumber", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>PAN Number</Label>
+                          <Input value={form.panNumber} onChange={(e) => handleChange("panNumber", e.target.value)} />
+                        </div>
+
+                        {/* Section: Address */}
+                        <div className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">
+                          Address Information
+                        </div>
+                        <div className="col-span-2 space-y-2">
+                          <Label>Permanent Address</Label>
+                          <textarea
+                            value={form.permanentAddress}
+                            onChange={(e) => handleChange("permanentAddress", e.target.value)}
+                            rows={2}
+                            className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                          />
+                        </div>
+                        <div className="col-span-2 space-y-2">
+                          <Label>Temporary Address</Label>
+                          <textarea
+                            value={form.temporaryAddress}
+                            onChange={(e) => handleChange("temporaryAddress", e.target.value)}
+                            rows={2}
+                            className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                          />
+                        </div>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="access" className="mt-0">
+                      <div className="space-y-4">
+                        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                          Assign Class & Section Access
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Select the classes and sections this staff member can access.
+                        </p>
+                        <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto p-3 border border-input rounded-md">
+                          {CLASS_GROUPS.map((cg) => (
+                            <label
+                              key={cg.id}
+                              className="flex items-center gap-2 text-sm cursor-pointer hover:text-foreground"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={form.assignedClassIds.includes(cg.id)}
+                                onChange={() => toggleClass(cg.id)}
+                                className="accent-primary"
+                              />
+                              {cg.name} ({cg.section})
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </TabsContent>
                   </div>
-                  <div className="col-span-2 space-y-2">
-                    <Label>Permanent Address</Label>
-                    <textarea
-                      value={form.permanentAddress}
-                      onChange={(e) => handleChange("permanentAddress", e.target.value)}
-                      rows={2}
-                      className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                    />
-                  </div>
-                  <div className="col-span-2 space-y-2">
-                    <Label>Temporary Address</Label>
-                    <textarea
-                      value={form.temporaryAddress}
-                      onChange={(e) => handleChange("temporaryAddress", e.target.value)}
-                      rows={2}
-                      className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                    />
-                  </div>
-                  </div>
-                </div>
+                </Tabs>
                 <DialogFooter className="px-6 pb-6 shrink-0">
                   <Button variant="outline" onClick={() => setDialogOpen(false)}>
                     Cancel
@@ -417,6 +570,9 @@ export default function AdminStaff() {
               <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Staff Type</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -439,6 +595,15 @@ export default function AdminStaff() {
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
                   {s.email}
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {s.department}
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground capitalize">
+                  {s.role.replace(/_/g, " ")}
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {s.staffType || "—"}
                 </TableCell>
                 <TableCell>
                   <Badge

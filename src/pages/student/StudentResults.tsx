@@ -1,8 +1,7 @@
 import { Award, CheckCircle, XCircle } from "lucide-react";
-import { EXAMS, EXAM_MARKS, PUBLISHED_RESULTS } from "../../data";
-
-const STUDENT_CLASS_ID = "C003";
-const STUDENT_ID = "STU-601";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 function getGrade(pct: number): string {
   if (pct >= 90) return "A+";
@@ -15,20 +14,23 @@ function getGrade(pct: number): string {
 }
 
 export default function StudentResults() {
-  const relevantExams = EXAMS.filter(
-    (e) => e.applicableClassIds.includes(STUDENT_CLASS_ID) && PUBLISHED_RESULTS[`${e.id}-${STUDENT_CLASS_ID}`]
+  const { currentStudent } = useAuth();
+  const { exams, examMarks } = useStore();
+  const classId = currentStudent?.classId || "";
+  const studentId = currentStudent?.id || "";
+
+  const PUBLISHED_RESULTS: Record<string, boolean> = {};
+  const relevantExams = exams.filter(
+    (e) => e.applicableClassIds.includes(classId) && PUBLISHED_RESULTS[`${e.id}-${classId}`]
   );
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">My Results</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Exam results and performance</p>
-      </div>
+      <Header title="My Results" subtitle="Exam results and performance" userName={currentStudent?.name} userRole="Student" />
 
       <div className="grid grid-cols-1 gap-6">
         {relevantExams.map((exam) => {
-          const marks = EXAM_MARKS.find((m) => m.examId === exam.id && m.studentId === STUDENT_ID);
+          const marks = examMarks.find((m) => m.examId === exam.id && m.studentId === studentId);
           let totalMarks = 0;
           let totalFullMarks = 0;
 

@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { TEACHERS, CLASS_GROUPS, STUDENTS } from "../../data";
+import { TEACHERS, CLASS_GROUPS } from "../../data";
 import type { AttendanceRecord, AttendanceStatus } from "../../types";
 import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 export default function TeacherMarkAttendance() {
-  const { setAttendanceRecords } = useStore();
-  const teacher = TEACHERS[0];
+  const { setAttendanceRecords, students } = useStore();
+  const storeTeachers = useStore().teachers;
+  const teacherList = storeTeachers.length > 0 ? storeTeachers : TEACHERS;
+  const teacher = teacherList[0];
   const myClasses = CLASS_GROUPS.filter((c) => teacher?.assignedClassIds?.includes(c.id) ?? false);
   const [selectedClass, setSelectedClass] = useState(myClasses[0]?.id || "");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [statuses, setStatuses] = useState<Record<string, AttendanceStatus>>({});
   const [saved, setSaved] = useState(false);
 
-  const studentsInClass = STUDENTS.filter((s) => s.classId === selectedClass);
+  const studentsInClass = students.filter((s) => s.classId === selectedClass);
 
   function markAllPresent() {
     const all: Record<string, AttendanceStatus> = {};

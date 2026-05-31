@@ -1,22 +1,24 @@
 import { useState } from "react";
 import { Plus, X, Eye, Star } from "lucide-react";
-import { ASSIGNMENTS as DATA_ASSIGNMENTS, SUBMISSIONS, CLASS_GROUPS, STUDENTS } from "../../data";
+import { CLASS_GROUPS } from "../../data";
 import type { Assignment, AssignmentSubmission } from "../../types";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 function getClassName(id: string) {
   return CLASS_GROUPS.find((c) => c.id === id)?.name || id;
 }
 
-function getStudentName(id: string) {
-  return STUDENTS.find((s) => s.id === id)?.name || id;
-}
-
 export default function TeacherAssignments() {
+  const store = useStore();
   const teacherId = "U002";
   const teacherClasses = CLASS_GROUPS.filter((c) => c.teacherId === teacherId);
-  const [assignments, setAssignments] = useState<Assignment[]>(DATA_ASSIGNMENTS.filter((a) => a.teacherId === teacherId));
-  const [submissions, setSubmissions] = useState<AssignmentSubmission[]>(SUBMISSIONS);
+  const [assignments, setAssignments] = useState<Assignment[]>(store.assignments.filter((a) => a.teacherId === teacherId));
+  const [submissions, setSubmissions] = useState<AssignmentSubmission[]>(store.assignmentSubmissions);
+
+  function getStudentName(id: string) {
+    return store.students.find((s) => s.id === id)?.name || id;
+  }
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [createForm, setCreateForm] = useState({ title: "", description: "", classId: teacherClasses[0]?.id || "", subject: "", dueDate: "" });
@@ -43,6 +45,7 @@ export default function TeacherAssignments() {
       schoolId: "SCH001",
     };
     setAssignments((prev) => [...prev, newAssignment]);
+    store.setAssignments((prev) => [...prev, newAssignment]);
     setCreateForm({ title: "", description: "", classId: teacherClasses[0]?.id || "", subject: "", dueDate: "" });
     setShowCreate(false);
   }
@@ -57,13 +60,15 @@ export default function TeacherAssignments() {
     if (!reviewModal) return;
     const score = Number(reviewScore);
     if (isNaN(score)) return;
-    setSubmissions((prev) =>
-      prev.map((s) =>
+    setSubmissions((prev) => {
+      const updated = prev.map((s) =>
         s.id === reviewModal.submission.id
           ? { ...s, score, comment: reviewComment, reviewed: true }
           : s
-      )
-    );
+      );
+      store.setAssignmentSubmissions(updated);
+      return updated;
+    });
     setReviewModal(null);
     setReviewScore("");
     setReviewComment("");

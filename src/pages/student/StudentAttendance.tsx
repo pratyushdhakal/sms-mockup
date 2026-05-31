@@ -1,7 +1,7 @@
 import { CheckCircle, XCircle, Clock, CalendarClock, Calendar } from "lucide-react";
-import { ATTENDANCE } from "../../data";
-
-const STUDENT_USER_ID = "U007";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 const statusBadge = (s: string) => {
   const m: Record<string, string> = {
@@ -19,7 +19,9 @@ const sourceBadge = (s: string) =>
     : "bg-slate-50 text-slate-600";
 
 export default function StudentAttendance() {
-  const records = ATTENDANCE.filter((a) => a.userId === STUDENT_USER_ID);
+  const { currentStudent } = useAuth();
+  const { attendanceRecords } = useStore();
+  const records = attendanceRecords.filter((a) => a.userId === currentStudent?.userId);
 
   const present = records.filter((a) => a.status === "Present").length;
   const absent = records.filter((a) => a.status === "Absent").length;
@@ -35,10 +37,7 @@ export default function StudentAttendance() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">My Attendance</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Attendance records</p>
-      </div>
+      <Header title="My Attendance" subtitle="Attendance records" userName={currentStudent?.name} userRole="Student" />
 
       <div className="grid grid-cols-4 gap-4 mb-6">
         {stats.map(({ label, value, icon: Icon, color }) => (

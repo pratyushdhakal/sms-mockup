@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { CalendarDays, BookOpen } from "lucide-react";
-import { CALENDAR_EVENTS } from "../../data";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 type TabType = "general" | "academic";
 
 export default function StaffCalendar() {
+  const { calendarEvents } = useStore();
   const [tab, setTab] = useState<TabType>("general");
 
-  const events = CALENDAR_EVENTS.filter((e) => e.type === tab);
+  const events = calendarEvents.filter((e) => e.type === tab);
 
   const tabs: { key: TabType; label: string; icon: typeof CalendarDays }[] = [
     { key: "general", label: "General", icon: CalendarDays },
@@ -16,10 +18,7 @@ export default function StaffCalendar() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Calendar</h1>
-        <p className="text-sm text-slate-400 mt-0.5">School events and schedules</p>
-      </div>
+      <Header title="Calendar" subtitle="School events and schedules" userName="Staff" userRole="Staff" />
 
       <div className="flex gap-2 mb-4">
         {tabs.map(({ key, label, icon: Icon }) => (

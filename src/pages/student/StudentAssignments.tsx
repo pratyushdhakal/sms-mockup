@@ -1,25 +1,29 @@
 import { useState } from "react";
 import { FileText, Plus, X, CheckCircle } from "lucide-react";
-import { ASSIGNMENTS, SUBMISSIONS, TEACHERS } from "../../data";
 import type { Assignment } from "../../types";
-
-const STUDENT_CLASS_ID = "C003";
-const STUDENT_ID = "STU-601";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 export default function StudentAssignments() {
-  const assignments = ASSIGNMENTS.filter((a) => a.classId === STUDENT_CLASS_ID);
-  const [submissions, setSubmissions] = useState(SUBMISSIONS);
+  const { currentStudent } = useAuth();
+  const store = useStore();
+  const student = currentStudent;
+  const studentId = student?.id || "";
+  const classId = student?.classId || "";
+  const assignments = store.assignments.filter((a) => a.classId === classId);
+  const [submissions, setSubmissions] = useState(store.assignmentSubmissions);
   const [selected, setSelected] = useState<Assignment | null>(null);
   const [showForm, setShowForm] = useState<Assignment | null>(null);
   const [form, setForm] = useState({ response: "", fileUrl: "" });
 
   function getTeacherName(teacherId: string): string {
-    const teacher = TEACHERS.find((t) => t.userId === teacherId);
+    const teacher = store.teachers.find((t) => t.userId === teacherId);
     return teacher?.name ?? "—";
   }
 
   function isSubmitted(assignmentId: string): boolean {
-    return submissions.some((s) => s.assignmentId === assignmentId && s.studentId === STUDENT_ID);
+    return submissions.some((s) => s.assignmentId === assignmentId && s.studentId === studentId);
   }
 
   function handleSubmit() {
@@ -27,7 +31,7 @@ export default function StudentAssignments() {
     const newSub = {
       id: `SUB${Date.now()}`,
       assignmentId: showForm.id,
-      studentId: STUDENT_ID,
+      studentId,
       response: form.response,
       fileUrl: form.fileUrl || undefined,
       submittedAt: new Date().toISOString().split("T")[0],
@@ -35,16 +39,14 @@ export default function StudentAssignments() {
       schoolId: "SCH001",
     };
     setSubmissions((prev) => [...prev, newSub]);
+    store.setAssignmentSubmissions((prev) => [...prev, newSub]);
     setShowForm(null);
     setForm({ response: "", fileUrl: "" });
   }
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Assignments</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Class assignments and submissions</p>
-      </div>
+      <Header title="Assignments" subtitle="Class assignments and submissions" userName={student?.name} userRole="Student" />
 
       <div className="grid grid-cols-1 gap-4">
         {assignments.map((a) => {

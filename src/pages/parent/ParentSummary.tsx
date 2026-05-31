@@ -1,37 +1,35 @@
 import { useState } from "react";
 import { User, BookOpen, Phone, Mail, Hash, Layers, CheckCircle, XCircle, Clock, CalendarClock, Wallet } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, ATTENDANCE, FEE_RECORDS, PARENT_STUDENT } from "../../data";
-
-const PARENT_ID = "U009";
+import { CLASS_GROUPS } from "../../data";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 export default function ParentSummary() {
-  const children = STUDENTS.filter((s) =>
-    PARENT_STUDENT.filter((ps) => ps.parentId === PARENT_ID).some((ps) => ps.studentId === s.id)
-  );
+  const { parentChildren } = useAuth();
+  const { attendanceRecords, feeRecords } = useStore();
+  const children = parentChildren;
 
   const [selectedStudent, setSelectedStudent] = useState<string>(children[0]?.id ?? "");
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
   const classGroup = CLASS_GROUPS.find((c) => c.id === currentStudent?.classId);
 
-  const attendanceRecords = ATTENDANCE.filter((a) => a.userId === currentStudent?.userId);
+  const records = attendanceRecords.filter((a) => a.userId === currentStudent?.userId);
 
-  const present = attendanceRecords.filter((a) => a.status === "Present").length;
-  const absent = attendanceRecords.filter((a) => a.status === "Absent").length;
-  const late = attendanceRecords.filter((a) => a.status === "Late").length;
-  const leave = attendanceRecords.filter((a) => a.status === "Leave").length;
+  const present = records.filter((a) => a.status === "Present").length;
+  const absent = records.filter((a) => a.status === "Absent").length;
+  const late = records.filter((a) => a.status === "Late").length;
+  const leave = records.filter((a) => a.status === "Leave").length;
 
-  const fees = FEE_RECORDS.filter((f) => f.studentId === currentStudent?.id);
+  const fees = feeRecords.filter((f) => f.studentId === currentStudent?.id);
   const totalFees = fees.reduce((sum, f) => sum + f.amount, 0);
   const totalPaid = fees.reduce((sum, f) => sum + f.paid, 0);
   const balance = totalFees - totalPaid;
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Student Summary</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Detailed student information</p>
-      </div>
+      <Header title="Student Summary" subtitle="Detailed student information" userName="Parent" userRole="Parent" />
 
       <div className="mb-6">
         <label className="block text-xs font-medium text-slate-500 mb-1.5">Select Child</label>

@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { Wallet, CheckCircle, XCircle } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, FEE_RECORDS, PARENT_STUDENT } from "../../data";
-
-const PARENT_ID = "U009";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import { CLASS_GROUPS } from "../../data";
+import Header from "../../layouts/Header";
 
 export default function ParentFees() {
-  const children = STUDENTS.filter((s) =>
-    PARENT_STUDENT.filter((ps) => ps.parentId === PARENT_ID).some((ps) => ps.studentId === s.id)
-  );
+  const { parentChildren } = useAuth();
+  const { feeRecords } = useStore();
+  const children = parentChildren;
 
   const [selectedStudent, setSelectedStudent] = useState<string>(children[0]?.id ?? "");
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const records = FEE_RECORDS.filter((f) => f.studentId === currentStudent?.id);
+  const records = feeRecords.filter((f) => f.studentId === currentStudent?.id);
   const totalFees = records.reduce((sum, f) => sum + f.amount, 0);
   const totalPaid = records.reduce((sum, f) => sum + f.paid, 0);
   const balance = totalFees - totalPaid;
@@ -29,10 +30,7 @@ export default function ParentFees() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Fees</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Fee records and payment status</p>
-      </div>
+      <Header title="Fee History" subtitle="Fee records and payment status" userName="Parent" userRole="Parent" />
 
       <div className="mb-6">
         <label className="block text-xs font-medium text-slate-500 mb-1.5">Select Child</label>

@@ -1,24 +1,28 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { EXAMS, TEACHERS, CLASS_GROUPS, STUDENTS } from "../../data";
+import { TEACHERS, CLASS_GROUPS } from "../../data";
 import type { Exam } from "../../types";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 export default function TeacherExamEntry() {
-  const teacher = TEACHERS[0];
-  const availableExams = EXAMS.filter((e) =>
-    e.applicableClassIds.some((cid) => teacher.assignedClassIds.includes(cid))
+  const store = useStore();
+  const teacherList = store.teachers.length > 0 ? store.teachers : TEACHERS;
+  const teacher = teacherList[0];
+  const examsList = store.exams;
+  const availableExams = examsList.filter((e) =>
+    e.applicableClassIds.some((cid) => teacher?.assignedClassIds?.includes(cid))
   );
   const [selectedExam, setSelectedExam] = useState<Exam | null>(availableExams[0] || null);
-  const [selectedClass, setSelectedClass] = useState(teacher.assignedClassIds[0] || "");
+  const [selectedClass, setSelectedClass] = useState(teacher?.assignedClassIds?.[0] || "");
   const [marks, setMarks] = useState<Record<string, Record<string, number>>>({});
   const [saved, setSaved] = useState(false);
 
   const availableClasses = CLASS_GROUPS.filter(
-    (c) => teacher.assignedClassIds.includes(c.id) && selectedExam?.applicableClassIds.includes(c.id)
+    (c) => teacher?.assignedClassIds?.includes(c.id) && selectedExam?.applicableClassIds.includes(c.id)
   );
 
-  const studentsInClass = STUDENTS.filter((s) => s.classId === selectedClass);
+  const studentsInClass = store.students.filter((s) => s.classId === selectedClass);
 
   function setMarksForStudent(studentId: string, subject: string, value: string) {
     const num = value === "" ? 0 : Number(value);

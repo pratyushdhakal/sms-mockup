@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { CheckCircle, CalendarClock, ArrowRight, BookOpen, FileText, GraduationCap, Wallet, Users } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, ATTENDANCE, FEE_RECORDS, EXAMS, PARENT_STUDENT } from "../../data";
-
-const PARENT_ID = "U009";
+import { CLASS_GROUPS } from "../../data";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 export default function ParentDashboard() {
-  const [selectedStudent, setSelectedStudent] = useState<string>(PARENT_STUDENT[0]?.studentId ?? "");
-
-  const children = STUDENTS.filter((s) =>
-    PARENT_STUDENT.filter((ps) => ps.parentId === PARENT_ID).some((ps) => ps.studentId === s.id)
-  );
+  const { parentChildren } = useAuth();
+  const { attendanceRecords, feeRecords, exams } = useStore();
+  const children = parentChildren;
+  const [selectedStudent, setSelectedStudent] = useState<string>(children[0]?.id ?? "");
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const myAttendance = ATTENDANCE.filter((a) => a.userId === currentStudent?.userId);
+  const myAttendance = attendanceRecords.filter((a) => a.userId === currentStudent?.userId);
   const presentCount = myAttendance.filter((a) => a.status === "Present").length;
   const attendancePct = myAttendance.length > 0 ? Math.round((presentCount / myAttendance.length) * 100) : 0;
 
-  const fees = FEE_RECORDS.filter((f) => f.studentId === currentStudent?.id);
+  const fees = feeRecords.filter((f) => f.studentId === currentStudent?.id);
   const totalFees = fees.reduce((sum, f) => sum + f.amount, 0);
   const totalPaid = fees.reduce((sum, f) => sum + f.paid, 0);
   const pendingFees = totalFees - totalPaid;
 
-  const upcomingExams = EXAMS.filter((e) => e.applicableClassIds.includes(currentStudent?.classId ?? "")).length;
+  const upcomingExams = exams.filter((e) => e.applicableClassIds.includes(currentStudent?.classId ?? "")).length;
 
   const quickLinks = [
     { label: "Attendance", icon: CalendarClock },
@@ -33,10 +33,7 @@ export default function ParentDashboard() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Welcome, Parent</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Monitor your children's progress</p>
-      </div>
+      <Header title="Parent Dashboard" subtitle="Monitor your children's progress" userName="Parent" userRole="Parent" />
 
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">

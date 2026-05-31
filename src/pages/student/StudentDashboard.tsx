@@ -1,22 +1,25 @@
 import { CheckCircle, CalendarClock, ArrowRight, BookOpen, FileText, GraduationCap } from "lucide-react";
-import { ATTENDANCE, CLASS_GROUPS, ASSIGNMENTS, EXAMS } from "../../data";
-
-const STUDENT_USER_ID = "U007";
-const STUDENT_NAME = "Yuwansh Magar";
-const STUDENT_CLASS_ID = "C003";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import { CLASS_GROUPS } from "../../data";
+import Header from "../../layouts/Header";
 
 export default function StudentDashboard() {
-  const classGroup = CLASS_GROUPS.find((c) => c.id === STUDENT_CLASS_ID);
+  const { currentStudent } = useAuth();
+  const { attendanceRecords, assignments, exams } = useStore();
+  const student = currentStudent;
+  const classId = student?.classId || "";
+  const classGroup = CLASS_GROUPS.find((c) => c.id === classId);
   const className = classGroup ? `${classGroup.name} — ${classGroup.section}` : "—";
 
-  const myAttendance = ATTENDANCE.filter((a) => a.userId === STUDENT_USER_ID);
+  const myAttendance = attendanceRecords.filter((a) => a.userId === student?.userId);
   const presentCount = myAttendance.filter((a) => a.status === "Present").length;
   const attendancePct = myAttendance.length > 0 ? Math.round((presentCount / myAttendance.length) * 100) : 0;
 
-  const classAssignments = ASSIGNMENTS.filter((a) => a.classId === STUDENT_CLASS_ID);
+  const classAssignments = assignments.filter((a) => a.classId === classId);
   const pendingAssignments = classAssignments.length;
 
-  const upcomingExams = EXAMS.filter((e) => e.applicableClassIds.includes(STUDENT_CLASS_ID)).length;
+  const upcomingExams = exams.filter((e) => e.applicableClassIds.includes(classId)).length;
 
   const quickLinks = [
     { label: "My Attendance", icon: CalendarClock },
@@ -27,10 +30,7 @@ export default function StudentDashboard() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Welcome, {STUDENT_NAME}</h1>
-        <p className="text-sm text-slate-400 mt-0.5">{className}</p>
-      </div>
+      <Header title="Dashboard" subtitle={className} userName={student?.name || "Student"} userRole="Student" />
 
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-slate-100 p-4">

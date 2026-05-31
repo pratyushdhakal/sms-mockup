@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { CheckCircle, XCircle, Clock, CalendarClock, Calendar } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, ATTENDANCE, PARENT_STUDENT } from "../../data";
-
-const PARENT_ID = "U009";
+import { CLASS_GROUPS } from "../../data";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 const statusBadge = (s: string) => {
   const m: Record<string, string> = {
@@ -20,15 +21,15 @@ const sourceBadge = (s: string) =>
     : "bg-slate-50 text-slate-600";
 
 export default function ParentAttendance() {
-  const children = STUDENTS.filter((s) =>
-    PARENT_STUDENT.filter((ps) => ps.parentId === PARENT_ID).some((ps) => ps.studentId === s.id)
-  );
+  const { parentChildren } = useAuth();
+  const { attendanceRecords } = useStore();
+  const children = parentChildren;
 
   const [selectedStudent, setSelectedStudent] = useState<string>(children[0]?.id ?? "");
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const records = ATTENDANCE.filter((a) => a.userId === currentStudent?.userId);
+  const records = attendanceRecords.filter((a) => a.userId === currentStudent?.userId);
 
   const present = records.filter((a) => a.status === "Present").length;
   const absent = records.filter((a) => a.status === "Absent").length;
@@ -44,10 +45,7 @@ export default function ParentAttendance() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Attendance</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Attendance records for your child</p>
-      </div>
+      <Header title="Child Attendance" subtitle="Attendance records for your child" userName="Parent" userRole="Parent" />
 
       <div className="mb-6">
         <label className="block text-xs font-medium text-slate-500 mb-1.5">Select Child</label>

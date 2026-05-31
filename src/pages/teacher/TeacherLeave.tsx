@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
-import { LEAVE_REQUESTS as DATA_LEAVE } from "../../data";
-import type { LeaveRequest, LeaveType, LeaveStatus } from "../../types";
+import type { LeaveType, LeaveStatus, LeaveRequest } from "../../types";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const statusBadge: Record<LeaveStatus, string> = {
@@ -11,7 +11,8 @@ const statusBadge: Record<LeaveStatus, string> = {
 };
 
 export default function TeacherLeave() {
-  const [leaves, setLeaves] = useState<LeaveRequest[]>(DATA_LEAVE.filter((l) => l.userId === "U002"));
+  const { leaveRequests, setLeaveRequests } = useStore();
+  const [leaves, setLeaves] = useState<LeaveRequest[]>(leaveRequests.filter((l) => l.userId === "U002"));
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ startDate: "", endDate: "", type: "sick" as LeaveType, reason: "" });
 
@@ -28,6 +29,7 @@ export default function TeacherLeave() {
       schoolId: "SCH001",
     };
     setLeaves((prev) => [newLeave, ...prev]);
+    setLeaveRequests((prev) => [newLeave, ...prev]);
     setForm({ startDate: "", endDate: "", type: "sick", reason: "" });
     setShowForm(false);
   }

@@ -1,35 +1,33 @@
 import { useState } from "react";
 import { FileText, CheckCircle, Clock } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, ASSIGNMENTS, SUBMISSIONS, TEACHERS, PARENT_STUDENT } from "../../data";
-
-const PARENT_ID = "U009";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import { CLASS_GROUPS } from "../../data";
+import Header from "../../layouts/Header";
 
 export default function ParentAssignments() {
-  const children = STUDENTS.filter((s) =>
-    PARENT_STUDENT.filter((ps) => ps.parentId === PARENT_ID).some((ps) => ps.studentId === s.id)
-  );
+  const { parentChildren } = useAuth();
+  const store = useStore();
+  const children = parentChildren;
 
   const [selectedStudent, setSelectedStudent] = useState<string>(children[0]?.id ?? "");
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const assignments = ASSIGNMENTS.filter((a) => a.classId === currentStudent?.classId);
+  const assignments = store.assignments.filter((a) => a.classId === currentStudent?.classId);
 
   function isSubmitted(assignmentId: string): boolean {
-    return SUBMISSIONS.some((s) => s.assignmentId === assignmentId && s.studentId === currentStudent?.id);
+    return store.assignmentSubmissions.some((s) => s.assignmentId === assignmentId && s.studentId === currentStudent?.id);
   }
 
   function getTeacherName(teacherId: string): string {
-    const teacher = TEACHERS.find((t) => t.userId === teacherId);
+    const teacher = store.teachers.find((t) => t.userId === teacherId);
     return teacher?.name ?? "—";
   }
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Assignments</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Class assignments and submission status</p>
-      </div>
+      <Header title="Child Assignments" subtitle="Class assignments and submission status" userName="Parent" userRole="Parent" />
 
       <div className="mb-6">
         <label className="block text-xs font-medium text-slate-500 mb-1.5">Select Child</label>

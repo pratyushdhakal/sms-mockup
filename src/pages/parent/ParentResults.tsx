@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Award, CheckCircle, XCircle } from "lucide-react";
-import { STUDENTS, CLASS_GROUPS, EXAMS, EXAM_MARKS, PARENT_STUDENT, PUBLISHED_RESULTS } from "../../data";
-
-const PARENT_ID = "U009";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import { CLASS_GROUPS } from "../../data";
+import Header from "../../layouts/Header";
 
 function getGrade(pct: number): string {
   if (pct >= 90) return "A+";
@@ -15,24 +16,22 @@ function getGrade(pct: number): string {
 }
 
 export default function ParentResults() {
-  const children = STUDENTS.filter((s) =>
-    PARENT_STUDENT.filter((ps) => ps.parentId === PARENT_ID).some((ps) => ps.studentId === s.id)
-  );
+  const { parentChildren } = useAuth();
+  const { exams, examMarks } = useStore();
+  const children = parentChildren;
 
   const [selectedStudent, setSelectedStudent] = useState<string>(children[0]?.id ?? "");
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const relevantExams = EXAMS.filter(
+  const PUBLISHED_RESULTS: Record<string, boolean> = {};
+  const relevantExams = exams.filter(
     (e) => e.applicableClassIds.includes(currentStudent?.classId ?? "") && PUBLISHED_RESULTS[`${e.id}-${currentStudent?.classId}`]
   );
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Results</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Exam results and performance</p>
-      </div>
+      <Header title="Child Results" subtitle="Exam results and performance" userName="Parent" userRole="Parent" />
 
       <div className="mb-6">
         <label className="block text-xs font-medium text-slate-500 mb-1.5">Select Child</label>
@@ -54,7 +53,7 @@ export default function ParentResults() {
 
       <div className="grid grid-cols-1 gap-6">
         {relevantExams.map((exam) => {
-          const marks = EXAM_MARKS.find((m) => m.examId === exam.id && m.studentId === currentStudent?.id);
+          const marks = examMarks.find((m) => m.examId === exam.id && m.studentId === currentStudent?.id);
           let totalMarks = 0;
           let totalFullMarks = 0;
 

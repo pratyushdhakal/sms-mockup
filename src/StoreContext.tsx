@@ -1,5 +1,9 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
-import type { Inquiry, Intake, Student, User, ParentStudent, AttendanceRecord, DeviceLog, Exam, ExamMarks, RoutineSlot } from "./types";
+import type {
+  Inquiry, Intake, Student, User, ParentStudent, AttendanceRecord, DeviceLog,
+  Exam, ExamMarks, RoutineSlot, LeaveRequest, Assignment, AssignmentSubmission,
+  FeeRecord, Announcement, CalendarEvent, Teacher, StaffMember,
+} from "./types";
 import {
   INQUIRIES as DATA_INQUIRIES,
   INTAKES as DATA_INTAKES,
@@ -12,6 +16,14 @@ import {
   EXAMS as DATA_EXAMS,
   EXAM_MARKS as DATA_EXAM_MARKS,
   ROUTINE_SLOTS as DATA_ROUTINE_SLOTS,
+  LEAVE_REQUESTS as DATA_LEAVE_REQUESTS,
+  ASSIGNMENTS as DATA_ASSIGNMENTS,
+  SUBMISSIONS as DATA_SUBMISSIONS,
+  FEE_RECORDS as DATA_FEE_RECORDS,
+  ANNOUNCEMENTS as DATA_ANNOUNCEMENTS,
+  CALENDAR_EVENTS as DATA_CALENDAR_EVENTS,
+  TEACHERS as DATA_TEACHERS,
+  STAFF as DATA_STAFF,
 } from "./data";
 
 let nextStuNum = 700;
@@ -48,6 +60,22 @@ interface StoreState {
   setExamMarks: React.Dispatch<React.SetStateAction<ExamMarks[]>>;
   routineSlots: RoutineSlot[];
   setRoutineSlots: React.Dispatch<React.SetStateAction<RoutineSlot[]>>;
+  leaveRequests: LeaveRequest[];
+  setLeaveRequests: React.Dispatch<React.SetStateAction<LeaveRequest[]>>;
+  assignments: Assignment[];
+  setAssignments: React.Dispatch<React.SetStateAction<Assignment[]>>;
+  assignmentSubmissions: AssignmentSubmission[];
+  setAssignmentSubmissions: React.Dispatch<React.SetStateAction<AssignmentSubmission[]>>;
+  feeRecords: FeeRecord[];
+  setFeeRecords: React.Dispatch<React.SetStateAction<FeeRecord[]>>;
+  announcements: Announcement[];
+  setAnnouncements: React.Dispatch<React.SetStateAction<Announcement[]>>;
+  calendarEvents: CalendarEvent[];
+  setCalendarEvents: React.Dispatch<React.SetStateAction<CalendarEvent[]>>;
+  teachers: Teacher[];
+  setTeachers: React.Dispatch<React.SetStateAction<Teacher[]>>;
+  staffMembers: StaffMember[];
+  setStaffMembers: React.Dispatch<React.SetStateAction<StaffMember[]>>;
 
   enrollInquiry: (inquiryId: string, intakeId: string, rollNumber: string, classGroupId: string) => EnrollResult | null;
 }
@@ -65,6 +93,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [exams, setExams] = useState<Exam[]>(DATA_EXAMS);
   const [examMarks, setExamMarks] = useState<ExamMarks[]>(DATA_EXAM_MARKS);
   const [routineSlots, setRoutineSlots] = useState<RoutineSlot[]>(DATA_ROUTINE_SLOTS);
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(DATA_LEAVE_REQUESTS);
+  const [assignments, setAssignments] = useState<Assignment[]>(DATA_ASSIGNMENTS);
+  const [assignmentSubmissions, setAssignmentSubmissions] = useState<AssignmentSubmission[]>(DATA_SUBMISSIONS);
+  const [feeRecords, setFeeRecords] = useState<FeeRecord[]>(DATA_FEE_RECORDS);
+  const [announcements, setAnnouncements] = useState<Announcement[]>(DATA_ANNOUNCEMENTS);
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(DATA_CALENDAR_EVENTS);
+  const [teachers, setTeachers] = useState<Teacher[]>(DATA_TEACHERS);
+  const [staffMembers, setStaffMembers] = useState<StaffMember[]>(DATA_STAFF);
 
   const enrollInquiry = useCallback((
     inquiryId: string,
@@ -173,6 +209,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         routineSlots, setRoutineSlots,
         exams, setExams,
         examMarks, setExamMarks,
+        leaveRequests, setLeaveRequests,
+        assignments, setAssignments,
+        assignmentSubmissions, setAssignmentSubmissions,
+        feeRecords, setFeeRecords,
+        announcements, setAnnouncements,
+        calendarEvents, setCalendarEvents,
+        teachers, setTeachers,
+        staffMembers, setStaffMembers,
         enrollInquiry,
       }}
     >

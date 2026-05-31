@@ -1,5 +1,6 @@
 import { Bell } from "lucide-react";
-import { ANNOUNCEMENTS } from "../../data";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 const priorityColor = (p: string) => {
   const m: Record<string, string> = {
@@ -11,19 +12,17 @@ const priorityColor = (p: string) => {
 };
 
 export default function ParentAnnouncements() {
-  const announcements = ANNOUNCEMENTS.filter(
+  const { announcements } = useStore();
+  const filtered = announcements.filter(
     (a) => a.audience === "all" || a.audience === "parents"
   );
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Announcements</h1>
-        <p className="text-sm text-slate-400 mt-0.5">School announcements and notices</p>
-      </div>
+      <Header title="Announcements" subtitle="School announcements and notices" userName="Parent" userRole="Parent" />
 
       <div className="grid grid-cols-1 gap-4">
-        {announcements.map((a) => (
+        {filtered.map((a) => (
           <div
             key={a.id}
             className="bg-white rounded-xl border border-slate-100 p-5 hover:shadow-sm transition-shadow"

@@ -1,19 +1,22 @@
 import { CheckCircle, XCircle, Clock, CalendarClock, ArrowRight } from "lucide-react";
-import { ATTENDANCE, LEAVE_REQUESTS } from "../../data";
-
-const STAFF_USER_ID = "U005";
-const STAFF_NAME = "Gopal Shrestha";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 export default function StaffDashboard() {
-  const myAttendance = ATTENDANCE.filter((a) => a.userId === STAFF_USER_ID);
+  const { currentStaff } = useAuth();
+  const { attendanceRecords, leaveRequests } = useStore();
+  const userId = currentStaff?.userId || "U005";
+
+  const myAttendance = attendanceRecords.filter((a) => a.userId === userId);
   const presentCount = myAttendance.filter((a) => a.status === "Present").length;
   const attendancePct = myAttendance.length > 0 ? Math.round((presentCount / myAttendance.length) * 100) : 0;
 
-  const pendingLeaves = LEAVE_REQUESTS.filter(
-    (l) => l.userId === STAFF_USER_ID && l.status === "pending"
+  const pendingLeaves = leaveRequests.filter(
+    (l) => l.userId === userId && l.status === "pending"
   ).length;
 
-  const today = "2026-05-26";
+  const today = new Date().toISOString().split("T")[0];
   const todayRecord = myAttendance.find((a) => a.date === today);
   const todayStatus = todayRecord?.status ?? null;
   const todaySource = todayRecord?.source ?? null;
@@ -33,10 +36,7 @@ export default function StaffDashboard() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Welcome, {STAFF_NAME}</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Staff Dashboard</p>
-      </div>
+      <Header title="Dashboard" subtitle="Staff Dashboard" userName={currentStaff?.name || "Staff"} userRole="Staff" />
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-slate-100 p-4">

@@ -1,8 +1,10 @@
 import { Users, MapPin } from "lucide-react";
-import { CLASS_GROUPS, STUDENTS } from "../../data";
+import { CLASS_GROUPS } from "../../data";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 export default function TeacherClasses() {
+  const { students } = useStore();
   const myClasses = CLASS_GROUPS.filter((c) => c.teacherId === "U002");
 
   return (
@@ -11,7 +13,7 @@ export default function TeacherClasses() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {myClasses.map((c) => {
-          const count = STUDENTS.filter((s) => s.classId === c.id).length;
+          const count = students.filter((s) => s.classId === c.id).length;
           return (
             <div key={c.id} className="bg-white rounded-xl border border-slate-100 p-5 hover:shadow-sm transition-shadow">
               <div className="flex items-start justify-between mb-4">

@@ -1,5 +1,5 @@
 import { Megaphone } from "lucide-react";
-import { ANNOUNCEMENTS } from "../../data";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const audienceColor = (a: string) =>
@@ -9,7 +9,8 @@ const priorityColor = (p: string) =>
   ({ high: "bg-red-50 text-red-700", medium: "bg-amber-50 text-amber-700", low: "bg-blue-50 text-blue-700" })[p] || "bg-gray-100 text-gray-600";
 
 export default function TeacherAnnouncements() {
-  const announcements = ANNOUNCEMENTS.filter((a) =>
+  const { announcements } = useStore();
+  const filtered = announcements.filter((a) =>
     a.audience === "all" || a.audience === "teachers" || a.audience === "staff"
   );
 
@@ -23,7 +24,7 @@ export default function TeacherAnnouncements() {
         </div>
 
         <div className="p-4 space-y-3">
-          {announcements.map((a) => (
+          {filtered.map((a) => (
             <div key={a.id} className="border border-slate-100 rounded-xl p-4 hover:shadow-sm transition-shadow">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">

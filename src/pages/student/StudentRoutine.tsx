@@ -1,23 +1,22 @@
-import { TEACHERS, DAYS, PERIODS } from "../../data";
+import { DAYS, PERIODS } from "../../data";
+import { useAuth } from "../../AuthContext";
 import { useStore } from "../../StoreContext";
-
-const STUDENT_CLASS_ID = "C003";
+import Header from "../../layouts/Header";
 
 export default function StudentRoutine() {
-  const { routineSlots } = useStore();
-  const slots = routineSlots.filter((s) => s.classId === STUDENT_CLASS_ID);
+  const { currentStudent } = useAuth();
+  const { routineSlots, teachers } = useStore();
+  const classId = currentStudent?.classId || "";
+  const slots = routineSlots.filter((s) => s.classId === classId);
 
   function getTeacherName(teacherId: string): string {
-    const teacher = TEACHERS.find((t) => t.userId === teacherId);
+    const teacher = teachers.find((t) => t.userId === teacherId);
     return teacher?.name ?? "—";
   }
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">My Routine</h1>
-        <p className="text-sm text-slate-400 mt-0.5">Weekly timetable</p>
-      </div>
+      <Header title="My Routine" subtitle="Weekly timetable" userName={currentStudent?.name} userRole="Student" />
 
       <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
         <table className="w-full">

@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { CALENDAR_EVENTS } from "../../data";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const TABS = ["General Calendar", "Academic Calendar"] as const;
 type Tab = (typeof TABS)[number];
 
 export default function TeacherCalendar() {
+  const { calendarEvents } = useStore();
   const [activeTab, setActiveTab] = useState<Tab>("General Calendar");
 
-  const filtered = CALENDAR_EVENTS.filter((e) =>
+  const filtered = calendarEvents.filter((e) =>
     activeTab === "General Calendar" ? e.type === "general" : e.type === "academic"
   );
 

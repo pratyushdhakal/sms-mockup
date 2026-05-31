@@ -1,30 +1,28 @@
 import { Bell } from "lucide-react";
-import { ANNOUNCEMENTS } from "../../data";
-import type { Priority } from "../../types";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
-const priorityColor = (p: Priority) => {
-  const m: Record<Priority, string> = {
+const priorityColor = (p: string) => {
+  const m: Record<string, string> = {
     high: "bg-red-50 text-red-700",
     medium: "bg-amber-50 text-amber-700",
     low: "bg-blue-50 text-blue-700",
   };
-  return m[p];
+  return m[p] ?? "bg-slate-100 text-slate-600";
 };
 
 export default function StaffAnnouncements() {
-  const announcements = ANNOUNCEMENTS.filter(
+  const { announcements } = useStore();
+  const filtered = announcements.filter(
     (a) => a.audience === "all" || a.audience === "staff" || a.audience === "teachers"
   );
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Announcements</h1>
-        <p className="text-sm text-slate-400 mt-0.5">School announcements and notices</p>
-      </div>
+      <Header title="Announcements" subtitle="School announcements and notices" userName="Staff" userRole="Staff" />
 
       <div className="grid grid-cols-1 gap-4">
-        {announcements.map((a) => (
+        {filtered.map((a) => (
           <div
             key={a.id}
             className="bg-white rounded-xl border border-slate-100 p-5 hover:shadow-sm transition-shadow"

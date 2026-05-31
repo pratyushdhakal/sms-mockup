@@ -1,26 +1,29 @@
 import { GraduationCap, Users, CalendarCheck, Clock, BookOpen, ClipboardCheck, FileText } from "lucide-react";
-import { TEACHERS, STUDENTS, CLASS_GROUPS, ATTENDANCE, LEAVE_REQUESTS } from "../../data";
+import { TEACHERS, CLASS_GROUPS, ATTENDANCE, LEAVE_REQUESTS } from "../../data";
 import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default function TeacherDashboard() {
-  const teacher = TEACHERS[0];
-  const myClasses = CLASS_GROUPS.filter((c) => teacher.assignedClassIds.includes(c.id));
-  const myStudentIds = STUDENTS.filter((s) => teacher.assignedClassIds.includes(s.classId)).map((s) => s.userId).filter(Boolean);
-  const totalStudents = STUDENTS.filter((s) => teacher.assignedClassIds.includes(s.classId)).length;
+  const store = useStore();
+  const storeTeachers = store.teachers.length > 0 ? store.teachers : TEACHERS;
+  const teacher = storeTeachers.find((t) => t.userId === "U002") || storeTeachers[0];
+  const myClasses = CLASS_GROUPS.filter((c) => teacher?.assignedClassIds?.includes(c.id));
+  const totalStudents = store.students.filter((s) => teacher?.assignedClassIds?.includes(s.classId)).length;
 
   const todayStr = new Date().toISOString().split("T")[0];
-  const todayAtt = ATTENDANCE.filter((a) => myStudentIds.includes(a.userId) && a.date === todayStr);
+  const attRecords = store.attendanceRecords.length > 0 ? store.attendanceRecords : ATTENDANCE;
+  const myStudentIds = store.students.filter((s) => teacher?.assignedClassIds?.includes(s.classId)).map((s) => s.userId).filter(Boolean);
+  const todayAtt = attRecords.filter((a) => myStudentIds.includes(a.userId) && a.date === todayStr);
   const presentCount = todayAtt.filter((a) => a.status === "Present").length;
   const attPct = totalStudents ? Math.round((presentCount / totalStudents) * 100) : 0;
 
-  const pendingLeaves = LEAVE_REQUESTS.filter((l) => l.userId === "U002" && l.status === "pending").length;
+  const leaveData = store.leaveRequests.length > 0 ? store.leaveRequests : LEAVE_REQUESTS;
+  const pendingLeaves = leaveData.filter((l) => l.userId === teacher?.userId && l.status === "pending").length;
 
-  const { routineSlots } = useStore();
   const todayDay = DAY_NAMES[new Date().getDay()];
-  const todaySlots = routineSlots.filter((s) => s.teacherId === "U002" && s.day === todayDay);
+  const todaySlots = store.routineSlots.filter((s) => s.teacherId === teacher?.userId && s.day === todayDay);
   const classMap = Object.fromEntries(CLASS_GROUPS.map((c) => [c.id, c.name]));
 
   const statCards = [
@@ -38,10 +41,10 @@ export default function TeacherDashboard() {
 
   return (
     <div>
-      <Header title="Dashboard" userName="Ram Prasad KC" userRole="Teacher" />
+      <Header title="Dashboard" userName={teacher?.name || "Teacher"} userRole="Teacher" />
 
       <div className="bg-indigo-50 rounded-xl p-5 mb-6">
-        <h2 className="text-lg font-semibold text-indigo-800">Welcome back, Ram Prasad KC</h2>
+        <h2 className="text-lg font-semibold text-indigo-800">Welcome back, {teacher?.name || "Teacher"}</h2>
         <p className="text-sm text-indigo-600 mt-1">Here's your overview for today.</p>
       </div>
 

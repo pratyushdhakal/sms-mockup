@@ -1,4 +1,4 @@
-import { ATTENDANCE } from "../../data";
+import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
 
 const statusColor: Record<string, string> = {
@@ -9,7 +9,8 @@ const statusColor: Record<string, string> = {
 };
 
 export default function TeacherMyAttendance() {
-  const records = ATTENDANCE.filter((a) => a.userId === "U002");
+  const { attendanceRecords } = useStore();
+  const records = attendanceRecords.filter((a) => a.userId === "U002");
 
   const summary = records.reduce(
     (acc, r) => {

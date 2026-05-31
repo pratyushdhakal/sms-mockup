@@ -141,44 +141,152 @@ const ALL_NAV: Record<string, NavEntry[]> = {
   ],
   teacher: [
     { type: "single", item: { id: "dashboard", label: "Dashboard", icon: LayoutDashboard } },
-    { type: "single", item: { id: "my-classes", label: "My Classes", icon: BookOpen } },
-    { type: "single", item: { id: "mark-attendance", label: "Mark Attendance", icon: Fingerprint } },
-    { type: "single", item: { id: "my-routine", label: "My Routine", icon: Calendar } },
-    { type: "single", item: { id: "assignments", label: "Assignments", icon: BookMarked } },
-    { type: "single", item: { id: "exam-entry", label: "Exam Entry", icon: ClipboardList } },
-    { type: "single", item: { id: "my-attendance", label: "My Attendance", icon: UserCheck } },
-    { type: "single", item: { id: "my-leave", label: "Leave Requests", icon: FileText } },
-    { type: "single", item: { id: "notices", label: "Announcements", icon: Bell } },
-    { type: "single", item: { id: "calendar", label: "Calendar", icon: Calendar } },
+    {
+      type: "group",
+      group: {
+        label: "Academic",
+        icon: BookOpen,
+        items: [
+          { id: "my-classes", label: "My Classes", icon: BookOpen },
+          { id: "mark-attendance", label: "Mark Attendance", icon: Fingerprint },
+          { id: "my-routine", label: "My Routine", icon: Calendar },
+          { id: "assignments", label: "Assignments", icon: BookMarked },
+          { id: "exam-entry", label: "Exam Entry", icon: ClipboardList },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Personal",
+        icon: UserCheck,
+        items: [
+          { id: "my-attendance", label: "My Attendance", icon: UserCheck },
+          { id: "my-leave", label: "Leave Requests", icon: FileText },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Notices",
+        icon: Bell,
+        items: [
+          { id: "notices", label: "Announcements", icon: Bell },
+          { id: "calendar", label: "Calendar", icon: Calendar },
+        ],
+      },
+    },
   ],
   staff: [
     { type: "single", item: { id: "dashboard", label: "Dashboard", icon: LayoutDashboard } },
-    { type: "single", item: { id: "inquiry", label: "Inquiries", icon: FileQuestion } },
-    { type: "single", item: { id: "intakes", label: "Intakes", icon: BookMarked } },
-    { type: "single", item: { id: "my-attendance", label: "My Attendance", icon: UserCheck } },
-    { type: "single", item: { id: "my-leave", label: "Leave Requests", icon: FileText } },
-    { type: "single", item: { id: "notices", label: "Announcements", icon: Bell } },
-    { type: "single", item: { id: "calendar", label: "Calendar", icon: Calendar } },
+    {
+      type: "group",
+      group: {
+        label: "Admissions",
+        icon: FileQuestion,
+        items: [
+          { id: "inquiry", label: "Inquiries", icon: FileQuestion },
+          { id: "intakes", label: "Intakes", icon: BookMarked },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Personal",
+        icon: UserCheck,
+        items: [
+          { id: "my-attendance", label: "My Attendance", icon: UserCheck },
+          { id: "my-leave", label: "Leave Requests", icon: FileText },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Notices",
+        icon: Bell,
+        items: [
+          { id: "notices", label: "Announcements", icon: Bell },
+          { id: "calendar", label: "Calendar", icon: Calendar },
+        ],
+      },
+    },
   ],
   student: [
     { type: "single", item: { id: "dashboard", label: "Dashboard", icon: LayoutDashboard } },
-    { type: "single", item: { id: "my-attendance", label: "My Attendance", icon: UserCheck } },
-    { type: "single", item: { id: "my-routine", label: "My Routine", icon: Calendar } },
-    { type: "single", item: { id: "assignments", label: "Assignments", icon: BookMarked } },
-    { type: "single", item: { id: "my-results", label: "My Results", icon: BarChart3 } },
-    { type: "single", item: { id: "my-leave", label: "Leave Requests", icon: FileText } },
-    { type: "single", item: { id: "notices", label: "Announcements", icon: Bell } },
-    { type: "single", item: { id: "calendar", label: "Calendar", icon: Calendar } },
+    {
+      type: "group",
+      group: {
+        label: "Academic",
+        icon: BookOpen,
+        items: [
+          { id: "my-attendance", label: "My Attendance", icon: UserCheck },
+          { id: "my-routine", label: "My Routine", icon: Calendar },
+          { id: "assignments", label: "Assignments", icon: BookMarked },
+          { id: "my-results", label: "My Results", icon: BarChart3 },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Personal",
+        icon: FileText,
+        items: [
+          { id: "my-leave", label: "Leave Requests", icon: FileText },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Notices",
+        icon: Bell,
+        items: [
+          { id: "notices", label: "Announcements", icon: Bell },
+          { id: "calendar", label: "Calendar", icon: Calendar },
+        ],
+      },
+    },
   ],
   parent: [
     { type: "single", item: { id: "dashboard", label: "Dashboard", icon: LayoutDashboard } },
-    { type: "single", item: { id: "child-summary", label: "Child Summary", icon: GraduationCap } },
-    { type: "single", item: { id: "child-attendance", label: "Child Attendance", icon: UserCheck } },
-    { type: "single", item: { id: "child-results", label: "Child Results", icon: BarChart3 } },
-    { type: "single", item: { id: "child-assignments", label: "Child Assignments", icon: BookMarked } },
-    { type: "single", item: { id: "fee-history", label: "Fee History", icon: CreditCard } },
-    { type: "single", item: { id: "notices", label: "Announcements", icon: Bell } },
-    { type: "single", item: { id: "calendar", label: "Calendar", icon: Calendar } },
+    {
+      type: "group",
+      group: {
+        label: "Overview",
+        icon: GraduationCap,
+        items: [
+          { id: "child-summary", label: "Child Summary", icon: GraduationCap },
+          { id: "child-attendance", label: "Child Attendance", icon: UserCheck },
+          { id: "child-results", label: "Child Results", icon: BarChart3 },
+          { id: "child-assignments", label: "Child Assignments", icon: BookMarked },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Finance",
+        icon: CreditCard,
+        items: [
+          { id: "fee-history", label: "Fee History", icon: CreditCard },
+        ],
+      },
+    },
+    {
+      type: "group",
+      group: {
+        label: "Notices",
+        icon: Bell,
+        items: [
+          { id: "notices", label: "Announcements", icon: Bell },
+          { id: "calendar", label: "Calendar", icon: Calendar },
+        ],
+      },
+    },
   ],
 };
 

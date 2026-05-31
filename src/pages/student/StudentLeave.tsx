@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Calendar, Plus, X } from "lucide-react";
-import { LEAVE_REQUESTS } from "../../data";
 import type { LeaveType, LeaveStatus } from "../../types";
-
-const STUDENT_USER_ID = "U007";
+import { useAuth } from "../../AuthContext";
+import { useStore } from "../../StoreContext";
+import Header from "../../layouts/Header";
 
 const statusBadge = (s: LeaveStatus) => {
   const m: Record<LeaveStatus, string> = {
@@ -24,8 +24,11 @@ const typeLabel: Record<LeaveType, string> = {
 };
 
 export default function StudentLeave() {
+  const { currentStudent, user } = useAuth();
+  const { leaveRequests, setLeaveRequests } = useStore();
+  const userId = user?.id || "";
   const [leaves, setLeaves] = useState(
-    LEAVE_REQUESTS.filter((l) => l.userId === STUDENT_USER_ID)
+    leaveRequests.filter((l) => l.userId === userId)
   );
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ startDate: "", endDate: "", type: "sick" as LeaveType, reason: "" });
@@ -34,7 +37,7 @@ export default function StudentLeave() {
     if (!form.startDate || !form.endDate || !form.reason) return;
     const newLeave = {
       id: `L${Date.now()}`,
-      userId: STUDENT_USER_ID,
+      userId,
       startDate: form.startDate,
       endDate: form.endDate,
       type: form.type,
@@ -43,17 +46,16 @@ export default function StudentLeave() {
       schoolId: "SCH001",
     };
     setLeaves((prev) => [newLeave, ...prev]);
+    setLeaveRequests((prev) => [newLeave, ...prev]);
     setForm({ startDate: "", endDate: "", type: "sick", reason: "" });
     setShowForm(false);
   }
 
   return (
     <div>
+      <Header title="Leave Requests" subtitle="Manage your leave requests" userName={currentStudent?.name} userRole="Student" />
+
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-800">Leave Requests</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Manage your leave requests</p>
-        </div>
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 px-3 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"

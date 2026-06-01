@@ -495,6 +495,7 @@ export const ASSIGNMENTS: Assignment[] = [
   { id: "AS006", title: "Reading Comprehension", description: "Read the story 'The Honest Woodcutter' and answer the 5 questions at the end.", classId: "C003", subject: "English", teacherId: "U004", dueDate: "2083-05-22", batch: "2083", createdAt: "2026-05-04T10:00:00Z", schoolId: "SCH001" },
   { id: "AS007", title: "Addition Practice", description: "Complete 20 addition problems from the worksheet. Practice carrying over numbers.", classId: "C003", subject: "Mathematics", teacherId: "U004", dueDate: "2083-05-28", batch: "2083", createdAt: "2026-05-07T10:00:00Z", schoolId: "SCH001" },
   { id: "AS008", title: "Nepali Essay", description: "Write a 300-word essay on 'Mero Desh' (My Country) in Nepali.", classId: "C009", subject: "Nepali", teacherId: "U004", dueDate: "2083-06-05", batch: "2083", createdAt: "2026-05-08T10:00:00Z", schoolId: "SCH001" },
+  { id: "AS009", title: "Drawing and Colouring", description: "Draw and colour a picture of your favourite animal. Use at least 3 different colours.", classId: "C003", subject: "Art", teacherId: "U004", dueDate: "2083-06-10", batch: "2083", createdAt: "2026-06-01T08:00:00Z", schoolId: "SCH001" },
 ];
 
 export const SUBMISSIONS: AssignmentSubmission[] = [

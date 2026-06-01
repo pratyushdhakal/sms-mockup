@@ -49,7 +49,7 @@ export default function StudentAnnouncements() {
             </div>
           </div>
         ))}
-        {announcements.length === 0 && (
+        {filtered.length === 0 && (
           <p className="text-sm text-slate-400 text-center py-6">No announcements found.</p>
         )}
       </div>

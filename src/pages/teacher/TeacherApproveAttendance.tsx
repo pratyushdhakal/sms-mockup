@@ -30,7 +30,7 @@ const statusColor: Record<string, string> = {
   Leave: "bg-blue-50 text-blue-700 border-blue-200",
 };
 
-function getStudentName(studentId: string, students: { id: string; name: string }[]) {
+function getStudentName(studentId: string, students: { id: string; name?: string; userId?: string }[]) {
   return students.find((s) => s.id === studentId || s.userId === studentId)?.name || studentId;
 }
 

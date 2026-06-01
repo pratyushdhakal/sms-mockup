@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import type {
-  Inquiry, Intake, Student, User, ParentStudent, AttendanceRecord, DeviceLog,
+  Inquiry, Intake, Student, User, ParentStudent, AttendanceRecord,
   Exam, ExamMarks, RoutineSlot, LeaveRequest, Assignment, AssignmentSubmission,
   FeeRecord, Announcement, CalendarEvent, Teacher, StaffMember,
 } from "./types";
@@ -12,7 +12,6 @@ import {
   PARENT_STUDENT as DATA_PARENT_STUDENT,
   CLASS_GROUPS,
   ATTENDANCE as DATA_ATTENDANCE,
-  DEVICE_LOGS as DATA_DEVICE_LOGS,
   EXAMS as DATA_EXAMS,
   EXAM_MARKS as DATA_EXAM_MARKS,
   ROUTINE_SLOTS as DATA_ROUTINE_SLOTS,
@@ -52,8 +51,6 @@ interface StoreState {
   setParentStudent: React.Dispatch<React.SetStateAction<ParentStudent[]>>;
   attendanceRecords: AttendanceRecord[];
   setAttendanceRecords: React.Dispatch<React.SetStateAction<AttendanceRecord[]>>;
-  deviceLogs: DeviceLog[];
-  setDeviceLogs: React.Dispatch<React.SetStateAction<DeviceLog[]>>;
   exams: Exam[];
   setExams: React.Dispatch<React.SetStateAction<Exam[]>>;
   examMarks: ExamMarks[];
@@ -89,7 +86,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(MOCK_USERS);
   const [parentStudent, setParentStudent] = useState<ParentStudent[]>(DATA_PARENT_STUDENT);
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(DATA_ATTENDANCE);
-  const [deviceLogs, setDeviceLogs] = useState<DeviceLog[]>(DATA_DEVICE_LOGS);
   const [exams, setExams] = useState<Exam[]>(DATA_EXAMS);
   const [examMarks, setExamMarks] = useState<ExamMarks[]>(DATA_EXAM_MARKS);
   const [routineSlots, setRoutineSlots] = useState<RoutineSlot[]>(DATA_ROUTINE_SLOTS);
@@ -205,7 +201,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         users, setUsers,
         parentStudent, setParentStudent,
         attendanceRecords, setAttendanceRecords,
-        deviceLogs, setDeviceLogs,
         routineSlots, setRoutineSlots,
         exams, setExams,
         examMarks, setExamMarks,

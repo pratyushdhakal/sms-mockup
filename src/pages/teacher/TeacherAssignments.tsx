@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Plus, X, Eye, Star } from "lucide-react";
 import { CLASS_GROUPS } from "../../data";
+import { useAuth } from "../../AuthContext";
 import type { Assignment, AssignmentSubmission } from "../../types";
 import { useStore } from "../../StoreContext";
 import Header from "../../layouts/Header";
@@ -11,27 +12,45 @@ function getClassName(id: string) {
 
 export default function TeacherAssignments() {
   const store = useStore();
-  const teacherId = "U002";
-  const teacherClasses = CLASS_GROUPS.filter((c) => c.teacherId === teacherId);
+  const { user, currentTeacher } = useAuth();
+  const teacherId = user?.id ?? "";
+  const teacherClasses = useMemo(
+    () => currentTeacher ? currentTeacher.assignedClassIds.map((id) => CLASS_GROUPS.find((c) => c.id === id)).filter(Boolean) as typeof CLASS_GROUPS : [],
+    [currentTeacher]
+  );
   const [assignments, setAssignments] = useState<Assignment[]>(store.assignments.filter((a) => a.teacherId === teacherId));
   const [submissions, setSubmissions] = useState<AssignmentSubmission[]>(store.assignmentSubmissions);
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showCreate, setShowCreate] = useState(false);
+  const [createForm, setCreateForm] = useState({ title: "", description: "", classId: teacherClasses[0]?.id || "", subject: "", dueDate: "" });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [reviewModal, setReviewModal] = useState<{ submission: AssignmentSubmission } | null>(null);
+  const [reviewScore, setReviewScore] = useState("");
+  const [reviewComment, setReviewComment] = useState("");
 
   function getStudentName(id: string) {
     return store.students.find((s) => s.id === id)?.name || id;
   }
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [showCreate, setShowCreate] = useState(false);
-  const [createForm, setCreateForm] = useState({ title: "", description: "", classId: teacherClasses[0]?.id || "", subject: "", dueDate: "" });
-  const [reviewModal, setReviewModal] = useState<{ submission: AssignmentSubmission } | null>(null);
-  const [reviewScore, setReviewScore] = useState("");
-  const [reviewComment, setReviewComment] = useState("");
 
   function getSubmissionsForAssignment(assignmentId: string) {
     return submissions.filter((s) => s.assignmentId === assignmentId);
   }
 
+  function validateForm() {
+    const errors: Record<string, string> = {};
+    if (!createForm.title.trim()) errors.title = "Title is required";
+    if (!createForm.description.trim()) errors.description = "Description is required";
+    if (!createForm.subject.trim()) errors.subject = "Subject is required";
+    if (!createForm.dueDate) errors.dueDate = "Due date is required";
+    if (!createForm.classId) errors.classId = "Class is required";
+    return errors;
+  }
+
   function handleCreate() {
-    if (!createForm.title || !createForm.description || !createForm.subject || !createForm.dueDate) return;
+    const errors = validateForm();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0 || !teacherId) return;
     const newAssignment: Assignment = {
       id: `AS${String(assignments.length + 1).padStart(3, "0")}`,
       title: createForm.title,
@@ -175,27 +194,32 @@ export default function TeacherAssignments() {
             <div className="space-y-3">
               <div>
                 <label className="block text-xs font-medium text-slate-500 mb-1">Title</label>
-                <input value={createForm.title} onChange={(e) => setCreateForm((prev) => ({ ...prev, title: e.target.value }))} placeholder="Assignment title" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" />
+                <input value={createForm.title} onChange={(e) => { setCreateForm((prev) => ({ ...prev, title: e.target.value })); setFormErrors((prev) => ({ ...prev, title: "" })); }} placeholder="Assignment title" className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 ${formErrors.title ? "border-red-400" : "border-slate-200"}`} />
+                {formErrors.title && <p className="text-xs text-red-500 mt-1">{formErrors.title}</p>}
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-500 mb-1">Description</label>
-                <textarea value={createForm.description} onChange={(e) => setCreateForm((prev) => ({ ...prev, description: e.target.value }))} rows={4} placeholder="Assignment description" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 resize-none" />
+                <textarea value={createForm.description} onChange={(e) => { setCreateForm((prev) => ({ ...prev, description: e.target.value })); setFormErrors((prev) => ({ ...prev, description: "" })); }} rows={4} placeholder="Assignment description" className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 resize-none ${formErrors.description ? "border-red-400" : "border-slate-200"}`} />
+                {formErrors.description && <p className="text-xs text-red-500 mt-1">{formErrors.description}</p>}
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-500 mb-1">Class</label>
-                <select value={createForm.classId} onChange={(e) => setCreateForm((prev) => ({ ...prev, classId: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 bg-white">
+                <select value={createForm.classId} onChange={(e) => { setCreateForm((prev) => ({ ...prev, classId: e.target.value })); setFormErrors((prev) => ({ ...prev, classId: "" })); }} className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 bg-white ${formErrors.classId ? "border-red-400" : "border-slate-200"}`}>
                   {teacherClasses.map((c) => (
                     <option key={c.id} value={c.id}>{c.name} ({c.section})</option>
                   ))}
                 </select>
+                {formErrors.classId && <p className="text-xs text-red-500 mt-1">{formErrors.classId}</p>}
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-500 mb-1">Subject</label>
-                <input value={createForm.subject} onChange={(e) => setCreateForm((prev) => ({ ...prev, subject: e.target.value }))} placeholder="e.g. Mathematics" className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" />
+                <input value={createForm.subject} onChange={(e) => { setCreateForm((prev) => ({ ...prev, subject: e.target.value })); setFormErrors((prev) => ({ ...prev, subject: "" })); }} placeholder="e.g. Mathematics" className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 ${formErrors.subject ? "border-red-400" : "border-slate-200"}`} />
+                {formErrors.subject && <p className="text-xs text-red-500 mt-1">{formErrors.subject}</p>}
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-500 mb-1">Due Date</label>
-                <input type="date" value={createForm.dueDate} onChange={(e) => setCreateForm((prev) => ({ ...prev, dueDate: e.target.value }))} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400" />
+                <input type="date" value={createForm.dueDate} onChange={(e) => { setCreateForm((prev) => ({ ...prev, dueDate: e.target.value })); setFormErrors((prev) => ({ ...prev, dueDate: "" })); }} className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 ${formErrors.dueDate ? "border-red-400" : "border-slate-200"}`} />
+                {formErrors.dueDate && <p className="text-xs text-red-500 mt-1">{formErrors.dueDate}</p>}
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-5">

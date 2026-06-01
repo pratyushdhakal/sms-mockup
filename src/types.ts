@@ -139,6 +139,7 @@ export type StaffRole = "accountant" | "librarian" | "front_desk" | "admin_assis
 export type FeeStatus = "Paid" | "Due" | "Partial";
 export type ActiveStatus = "Active" | "Inactive";
 export type InquiryStatus = "new" | "contacted" | "converted" | "lost";
+export type InquiryType = "Admission" | "General Inquiry" | "Complaint" | "Feedback" | "Transfer" | "Other";
 
 export interface Inquiry {
   id: string;
@@ -157,7 +158,7 @@ export interface Inquiry {
   contactMethod: string;
   permanentAddress: string;
   temporaryAddress: string;
-  inquiryType: string;
+  inquiryType: InquiryType;
   description: string;
   outcome: string;
   assignedTo: string;
@@ -183,15 +184,6 @@ export interface AttendanceRecord {
   markedBy: string;
   verified: boolean;
   verifiedBy?: string;
-  schoolId: string;
-}
-
-export interface DeviceLog {
-  id: string;
-  userId: string;
-  date: string;
-  checkIn: string;
-  checkOut?: string;
   schoolId: string;
 }
 

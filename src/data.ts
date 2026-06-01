@@ -1,7 +1,7 @@
 import type {
   User, Student, Teacher, StaffMember, AttendanceRecord, ClassGroup,
   Intake, LeaveRequest, RoutineSlot, Announcement, CalendarEvent,
-  Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent, Inquiry, DeviceLog,
+  Exam, ExamMarks, Assignment, AssignmentSubmission, FeeRecord, ParentStudent, Inquiry,
   Subject, FeeType, GradingScale, ReferenceDatum, SchoolConfig,
 } from "./types";
 
@@ -85,7 +85,7 @@ export const STAFF: StaffMember[] = [
   },
 ];
 
-export const STUDENTS: Student[] = [
+const BASE_STUDENTS: Student[] = [
   { id: "STU-601", name: "Yuwansh Magar", classId: "C003", section: "Section A", rollNumber: "1", batch: "2083", phone: "9800000006", email: "yuwansh@email.com", fee: "Paid", status: "Active", dob: "2075-05-15", gender: "Male", bloodGroup: "O+", nationality: "Nepali", religion: "Hindu", motherTongue: "Nepali", ethnicGroup: "Magar", permanentAddress: "Biratnagar, Morang", temporaryAddress: "", fatherName: "Hari Magar", fatherOccupation: "Teacher", motherName: "Sita Magar", motherOccupation: "Housewife", guardianName: "Hari Magar", guardianContact: "9800000012", guardianRelation: "Father", parentEmail: "parent@email.com", previousSchool: "", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U007" },
   { id: "STU-602", name: "Bijan Shakya", classId: "C003", section: "Section A", rollNumber: "2", batch: "2083", phone: "9800000007", email: "bijan@email.com", fee: "Paid", status: "Active", dob: "2075-08-20", gender: "Male", bloodGroup: "A+", nationality: "Nepali", religion: "Buddhist", motherTongue: "Nepali", ethnicGroup: "Shakya", permanentAddress: "Dharan, Sunsari", temporaryAddress: "", fatherName: "Rajan Shakya", fatherOccupation: "Business", motherName: "Anita Shakya", motherOccupation: "Housewife", guardianName: "Rajan Shakya", guardianContact: "9800000013", guardianRelation: "Father", parentEmail: "", previousSchool: "", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U008" },
   { id: "STU-603", name: "Aarav Sharma", classId: "C004", section: "Section A", rollNumber: "1", batch: "2083", phone: "9800000009", email: "aarav@email.com", fee: "Paid", status: "Active", dob: "2074-03-10", gender: "Male", bloodGroup: "B+", nationality: "Nepali", religion: "Hindu", motherTongue: "Nepali", ethnicGroup: "Sharma", permanentAddress: "Itahari, Sunsari", temporaryAddress: "", fatherName: "Ramesh Sharma", fatherOccupation: "Engineer", motherName: "Pooja Sharma", motherOccupation: "Nurse", guardianName: "Ramesh Sharma", guardianContact: "9800000014", guardianRelation: "Father", parentEmail: "", previousSchool: "Sunshine School", admissionDate: "2083-01-01", schoolId: "SCH001", userId: "U010" },
@@ -135,34 +135,6 @@ export const ATTENDANCE: AttendanceRecord[] = [
   { id: "AT040", userId: "U005", date: "2083-02-05", status: "Present", source: "device", markedBy: "U001", verified: true, verifiedBy: "U001", schoolId: "SCH001" },
 ];
 
-export const DEVICE_LOGS: DeviceLog[] = [
-  { id: "DL001", userId: "U002", date: "2083-02-01", checkIn: "07:45", checkOut: "15:30", schoolId: "SCH001" },
-  { id: "DL002", userId: "U003", date: "2083-02-01", checkIn: "07:50", checkOut: "15:45", schoolId: "SCH001" },
-  { id: "DL003", userId: "U004", date: "2083-02-01", checkIn: "07:40", checkOut: "15:20", schoolId: "SCH001" },
-  { id: "DL004", userId: "U005", date: "2083-02-01", checkIn: "08:00", checkOut: "16:30", schoolId: "SCH001" },
-  { id: "DL005", userId: "U006", date: "2083-02-01", checkIn: "08:15", checkOut: "16:00", schoolId: "SCH001" },
-  { id: "DL006", userId: "U007", date: "2083-02-01", checkIn: "07:55", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL007", userId: "U008", date: "2083-02-01", checkIn: "07:58", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL008", userId: "U010", date: "2083-02-01", checkIn: "07:50", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL009", userId: "U011", date: "2083-02-01", checkIn: "08:05", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL010", userId: "U002", date: "2083-02-02", checkIn: "07:42", checkOut: "15:25", schoolId: "SCH001" },
-  { id: "DL011", userId: "U003", date: "2083-02-02", checkIn: "07:46", checkOut: "15:40", schoolId: "SCH001" },
-  { id: "DL012", userId: "U004", date: "2083-02-02", checkIn: "07:38", checkOut: "15:15", schoolId: "SCH001" },
-  { id: "DL013", userId: "U005", date: "2083-02-02", checkIn: "07:55", checkOut: "16:20", schoolId: "SCH001" },
-  { id: "DL014", userId: "U006", date: "2083-02-02", checkIn: "08:10", checkOut: "16:00", schoolId: "SCH001" },
-  { id: "DL015", userId: "U007", date: "2083-02-02", checkIn: "07:50", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL016", userId: "U008", date: "2083-02-02", checkIn: "07:55", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL017", userId: "U011", date: "2083-02-02", checkIn: "07:48", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL018", userId: "U002", date: "2083-02-03", checkIn: "07:48", checkOut: "15:35", schoolId: "SCH001" },
-  { id: "DL019", userId: "U004", date: "2083-02-03", checkIn: "07:42", checkOut: "15:20", schoolId: "SCH001" },
-  { id: "DL020", userId: "U005", date: "2083-02-03", checkIn: "07:58", checkOut: "16:25", schoolId: "SCH001" },
-  { id: "DL021", userId: "U006", date: "2083-02-03", checkIn: "08:12", checkOut: "16:00", schoolId: "SCH001" },
-  { id: "DL022", userId: "U007", date: "2083-02-03", checkIn: "07:52", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL023", userId: "U008", date: "2083-02-03", checkIn: "08:02", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL024", userId: "U010", date: "2083-02-03", checkIn: "07:55", checkOut: "14:30", schoolId: "SCH001" },
-  { id: "DL025", userId: "U011", date: "2083-02-03", checkIn: "07:50", checkOut: "14:30", schoolId: "SCH001" },
-];
-
 export const INTAKES: Intake[] = [
   { id: "I001", name: "Nursery Intake 2083", academicYear: "2083", grade: "Nursery", capacity: 40, enrolled: 0, status: "open", schoolId: "SCH001" },
   { id: "I002", name: "LKG Intake 2083", academicYear: "2083", grade: "LKG", capacity: 30, enrolled: 0, status: "open", schoolId: "SCH001" },
@@ -175,35 +147,35 @@ export const INQUIRIES: Inquiry[] = [
     id: "INQ-001", inquirerName: "Hari Poudel", inquirerEmail: "hari@email.com", inquirerMobile: "9800980260", inquirerPhone: "", relationship: "Father",
     candidateTitle: "Mr.", candidateName: "Aayush Poudel", candidateGender: "Male", candidateDob: "Jestha 15, 2075", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "Phone",
     permanentAddress: "Sundarharaicha, Morang", temporaryAddress: "",
-    inquiryType: "New Admission", description: "Looking to enroll son in Class 4", outcome: "", assignedTo: "U005", outcomeDetails: "",
+    inquiryType: "Admission", description: "Looking to enroll son in Class 4", outcome: "", assignedTo: "U005", outcomeDetails: "",
     status: "new", createdAt: "Baisakh 28, 2083", createdBy: "U005", schoolId: "SCH001",
   },
   {
     id: "INQ-002", inquirerName: "Sita Acharya", inquirerEmail: "sita@email.com", inquirerMobile: "9812345678", inquirerPhone: "", relationship: "Mother",
     candidateTitle: "Miss", candidateName: "Anjana Acharya", candidateGender: "Female", candidateDob: "Chaitra 10, 2076", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "Walk-in",
     permanentAddress: "Biratnagar, Morang", temporaryAddress: "",
-    inquiryType: "New Admission", description: "Interested in Nursery admission", outcome: "", assignedTo: "U005", outcomeDetails: "",
+    inquiryType: "Admission", description: "Interested in Nursery admission", outcome: "", assignedTo: "U005", outcomeDetails: "",
     status: "new", createdAt: "Jestha 1, 2083", createdBy: "U005", schoolId: "SCH001",
   },
   {
     id: "INQ-003", inquirerName: "Ramesh Koirala", inquirerEmail: "ramesh@email.com", inquirerMobile: "9845678901", inquirerPhone: "", relationship: "Father",
     candidateTitle: "Mr.", candidateName: "Sagar Koirala", candidateGender: "Male", candidateDob: "Mangsir 5, 2074", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "Phone",
     permanentAddress: "Itahari, Sunsari", temporaryAddress: "",
-    inquiryType: "New Admission", description: "Looking for Class 1 admission", outcome: "", assignedTo: "U005", outcomeDetails: "",
+    inquiryType: "Admission", description: "Looking for Class 1 admission", outcome: "", assignedTo: "U005", outcomeDetails: "",
     status: "new", createdAt: "Jestha 3, 2083", createdBy: "U005", schoolId: "SCH001",
   },
   {
     id: "INQ-004", inquirerName: "Maya Gurung", inquirerEmail: "maya@email.com", inquirerMobile: "9856789012", inquirerPhone: "", relationship: "Mother",
     candidateTitle: "Miss", candidateName: "Riya Gurung", candidateGender: "Female", candidateDob: "Baisakh 20, 2076", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "Walk-in",
     permanentAddress: "Dharan, Sunsari", temporaryAddress: "",
-    inquiryType: "New Admission", description: "Wants to enroll daughter in LKG", outcome: "", assignedTo: "U005", outcomeDetails: "",
+    inquiryType: "Admission", description: "Wants to enroll daughter in LKG", outcome: "", assignedTo: "U005", outcomeDetails: "",
     status: "new", createdAt: "Jestha 5, 2083", createdBy: "U005", schoolId: "SCH001",
   },
   {
     id: "INQ-005", inquirerName: "Krishna Thapa", inquirerEmail: "krishna@email.com", inquirerMobile: "9867890123", inquirerPhone: "", relationship: "Father",
     candidateTitle: "Mr.", candidateName: "Amar Thapa", candidateGender: "Male", candidateDob: "Poush 12, 2073", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "Referral",
     permanentAddress: "Urlabari, Morang", temporaryAddress: "",
-    inquiryType: "New Admission", description: "Referred by neighbor, interested in Class 4", outcome: "", assignedTo: "U005", outcomeDetails: "",
+    inquiryType: "Admission", description: "Referred by neighbor, interested in Class 4", outcome: "", assignedTo: "U005", outcomeDetails: "",
     status: "new", createdAt: "Jestha 7, 2083", createdBy: "U005", schoolId: "SCH001",
   },
 ];
@@ -273,15 +245,24 @@ export const ROUTINE_SLOTS: RoutineSlot[] = [
 
 export const ANNOUNCEMENTS: Announcement[] = [
   { id: "N001", title: "Admissions Open for 2083", content: "Admissions are now open for Nursery through Grade 4 for the academic year 2083. Visit the school office for details.", audience: "all", priority: "high", publishDate: "2026-05-01", createdAt: "2026-04-28", schoolId: "SCH001" },
+  { id: "N002", title: "Parent-Teacher Meeting", content: "Parent-Teacher meeting for Grade 10 students will be held on 2083-03-15 at 10 AM in the school hall. All parents are requested to attend.", audience: "parents", priority: "high", publishDate: "2026-05-10", createdAt: "2026-05-08", schoolId: "SCH001" },
+  { id: "N003", title: "Science Fair 2083", content: "The annual Science Fair will be held on 2083-04-20. Students from all classes are encouraged to participate. Registration closes on 2083-04-05.", audience: "students", priority: "medium", publishDate: "2026-05-15", createdAt: "2026-05-12", schoolId: "SCH001" },
+  { id: "N004", title: "Teacher Workshop", content: "There will be a workshop on Modern Teaching Methodologies for all teachers on 2083-03-10 in the staff room.", audience: "teachers", priority: "medium", publishDate: "2026-05-18", createdAt: "2026-05-16", schoolId: "SCH001" },
+  { id: "N005", title: "Holiday Notice: Maha Shivaratri", content: "School will remain closed on 2083-03-01 on the occasion of Maha Shivaratri.", audience: "all", priority: "low", publishDate: "2026-05-20", createdAt: "2026-05-18", schoolId: "SCH001" },
 ];
 
 export const CALENDAR_EVENTS: CalendarEvent[] = [
   { id: "E001", title: "School Reopening", description: "New academic year begins", date: "2026-04-15", type: "academic", schoolId: "SCH001" },
   { id: "E002", title: "Admission Deadline", description: "Last date for admission applications", date: "2026-06-30", type: "academic", schoolId: "SCH001" },
   { id: "E003", title: "First Day of Classes", description: "Regular classes begin", date: "2026-07-01", type: "academic", schoolId: "SCH001" },
+  { id: "E004", title: "Parent-Teacher Meeting", description: "Grade 10 parent-teacher meeting in school hall", date: "2026-05-20", type: "academic", schoolId: "SCH001" },
+  { id: "E005", title: "Science Fair", description: "Annual science fair with student projects", date: "2026-06-05", type: "academic", schoolId: "SCH001" },
+  { id: "E006", title: "Maha Shivaratri", description: "Public holiday", date: "2026-03-08", type: "general", schoolId: "SCH001" },
+  { id: "E007", title: "Sports Day", description: "Annual sports day competition", date: "2026-08-15", type: "general", schoolId: "SCH001" },
+  { id: "E008", title: "School Picnic", description: "Annual school picnic for all students", date: "2026-09-20", type: "general", schoolId: "SCH001" },
 ];
 
-export const EXAMS: Exam[] = [
+const BASE_EXAMS: Exam[] = [
   { 
     id: "EXM001", 
     name: "First Terminal Exam 2083", 
@@ -295,14 +276,212 @@ export const EXAMS: Exam[] = [
     ], 
     schoolId: "SCH001" 
   },
+  { 
+    id: "EXM002", 
+    name: "Mid-Term Exam 2083", 
+    applicableClassIds: ["C003", "C004"], 
+    startDate: "2083-06-15", 
+    endDate: "2083-06-22", 
+    subjects: [
+      { name: "English", fullMarks: 50, passMarks: 20 },
+      { name: "Mathematics", fullMarks: 50, passMarks: 20 },
+      { name: "Nepali", fullMarks: 50, passMarks: 20 }
+    ], 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "EXM003", 
+    name: "Final Exam 2083", 
+    applicableClassIds: ["C003", "C004", "C007", "C008", "C009"], 
+    startDate: "2083-09-01", 
+    endDate: "2083-09-15", 
+    subjects: [
+      { name: "Mathematics", fullMarks: 100, passMarks: 40 },
+      { name: "Science", fullMarks: 100, passMarks: 40 },
+      { name: "English", fullMarks: 100, passMarks: 40 },
+      { name: "Nepali", fullMarks: 100, passMarks: 40 }
+  ],
+    schoolId: "SCH001" 
+  },
 ];
 
-export const EXAM_MARKS: ExamMarks[] = [
+const EXTRA_EXAMS: Exam[] = [
+  {
+    id: "EXM004",
+    name: "Unit Test 1 - Grade 10",
+    applicableClassIds: ["C007", "C008"],
+    startDate: "2083-03-01",
+    endDate: "2083-03-03",
+    subjects: [
+      { name: "Mathematics", fullMarks: 25, passMarks: 10 },
+      { name: "Science", fullMarks: 25, passMarks: 10 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM005",
+    name: "Unit Test 1 - Primary",
+    applicableClassIds: ["C004", "C005", "C006"],
+    startDate: "2083-03-05",
+    endDate: "2083-03-07",
+    subjects: [
+      { name: "English", fullMarks: 20, passMarks: 8 },
+      { name: "Mathematics", fullMarks: 20, passMarks: 8 },
+      { name: "Nepali", fullMarks: 20, passMarks: 8 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM006",
+    name: "Unit Test 1 - ECD",
+    applicableClassIds: ["C001", "C002", "C003"],
+    startDate: "2083-03-10",
+    endDate: "2083-03-12",
+    subjects: [
+      { name: "English", fullMarks: 20, passMarks: 8 },
+      { name: "Mathematics", fullMarks: 20, passMarks: 8 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM007",
+    name: "Second Terminal Exam 2083",
+    applicableClassIds: ["C001", "C002", "C003", "C004", "C005", "C006", "C007", "C008", "C009"],
+    startDate: "2083-07-01",
+    endDate: "2083-07-15",
+    subjects: [
+      { name: "English", fullMarks: 100, passMarks: 40 },
+      { name: "Mathematics", fullMarks: 100, passMarks: 40 },
+      { name: "Nepali", fullMarks: 100, passMarks: 40 },
+      { name: "Science", fullMarks: 100, passMarks: 40 },
+      { name: "Social Studies", fullMarks: 100, passMarks: 40 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM008",
+    name: "Pre-Board Exam 2083",
+    applicableClassIds: ["C007", "C008", "C009"],
+    startDate: "2083-11-01",
+    endDate: "2083-11-10",
+    subjects: [
+      { name: "English", fullMarks: 100, passMarks: 40 },
+      { name: "Mathematics", fullMarks: 100, passMarks: 40 },
+      { name: "Nepali", fullMarks: 100, passMarks: 40 },
+      { name: "Science", fullMarks: 100, passMarks: 40 },
+      { name: "Social Studies", fullMarks: 100, passMarks: 40 },
+      { name: "Computer Science", fullMarks: 50, passMarks: 20 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM009",
+    name: "Weekly Test - Science",
+    applicableClassIds: ["C004", "C005", "C006", "C007", "C008", "C009"],
+    startDate: "2083-04-15",
+    endDate: "2083-04-15",
+    subjects: [
+      { name: "Science", fullMarks: 15, passMarks: 6 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM010",
+    name: "Weekly Test - Mathematics",
+    applicableClassIds: ["C004", "C005", "C006", "C007", "C008", "C009"],
+    startDate: "2083-04-22",
+    endDate: "2083-04-22",
+    subjects: [
+      { name: "Mathematics", fullMarks: 15, passMarks: 6 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM011",
+    name: "Grade 9 Quarterly Exam",
+    applicableClassIds: ["C009"],
+    startDate: "2083-05-01",
+    endDate: "2083-05-05",
+    subjects: [
+      { name: "English", fullMarks: 75, passMarks: 30 },
+      { name: "Mathematics", fullMarks: 75, passMarks: 30 },
+      { name: "Science", fullMarks: 75, passMarks: 30 },
+      { name: "Nepali", fullMarks: 75, passMarks: 30 },
+    ],
+    schoolId: "SCH001",
+  },
+  {
+    id: "EXM012",
+    name: "Primary Mid-Term 2083",
+    applicableClassIds: ["C001", "C002", "C003", "C004", "C005", "C006"],
+    startDate: "2083-06-01",
+    endDate: "2083-06-08",
+    subjects: [
+      { name: "English", fullMarks: 50, passMarks: 20 },
+      { name: "Mathematics", fullMarks: 50, passMarks: 20 },
+      { name: "Nepali", fullMarks: 50, passMarks: 20 },
+    ],
+    schoolId: "SCH001",
+  },
+];
+
+export const EXAMS = [...BASE_EXAMS, ...EXTRA_EXAMS];
+
+const BASE_EXAM_MARKS: ExamMarks[] = [
   { 
     id: "MK001", 
     examId: "EXM001", 
-    studentId: "STU001", 
+    studentId: "STU-604", 
     subjectMarks: { "Mathematics": 85, "Science": 90, "English": 78 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK002", 
+    examId: "EXM002", 
+    studentId: "STU-601", 
+    subjectMarks: { "English": 42, "Mathematics": 38, "Nepali": 45 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK003", 
+    examId: "EXM002", 
+    studentId: "STU-602", 
+    subjectMarks: { "English": 35, "Mathematics": 40, "Nepali": 30 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK004", 
+    examId: "EXM002", 
+    studentId: "STU-603", 
+    subjectMarks: { "English": 48, "Mathematics": 50, "Nepali": 44 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK005", 
+    examId: "EXM003", 
+    studentId: "STU-601", 
+    subjectMarks: { "Mathematics": 72, "Science": 68, "English": 80, "Nepali": 75 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK006", 
+    examId: "EXM003", 
+    studentId: "STU-602", 
+    subjectMarks: { "Mathematics": 65, "Science": 70, "English": 60, "Nepali": 55 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK007", 
+    examId: "EXM003", 
+    studentId: "STU-603", 
+    subjectMarks: { "Mathematics": 88, "Science": 92, "English": 85, "Nepali": 78 }, 
+    schoolId: "SCH001" 
+  },
+  { 
+    id: "MK008", 
+    examId: "EXM003", 
+    studentId: "STU-604", 
+    subjectMarks: { "Mathematics": 45, "Science": 55, "English": 60, "Nepali": 50 }, 
     schoolId: "SCH001" 
   },
 ];
@@ -324,6 +503,12 @@ export const SUBMISSIONS: AssignmentSubmission[] = [
   { id: "SUB1712345678903", assignmentId: "AS003", studentId: "STU-604", response: "Completed all 15 quadratic equations. Used quadratic formula throughout.", submittedAt: "2026-05-23T11:00:00Z", score: 85, reviewed: true, comment: "Good work. Some mistakes in equation 9 and 12.", schoolId: "SCH001" },
   { id: "SUB1712345678904", assignmentId: "AS003", studentId: "STU-603", response: "Solved 12 out of 15 equations. Could not solve equations 7, 10, and 14.", submittedAt: "2026-05-24T16:45:00Z", reviewed: false, schoolId: "SCH001" },
   { id: "SUB1712345678905", assignmentId: "AS006", studentId: "STU-602", response: "The moral of the story is honesty always wins. The woodcutter got all three axes because he told the truth.", submittedAt: "2026-05-21T10:00:00Z", score: 10, reviewed: true, comment: "Good understanding of the moral. Try to write in complete sentences.", schoolId: "SCH001" },
+  { id: "SUB1712345678906", assignmentId: "AS001", studentId: "STU-601", response: "Solved all 10 algebra problems. Answers: 2x=4→x=2, 3x+1=10→x=3, x/2=5→x=10, 2x+3=11→x=4, 5x-2=13→x=3, etc.", submittedAt: "2026-05-12T10:20:00Z", score: 9, reviewed: true, comment: "Correct approach. Try showing more steps.", schoolId: "SCH001" },
+  { id: "SUB1712345678907", assignmentId: "AS002", studentId: "STU-603", response: "Submitted lab report with hypothesis, method section, observations table, and conclusion. Used 3 plants with different sunlight exposure.", submittedAt: "2026-05-16T14:00:00Z", score: 92, reviewed: true, comment: "Excellent report! Well-structured observations.", schoolId: "SCH001" },
+  { id: "SUB1712345678908", assignmentId: "AS002", studentId: "STU-604", response: "Lab report: Plant growth experiment with 2 plants. One in sunlight, one in shade.", submittedAt: "2026-05-17T09:30:00Z", reviewed: false, schoolId: "SCH001" },
+  { id: "SUB1712345678909", assignmentId: "AS004", studentId: "STU-602", response: "Completed grammar exercises 1-5. Identified nouns, verbs, and adjectives in all sentences.", submittedAt: "2026-05-15T11:45:00Z", reviewed: false, schoolId: "SCH001" },
+  { id: "SUB1712345678910", assignmentId: "AS008", studentId: "STU-604", response: "मेरो देश नेपालको बारेमा निबन्ध। नेपाल विविधताले भरिपूर्ण देश हो। यहाँका मानिसहरू विभिन्न धर्म, संस्कृति र भाषामा बस्छन्।", submittedAt: "2026-06-02T16:00:00Z", score: 38, reviewed: true, comment: "Well written essay. Use more descriptive language.", schoolId: "SCH001" },
+  { id: "SUB1712345678911", assignmentId: "AS005", studentId: "STU-604", response: "Balanced 10 chemical equations. Identified reaction types: synthesis, decomposition, single displacement, double displacement, combustion.", submittedAt: "2026-05-30T13:15:00Z", score: 72, reviewed: true, comment: "Good work on balancing but verify equations 3 and 8.", schoolId: "SCH001" },
 ];
 
 export const FEE_RECORDS: FeeRecord[] = [
@@ -345,6 +530,9 @@ export const FEE_RECORDS: FeeRecord[] = [
 
 export const PARENT_STUDENT: ParentStudent[] = [
   { parentId: "U009", studentId: "STU-601" },
+  { parentId: "U009", studentId: "STU-602" },
+  { parentId: "U009", studentId: "STU-603" },
+  { parentId: "U009", studentId: "STU-604" },
 ];
 
 export const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -458,3 +646,118 @@ export const SCHOOL_CONFIG: SchoolConfig = {
   activeAcademicYear: "2083",
 };
 
+// ──────────────────────────────────────────────
+// 🚀 ENORMOUS SEED DATA GENERATION
+// ──────────────────────────────────────────────
+
+const FIRST_NAMES = [
+  "Aarav","Bishesh","Chandra","Deepak","Ekta","Fakir","Ganesh","Harish","Ishwor","Jaya",
+  "Kiran","Laxmi","Maya","Nabin","Om","Prakash","Radha","Sagar","Tulsi","Uma",
+  "Binod","Sita","Gopal","Anita","Rajan","Pooja","Hari","Maya","Krishna","Suman",
+  "Nirmala","Dipak","Sabina","Rajesh","Kabita","Manoj","Sunita","Ramesh","Devi","Prakash",
+];
+const LAST_NAMES = [
+  "Sharma","Acharya","Thapa","Khadka","Gurung","Rai","Tamang","Lama","KC","Poudel",
+  "Bhandari","Dahal","Pandey","Neupane","Subedi","Regmi","Koirala","Pokharel","Bastola","Adhikari",
+  "Magar","Shrestha","Karmacharya","Pradhan","Ranjitkar","Singh","Yadav","Kumal","Dangol","Malla",
+];
+const CLASS_INFO: { id: string; name: string; section: string }[] = [
+  { id: "C001", name: "Nursery", section: "Section A" },
+  { id: "C002", name: "LKG", section: "Section A" },
+  { id: "C003", name: "UKG", section: "Section A" },
+  { id: "C004", name: "Class 1", section: "Section A" },
+  { id: "C005", name: "Class 2", section: "Section A" },
+  { id: "C006", name: "Class 3", section: "Section A" },
+  { id: "C007", name: "Grade 10", section: "Section A" },
+  { id: "C008", name: "Grade 10", section: "Section B" },
+  { id: "C009", name: "Grade 9", section: "Section A" },
+];
+
+const STUDENTS_PER_CLASS = 20;
+
+function generateExtraStudents(): Student[] {
+  const list: Student[] = [];
+  let counter = 700;
+  for (let ci = 0; ci < CLASS_INFO.length; ci++) {
+    const { id: classId, section } = CLASS_INFO[ci];
+    for (let si = 0; si < STUDENTS_PER_CLASS; si++) {
+      const stuNum = counter++;
+      const firstName = FIRST_NAMES[(ci * STUDENTS_PER_CLASS + si) % FIRST_NAMES.length];
+      const lastName = LAST_NAMES[(ci * STUDENTS_PER_CLASS + si) % LAST_NAMES.length];
+      const name = `${firstName} ${lastName}`;
+      const roll = String(si + 1);
+      list.push({
+        id: `STU-${stuNum}`,
+        name,
+        classId,
+        section,
+        rollNumber: roll,
+        batch: "2083",
+        phone: `98${String(70000000 + stuNum).slice(0, 8)}`,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@email.com`,
+        fee: si % 5 === 0 ? "Due" : si % 7 === 0 ? "Partial" : "Paid",
+        status: "Active",
+        dob: `207${Math.floor(Math.random() * 6) + 1}-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
+        gender: si % 2 === 0 ? "Male" : "Female",
+        bloodGroup: ["A+","A-","B+","B-","AB+","AB-","O+","O-"][si % 8],
+        nationality: "Nepali",
+        religion: ["Hindu","Buddhist","Muslim","Christian"][si % 4],
+        motherTongue: "Nepali",
+        ethnicGroup: lastName,
+        permanentAddress: "Biratnagar, Morang",
+        temporaryAddress: "",
+        fatherName: `${firstName} ${lastName}`,
+        fatherOccupation: ["Teacher","Farmer","Business","Engineer","Doctor","Service"][si % 6],
+        motherName: `${FIRST_NAMES[(si + 5) % FIRST_NAMES.length]} ${lastName}`,
+        motherOccupation: ["Housewife","Nurse","Teacher","Business"][si % 4],
+        guardianName: `${firstName} ${lastName}`,
+        guardianContact: `98${String(70000000 + stuNum).slice(0, 8)}`,
+        guardianRelation: si % 2 === 0 ? "Father" : "Mother",
+        parentEmail: `parent.${firstName.toLowerCase()}@email.com`,
+        previousSchool: si % 3 === 0 ? "Sunrise Academy" : "",
+        admissionDate: "2083-01-01",
+        schoolId: "SCH001",
+      });
+    }
+  }
+  return list;
+}
+
+function generateExtraExamMarks(): ExamMarks[] {
+  const list: ExamMarks[] = [];
+  let counter = 900;
+  const allExams = [...BASE_EXAMS, ...EXTRA_EXAMS];
+  const allStudents = [...BASE_STUDENTS, ...EXTRA_STUDENTS];
+  const examIds = ["EXM001", "EXM003", "EXM007", "EXM008", "EXM011"];
+  for (const examId of examIds) {
+    const exam = allExams.find((e) => e.id === examId);
+    if (!exam) continue;
+    for (const classId of exam.applicableClassIds) {
+      const studentsInClass = allStudents.filter((s) => s.classId === classId);
+      for (let i = 0; i < Math.min(studentsInClass.length, 20); i+=2) {
+        const student = studentsInClass[i];
+        const subjectMarks: Record<string, number> = {};
+        for (const sub of exam.subjects) {
+          subjectMarks[sub.name] = Math.floor(Math.random() * (sub.fullMarks - sub.passMarks + 10)) + sub.passMarks - 5;
+          if (subjectMarks[sub.name] > sub.fullMarks) subjectMarks[sub.name] = sub.fullMarks;
+          if (subjectMarks[sub.name] < 0) subjectMarks[sub.name] = 0;
+        }
+        list.push({
+          id: `MK${counter++}`,
+          examId,
+          studentId: student.id,
+          subjectMarks,
+          schoolId: "SCH001",
+        });
+      }
+    }
+  }
+  return list;
+}
+
+const EXTRA_STUDENTS = generateExtraStudents();
+export { EXTRA_STUDENTS };
+
+export const STUDENTS = [...BASE_STUDENTS, ...EXTRA_STUDENTS];
+
+export const EXAM_MARKS = [...BASE_EXAM_MARKS, ...generateExtraExamMarks()];

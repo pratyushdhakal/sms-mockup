@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, UserPlus, Phone, Users } from "lucide-react";
+import { Search, UserPlus, Phone, Users, UserX } from "lucide-react";
 import { useStore } from "../../StoreContext";
 import { CLASS_GROUPS } from "../../data";
 import { useNavigate } from "../../NavContext";
@@ -16,11 +16,11 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import type { Inquiry } from "../../types";
+import type { Inquiry, InquiryStatus } from "../../types";
 
 export default function AdminAdmissions() {
   const { navigate } = useNavigate();
-  const { inquiries, intakes, enrollInquiry } = useStore();
+  const { inquiries, intakes, enrollInquiry, setInquiries } = useStore();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"pending" | "enrolled">("pending");
 
@@ -42,6 +42,10 @@ export default function AdminAdmissions() {
       setEnrollClassGroup("");
       setEnrollRoll("");
     }
+  }
+
+  function markLost(id: string) {
+    setInquiries((prev) => prev.map((i) => i.id === id ? { ...i, status: "lost" as InquiryStatus } : i));
   }
 
   return (
@@ -100,11 +104,18 @@ export default function AdminAdmissions() {
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">{inq.createdAt}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" className="text-blue-600 text-xs gap-1"
-                    onClick={() => { setDialogInquiry(inq.id); setEnrollIntake(""); setEnrollClassGroup(""); setEnrollRoll(""); }}
-                  >
-                    <UserPlus size={12} /> Enroll
-                  </Button>
+                  <div className="flex items-center justify-end gap-1">
+                    <Button variant="ghost" size="sm" className="text-blue-600 text-xs gap-1"
+                      onClick={() => { setDialogInquiry(inq.id); setEnrollIntake(""); setEnrollClassGroup(""); setEnrollRoll(""); }}
+                    >
+                      <UserPlus size={12} /> Enroll
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-destructive text-xs gap-1"
+                      onClick={() => markLost(inq.id)}
+                    >
+                      <UserX size={12} /> Lost
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Plus, Search, MessageSquare, Phone, UserX } from "lucide-react";
+import { Plus, Search, MessageSquare, Phone, Eye } from "lucide-react";
 import { useStore } from "../../StoreContext";
-import type { Inquiry, InquiryStatus } from "../../types";
+import type { Inquiry, InquiryStatus, InquiryType } from "../../types";
 import Header from "../../layouts/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +23,7 @@ const INIT_FORM = {
   inquirerName: "", inquirerEmail: "", inquirerMobile: "", inquirerPhone: "", relationship: "",
   candidateTitle: "", candidateName: "", candidateGender: "", candidateDob: "", candidateMobile: "", candidatePhone: "", candidateEmail: "", contactMethod: "",
   permanentAddress: "", temporaryAddress: "",
-  inquiryType: "", description: "",
+  inquiryType: "General Inquiry", description: "",
   outcome: "", assignedTo: "", outcomeDetails: "",
 };
 
@@ -57,6 +57,7 @@ export default function StaffInquiries() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewing, setViewing] = useState<Inquiry | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(INIT_FORM);
 
@@ -92,6 +93,10 @@ export default function StaffInquiries() {
 
   function markStatus(id: string, status: InquiryStatus) {
     setInquiries((prev) => prev.map((i) => (i.id === id ? { ...i, status } : i)));
+  }
+
+  function isEnrollmentType(inquiryType: string): boolean {
+    return inquiryType === "Admission";
   }
 
   return (
@@ -144,7 +149,22 @@ export default function StaffInquiries() {
                   <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">Address</h3>
                   <TextAreaField label="Permanent Address" value={form.permanentAddress} onChange={e => setForm({...form, permanentAddress: e.target.value})} />
                   <h3 className="col-span-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-3">Inquiry Details</h3>
-                  <InputField label="Inquiry Type" value={form.inquiryType} onChange={e => setForm({...form, inquiryType: e.target.value})} />
+                  <div className="space-y-2">
+                    <Label className="text-sm">Inquiry Type</Label>
+                    <Select value={form.inquiryType} onValueChange={(v) => setForm({...form, inquiryType: v as InquiryType})}>
+                      <SelectTrigger className="h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Admission">Admission</SelectItem>
+                        <SelectItem value="General Inquiry">General Inquiry</SelectItem>
+                        <SelectItem value="Complaint">Complaint</SelectItem>
+                        <SelectItem value="Feedback">Feedback</SelectItem>
+                        <SelectItem value="Transfer">Transfer</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <TextAreaField label="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
                 </div>
               </ScrollArea>
@@ -160,8 +180,10 @@ export default function StaffInquiries() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Candidate</TableHead>
               <TableHead>Inquirer</TableHead>
+              <TableHead>Relation</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
@@ -171,13 +193,18 @@ export default function StaffInquiries() {
           <TableBody>
             {filtered.map((inq) => {
               const sb = STATUS_BADGE[inq.status];
+              const isEnrollment = isEnrollmentType(inq.inquiryType);
               return (
                 <TableRow key={inq.id}>
                   <TableCell className="text-sm font-medium text-primary">{inq.id}</TableCell>
                   <TableCell>
+                    <Badge variant="outline" className="text-xs">{inq.inquiryType || "—"}</Badge>
+                  </TableCell>
+                  <TableCell>
                     <span className="text-sm font-medium">{inq.candidateName || "N/A"}</span>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{inq.inquirerName}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{inq.relationship || "—"}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Phone size={11} /> {inq.inquirerMobile}
@@ -186,18 +213,19 @@ export default function StaffInquiries() {
                   <TableCell>
                     <Badge variant={sb.variant}>{sb.label}</Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{inq.createdAt}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">{inq.createdAt}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      {inq.status === "new" && (
-                        <Button variant="ghost" size="icon" onClick={() => markStatus(inq.id, "contacted")} title="Mark Contacted">
-                          <MessageSquare size={14} />
+                      <Button variant="ghost" size="sm" className="text-xs gap-1" onClick={() => setViewing(inq)}>
+                        <Eye size={12} /> View
+                      </Button>
+                      {isEnrollment && inq.status === "new" && (
+                        <Button variant="ghost" size="sm" className="text-xs gap-1" onClick={() => markStatus(inq.id, "contacted")}>
+                          <MessageSquare size={12} /> Contacted
                         </Button>
                       )}
-                      {inq.status === "contacted" && (
-                        <Button variant="ghost" size="icon" onClick={() => markStatus(inq.id, "lost")} title="Mark Lost" className="text-destructive">
-                          <UserX size={14} />
-                        </Button>
+                      {isEnrollment && inq.status === "contacted" && (
+                        <span className="text-xs text-muted-foreground italic">In Admissions</span>
                       )}
                     </div>
                   </TableCell>
@@ -207,6 +235,60 @@ export default function StaffInquiries() {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={!!viewing} onOpenChange={(open) => { if (!open) setViewing(null); }}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] p-0 flex flex-col overflow-hidden">
+          <DialogHeader className="px-6 pt-6 pb-0 shrink-0">
+            <DialogTitle>Inquiry Details — {viewing?.id}</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="flex-1 min-h-0 px-6 py-4">
+            <div className="space-y-5">
+              <div>
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Inquirer</h4>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div><span className="text-muted-foreground">Name:</span> {viewing?.inquirerName}</div>
+                  <div><span className="text-muted-foreground">Relationship:</span> {viewing?.relationship || "—"}</div>
+                  <div><span className="text-muted-foreground">Email:</span> {viewing?.inquirerEmail || "—"}</div>
+                  <div><span className="text-muted-foreground">Mobile:</span> {viewing?.inquirerMobile}</div>
+                  <div><span className="text-muted-foreground">Phone:</span> {viewing?.inquirerPhone || "—"}</div>
+                  <div><span className="text-muted-foreground">Contact Method:</span> {viewing?.contactMethod || "—"}</div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Candidate</h4>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div><span className="text-muted-foreground">Title:</span> {viewing?.candidateTitle || "—"}</div>
+                  <div><span className="text-muted-foreground">Name:</span> {viewing?.candidateName || "—"}</div>
+                  <div><span className="text-muted-foreground">Gender:</span> {viewing?.candidateGender || "—"}</div>
+                  <div><span className="text-muted-foreground">DOB:</span> {viewing?.candidateDob || "—"}</div>
+                  <div><span className="text-muted-foreground">Mobile:</span> {viewing?.candidateMobile || "—"}</div>
+                  <div><span className="text-muted-foreground">Email:</span> {viewing?.candidateEmail || "—"}</div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Address</h4>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="col-span-2"><span className="text-muted-foreground">Permanent:</span> {viewing?.permanentAddress || "—"}</div>
+                  <div className="col-span-2"><span className="text-muted-foreground">Temporary:</span> {viewing?.temporaryAddress || "—"}</div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Inquiry</h4>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div><span className="text-muted-foreground">Type:</span> {viewing?.inquiryType || "—"}</div>
+                  <div><span className="text-muted-foreground">Status:</span> {viewing?.status}</div>
+                  <div><span className="text-muted-foreground">Date:</span> {viewing?.createdAt}</div>
+                  <div className="col-span-2"><span className="text-muted-foreground">Description:</span> {viewing?.description || "—"}</div>
+                  <div className="col-span-2"><span className="text-muted-foreground">Outcome Details:</span> {viewing?.outcomeDetails || "—"}</div>
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+          <DialogFooter className="px-6 pb-6 shrink-0">
+            <Button variant="outline" onClick={() => setViewing(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

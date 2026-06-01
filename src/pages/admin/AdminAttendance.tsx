@@ -123,8 +123,8 @@ function StaffAttendanceTab() {
 }
 
 export default function AdminAttendance() {
-  const { navigate, setViewEntity } = useNavigate();
-  const { students, attendanceRecords, setAttendanceRecords, deviceLogs, users } = useStore();
+  const { navigate } = useNavigate();
+  const { students, attendanceRecords, setAttendanceRecords } = useStore();
 
   const ADMIN_USER_ID = "U001";
   const [markDate, setMarkDate] = useState(new Date().toISOString().split("T")[0]);
@@ -177,33 +177,6 @@ export default function AdminAttendance() {
     }
   }
 
-  // Device Logs State
-  const [dateStart, setDateStart] = useState("");
-  const [dateEnd, setDateEnd] = useState("");
-  const [search, setSearch] = useState("");
-  const [activeRoleTab, setActiveRoleTab] = useState<"Students" | "Staff" | "Teachers" | "Managers">("Students");
-
-  const filteredDeviceLogs = useMemo(() => {
-    let logs = deviceLogs;
-    if (dateStart) logs = logs.filter(l => l.date >= dateStart);
-    if (dateEnd) logs = logs.filter(l => l.date <= dateEnd);
-    if (search) logs = logs.filter(l => users.find(u => u.id === l.userId)?.name.toLowerCase().includes(search.toLowerCase()));
-    
-    // Filter by role tab
-    if (activeRoleTab === "Students") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "student");
-    if (activeRoleTab === "Staff") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "staff");
-    if (activeRoleTab === "Teachers") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "teacher");
-    if (activeRoleTab === "Managers") logs = logs.filter(l => users.find(u => u.id === l.userId)?.type === "admin");
-
-    return logs;
-  }, [deviceLogs, dateStart, dateEnd, search, activeRoleTab, users]);
-
-  const deviceSummary = useMemo(() => ({
-    total: filteredDeviceLogs.length,
-    checkIns: filteredDeviceLogs.filter(l => l.checkIn).length,
-    checkOuts: filteredDeviceLogs.filter(l => l.checkOut).length,
-  }), [filteredDeviceLogs]);
-
   return (
     <div className="p-6 space-y-6">
       <Header title="Attendance" subtitle="Track and manage attendance records" />
@@ -212,7 +185,6 @@ export default function AdminAttendance() {
         <TabsList>
           <TabsTrigger value="class">Class Attendance</TabsTrigger>
           <TabsTrigger value="staff">Staff Attendance</TabsTrigger>
-          <TabsTrigger value="device">Device Logs</TabsTrigger>
           <TabsTrigger value="my">My Attendance</TabsTrigger>
         </TabsList>
 
@@ -263,65 +235,6 @@ export default function AdminAttendance() {
           <StaffAttendanceTab />
         </TabsContent>
         
-        <TabsContent value="device">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Biometric Device Logs</CardTitle>
-                <div className="flex gap-2">
-                    <Input type="date" value={dateStart} onChange={e => setDateStart(e.target.value)} className="w-40" />
-                    <Input type="date" value={dateEnd} onChange={e => setDateEnd(e.target.value)} className="w-40" />
-                    <Input placeholder="Search name" value={search} onChange={e => setSearch(e.target.value)} className="w-40" />
-                    <Button variant="outline" size="sm">Refresh</Button>
-                </div>
-            </CardHeader>
-            <CardContent>
-              {/* Summary Cards */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <Card><CardContent className="p-4"><p className="text-sm text-muted-foreground">Total Records</p><p className="text-2xl font-bold">{deviceSummary.total}</p></CardContent></Card>
-                <Card><CardContent className="p-4"><p className="text-sm text-muted-foreground">Check Ins</p><p className="text-2xl font-bold text-emerald-600">{deviceSummary.checkIns}</p></CardContent></Card>
-                <Card><CardContent className="p-4"><p className="text-sm text-muted-foreground">Check Outs</p><p className="text-2xl font-bold text-blue-600">{deviceSummary.checkOuts}</p></CardContent></Card>
-              </div>
-              
-              {/* Tabs for Roles */}
-              <div className="flex gap-2 mb-4 border-b">
-                {(["Students", "Staff", "Teachers", "Managers"] as const).map(role => (
-                  <button key={role} onClick={() => setActiveRoleTab(role)} className={`pb-2 px-2 text-sm ${activeRoleTab === role ? "border-b-2 border-indigo-600 font-medium text-indigo-600" : "text-muted-foreground"}`}>{role}</button>
-                ))}
-              </div>
-
-              <Table>
-                <TableHeader><TableRow><TableHead>User ID</TableHead><TableHead>Date</TableHead><TableHead>User</TableHead><TableHead>Check In</TableHead><TableHead>Check Out</TableHead></TableRow></TableHeader>
-                <TableBody>
-                  {filteredDeviceLogs.map(log => (
-                    <TableRow key={log.id}>
-                      <TableCell>{log.userId}</TableCell>
-                      <TableCell>{log.date}</TableCell>
-                      <TableCell
-                        className="font-medium cursor-pointer hover:text-primary transition-colors"
-                        onClick={() => {
-                          const user = users.find(u => u.id === log.userId);
-                          if (user?.type === "student") {
-                            setViewEntity({ type: "student", id: user.id });
-                            navigate("student-detail");
-                          } else if (user?.type === "teacher" || user?.type === "staff") navigate("staff");
-                          else if (user?.type === "admin") navigate("users");
-                        }}
-                      >{users.find(u => u.id === log.userId)?.name || "Unknown"}</TableCell>
-                      <TableCell className="text-emerald-600">{log.checkIn}</TableCell>
-                      <TableCell className="text-blue-600">{log.checkOut || "-"}</TableCell>
-                    </TableRow>
-                  ))}
-                  {filteredDeviceLogs.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-6">No data</TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
         <TabsContent value="my">
           <Card>
             <CardHeader><CardTitle>My Attendance</CardTitle></CardHeader>

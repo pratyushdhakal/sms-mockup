@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Award, CheckCircle, XCircle } from "lucide-react";
 import { useAuth } from "../../AuthContext";
 import { useStore } from "../../StoreContext";
-import { CLASS_GROUPS } from "../../data";
+import { CLASS_GROUPS, PUBLISHED_RESULTS } from "../../data";
 import Header from "../../layouts/Header";
 
 function getGrade(pct: number): string {
@@ -24,7 +24,6 @@ export default function ParentResults() {
 
   const currentStudent = children.find((s) => s.id === selectedStudent) ?? children[0];
 
-  const PUBLISHED_RESULTS: Record<string, boolean> = {};
   const relevantExams = exams.filter(
     (e) => e.applicableClassIds.includes(currentStudent?.classId ?? "") && PUBLISHED_RESULTS[`${e.id}-${currentStudent?.classId}`]
   );

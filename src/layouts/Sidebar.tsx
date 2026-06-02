@@ -381,7 +381,7 @@ function NavGroup({
     );
   }
 
-  return (
+  return (  
     <motion.div>
       <motion.button
         onClick={onToggle}

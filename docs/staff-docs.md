@@ -38,7 +38,7 @@ This page shows the staff member's own attendance records. Four stat cards displ
 ## 5. Leave Requests
 
 Staff members can submit and track their own leave applications. A New Leave Request button opens a form with start date, end date, leave type (Sick, Casual, Annual, Maternity, Paternity, Unpaid), and a reason field. Once submitted, the request appears in the table with its status: Pending (amber), Approved (green), or Rejected (red). The admin reviews and responds to leave requests from their Leave Management page.
-
+ 
 ---
 
 ## 6. Announcements
